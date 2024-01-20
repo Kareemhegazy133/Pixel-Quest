@@ -1,8 +1,8 @@
 #include <SDL.h>
-#include "simple_logger.h"
+#include "..\gfc\simple_logger\include\simple_logger.h"
 
-#include "gf2d_graphics.h"
-#include "gf2d_sprite.h"
+#include "..\include\gf2d_graphics.h"
+#include "..\include\gf2d_sprite.h"
 
 int main(int argc, char * argv[])
 {
@@ -20,7 +20,7 @@ int main(int argc, char * argv[])
     init_logger("gf2d.log",0);
     slog("---==== BEGIN ====---");
     gf2d_graphics_initialize(
-        "gf2d",
+        "Pixel Quest",
         1200,
         720,
         1200,

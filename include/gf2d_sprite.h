@@ -2,10 +2,10 @@
 #define __GF2D_SPRITE_H__
 
 #include <SDL.h>
-#include "gfc_types.h"
-#include "gfc_color.h"
-#include "gfc_vector.h"
-#include "gfc_text.h"
+#include "..\gfc\include\gfc_types.h"
+#include "..\gfc\include\gfc_color.h"
+#include "..\gfc\include\gfc_vector.h"
+#include "..\gfc\include\gfc_text.h"
 
 typedef struct Sprite_S
 {

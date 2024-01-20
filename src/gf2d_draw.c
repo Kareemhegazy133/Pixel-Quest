@@ -1,9 +1,9 @@
-#include "simple_logger.h"
+#include "..\gfc\simple_logger\include\simple_logger.h"
 
-#include "gfc_list.h"
+#include "..\gfc\include\gfc_list.h"
 
-#include "gf2d_draw.h"
-#include "gf2d_graphics.h"
+#include "..\include\gf2d_draw.h"
+#include "..\include\gf2d_graphics.h"
 
 void gf2d_draw_shape(Shape shape,Color color,Vector2D offset)
 {
