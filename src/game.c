@@ -6,13 +6,14 @@
 
 #include <pq_entity.h>
 #include <pq_player.h>
+#include <pq_world.h>
 
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
-    Sprite *sprite;
+    pq_world* world;
     
     int mx,my;
     float mf = 0;
@@ -37,7 +38,7 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/S_2_1280x720.png");
+    world = test_new_world();
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
     player = new_pq_player();
 
@@ -56,21 +57,21 @@ int main(int argc, char * argv[])
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
-            //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,vector2d(0,0));
+        //backgrounds drawn first
+        draw_pq_world(world);
 
-            pq_entity_system_draw();
+        pq_entity_system_draw();
             
-            //UI elements last
-            gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf);
+        //UI elements last
+        gf2d_sprite_draw(
+            mouse,
+            vector2d(mx,my),
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            &mouseColor,
+            (int)mf);
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
         
@@ -79,6 +80,7 @@ int main(int argc, char * argv[])
     }
 
     free_pq_entity(player);
+    free_pq_world(world);
 
     slog("---==== END ====---");
     return 0;

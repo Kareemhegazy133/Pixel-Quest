@@ -2,10 +2,6 @@
 
 #include <pq_player.h>
 
-void pq_player_think(pq_entity* player);
-void pq_player_update(pq_entity* player);
-void pq_player_free(pq_entity* player);
-
 pq_entity* new_pq_player()
 {
 	pq_entity* player;
