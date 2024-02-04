@@ -14,6 +14,7 @@ typedef struct PQ_Entity_S
 	float		frame;											// The current frame of animation for the sprite
 	Vector2D	position;										// The entity's position
 	Vector2D	velocity;										// The entity's velocity
+	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input (Player Only)
 	void (*think)(struct PQ_Entity_S* self);					// The function to call to make decisions
 	void (*update)(struct PQ_Entity_S* self);					// The function to call to execute the think function's decisions
 	void (*free)(struct PQ_Entity_S* self);						// The function to call to clean up any custom allocated data

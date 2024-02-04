@@ -66,9 +66,11 @@ pq_entity* new_pq_entity()
 		if (_pq_entity_manager.entities_list[i]._is_active) continue;
 
 		memset(&_pq_entity_manager.entities_list[i], 0, sizeof(pq_entity));
+		
+		// Set the defaults
 		_pq_entity_manager.entities_list[i]._is_active = 1;
-		// Set the default color
-		// Set the default scale
+		_pq_entity_manager.entities_list[i].handle_input = NULL;
+
 		return &_pq_entity_manager.entities_list[i];
 	}
 	slog("There are no more available pixel quest entities");
