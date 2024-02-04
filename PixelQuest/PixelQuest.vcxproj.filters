@@ -99,6 +99,12 @@
     <ClCompile Include="..\gfc\simple_json\src\simple_json_string.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pq_entity.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pq_player.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\gf2d_draw.h">

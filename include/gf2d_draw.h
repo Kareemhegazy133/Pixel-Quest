@@ -2,10 +2,10 @@
 #define __GF2D_DRAW_H__
 
 #include <SDL.h>
-#include "..\gfc\include\gfc_list.h"
-#include "..\gfc\include\gfc_vector.h"
-#include "..\gfc\include\gfc_shape.h"
-#include "..\gfc\include\gfc_color.h"
+#include <gfc_list.h>
+#include <gfc_vector.h>
+#include <gfc_shape.h>
+#include <gfc_color.h>
 
 
 /**

@@ -3,8 +3,8 @@
 
 #include <SDL.h>
 
-#include "..\gfc\include\gfc_types.h"
-#include "..\gfc\include\gfc_vector.h"
+#include <gfc_types.h>
+#include <gfc_vector.h>
 
 /**
  * @brief initializes SDL and setups up basic window and rendering contexts
