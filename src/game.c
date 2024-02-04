@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/Summer Pack/summer 2/S_2_1280x720.png");
+    sprite = gf2d_sprite_load_image("images/backgrounds/S_2_1280x720.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
     player = new_pq_player();
 

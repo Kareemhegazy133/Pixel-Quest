@@ -17,7 +17,7 @@ pq_entity* new_pq_player()
 		return NULL;
 	}
 
-	player->sprite = gf2d_sprite_load_all("images/entities/Men Pack/Swordsman/Idle.png", 128, 128, 8, 0);
+	player->sprite = gf2d_sprite_load_all("images/entities/Swordsman/Idle.png", 128, 128, 8, 0);
 	player->frame = 0;
 	player->position = vector2d(0, 0);
 
