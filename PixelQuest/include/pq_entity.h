@@ -9,16 +9,30 @@
 
 typedef struct PQ_Entity_S
 {
+	///////// <Commons> /////////
+
 	Uint8		_is_active;										// A flag for keeping track of memory usage
 	Sprite*		sprite;											// The entity's sprite (null if entity does not have one)
 	float		frame;											// The current frame of animation for the sprite
 	Vector2D	position;										// The entity's position
 	Vector2D	velocity;										// The entity's velocity
-	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input (Player Only)
 	void (*think)(struct PQ_Entity_S* self);					// The function to call to make decisions
 	void (*update)(struct PQ_Entity_S* self);					// The function to call to execute the think function's decisions
 	void (*free)(struct PQ_Entity_S* self);						// The function to call to clean up any custom allocated data
 	void* data;													// For ad hoc addition data for the entity
+
+	///////// <Player and Enemies Only> /////////
+
+	int health;													// The player's health
+	int max_health;												// The player's max health
+	int damage;													// The player's damage
+	int defense;												// The player's defense
+
+	void (*take_damage)(struct PQ_Entity_S* self);				// The function to call to handle taking damage
+
+	///////// <Player Only> /////////
+
+	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
 } pq_entity;
 
 /**

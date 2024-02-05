@@ -17,6 +17,14 @@ pq_entity* new_pq_player()
 	player->frame = 0;
 	player->position = vector2d(0, 400);
 
+	// Initialize player stats
+	player->health = 100;
+	player->max_health = 100;
+	player->damage = 10;
+	player->defense = 5;
+
+	player->take_damage = pq_player_take_damage;
+
 	// Initialize the input handling function for the player
 	player->handle_input = pq_player_handle_input;
 
@@ -58,6 +66,32 @@ void pq_player_handle_input(pq_entity* player)
 
 	vector2d_normalize(&direction);
 	vector2d_scale(player->velocity, direction, 2);
+}
+
+void pq_player_take_damage(pq_entity* player, int damage)
+{
+	if (!player)
+	{
+		slog("player = NULL, Cannot take damage without a pq_player entity.");
+		return;
+	}
+
+	// Calculate actual damage after considering player's defense
+	int actual_damage = damage - player->defense;
+	if (actual_damage < 0)
+	{
+		actual_damage = 0;
+	}
+
+	// Update player's health
+	player->health -= actual_damage;
+
+	// Check if player's health is below or equal to zero (indicating death)
+	if (player->health <= 0)
+	{
+		// Player is defeated, handle game over or respawn logic
+		// pq_player_die(player) or pq_player_respawn(player);
+	}
 }
 
 void pq_player_think(pq_entity* player)

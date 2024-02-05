@@ -15,6 +15,13 @@ pq_entity* new_pq_player();
 void pq_player_handle_input(pq_entity* player);
 
 /**
+* @brief: This function handles taking damage for the pixel quest player entity.
+* @param player: This is the pixel quest player entity that takes damage.
+* @param damage: The damage that the player will take.
+*/
+void pq_player_take_damage(pq_entity* player, int damage);
+
+/**
 * @brief: This function makes decisions for the player entity which will then get executed in pq_player_update().
 * @param player: This is the pixel quest player entity in which we will make decisions for.
 */

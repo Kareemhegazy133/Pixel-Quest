@@ -69,7 +69,6 @@ pq_entity* new_pq_entity()
 		
 		// Set the defaults
 		_pq_entity_manager.entities_list[i]._is_active = 1;
-		_pq_entity_manager.entities_list[i].handle_input = NULL;
 
 		return &_pq_entity_manager.entities_list[i];
 	}
