@@ -1,6 +1,7 @@
 #include <simple_logger.h>
 
 #include <pq_entity.h>
+#include <pq_camera.h>
 
 typedef struct
 {
@@ -131,8 +132,12 @@ void pq_entity_draw(pq_entity* entity)
 {
 	if (!entity) return;
 
+	Vector2D offset = pq_camera_get_offset();
+	Vector2D position;
+	vector2d_add(position, entity->position, offset);
+
 	if (entity->sprite) {
-		gf2d_sprite_render(entity->sprite, entity->position, NULL, NULL, NULL, NULL, NULL, NULL, (Uint32)entity->frame);
+		gf2d_sprite_render(entity->sprite, position, NULL, NULL, NULL, NULL, NULL, NULL, (Uint32)entity->frame);
 	}
 }
 

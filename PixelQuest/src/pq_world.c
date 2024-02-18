@@ -2,6 +2,7 @@
 #include <gf2d_graphics.h>
 #include <gf2d_sprite.h>
 
+#include <pq_camera.h>
 #include <pq_world.h>
 
 void pq_world_build_tile_layer(pq_world* world)
@@ -52,6 +53,87 @@ void pq_world_build_tile_layer(pq_world* world)
 	}
 }
 
+pq_world* load_pq_world(const char* file_name)
+{
+	if (!file_name)
+	{
+		slog("file_name = NULL, Cannot load world without a file name.");
+		return NULL;
+	}
+
+	pq_world* world;
+	SJson* map_file_json = sj_load(file_name);
+
+	if (!map_file_json)
+	{
+		slog("map_file_json = NULL, Failed to load world map file.");
+		return NULL;
+	}
+
+	SJson* world_json = sj_object_get_value(map_file_json, "world");
+	if (!world_json)
+	{
+		slog("%s is missing the world object.", file_name);
+		sj_free(map_file_json);
+		return NULL;
+	}
+
+	SJson* vertical = sj_object_get_value(world_json, "tile_map");
+	if (!vertical)
+	{
+		slog("%s is missing the tile_map object.", file_name);
+		sj_free(map_file_json);
+		return NULL;
+	}
+	int h = sj_array_get_count(vertical);
+
+	SJson* horizontal = sj_array_get_nth(vertical, 0);
+	if (!horizontal)
+	{
+		slog("Failed to get first horizontal row");
+		sj_free(map_file_json);
+		return NULL;
+	}
+	int w = sj_array_get_count(horizontal);
+
+	world = new_pq_world(w, h);
+	if (!world)
+	{
+		slog("Failed to allocate space for a new world for file: %s", file_name);
+		sj_free(map_file_json);
+		return NULL;
+	}
+
+	for (int i = 0; i < h; i++)
+	{
+		horizontal = sj_array_get_nth(vertical, i);
+		if (!horizontal) continue;
+		for (int j = 0; j < w; j++)
+		{
+			SJson* item = sj_array_get_nth(horizontal, j);
+			if (!item) continue;
+			int tile = 0;
+			sj_get_integer_value(item, &tile);
+			world->tile_map[j + i * w] = tile;
+		}
+	}
+	const char* background = sj_object_get_value_as_string(world_json, "background");
+	world->background = gf2d_sprite_load_image(background);
+	const char* tile_set = sj_object_get_value_as_string(world_json, "tile_set");
+	int frame_width;
+	sj_object_get_value_as_int(world_json, "frame_width", &frame_width);
+	int frame_height;
+	sj_object_get_value_as_int(world_json, "frame_height", &frame_height);
+	int frames_per_line;
+	sj_object_get_value_as_int(world_json, "frames_per_line", &frames_per_line);
+
+	world->tile_set = gf2d_sprite_load_all(tile_set, frame_width, frame_height, frames_per_line, 1);
+	pq_world_build_tile_layer(world);
+
+	sj_free(map_file_json);
+	return world;
+}
+
 pq_world* test_new_world()
 {
 	pq_world* world;
@@ -79,6 +161,7 @@ pq_world* test_new_world()
 	}
 
 	pq_world_build_tile_layer(world);
+	setup_camera_pq_world(world);
 	return world;
 }
 
@@ -119,6 +202,8 @@ void draw_pq_world(pq_world* world)
 {
 	if (!world) return;
 
+	Vector2D offset  = pq_camera_get_offset();
+
 	gf2d_sprite_draw_image(world->background, vector2d(0, 0));
 
 	if (!world->tile_layer)
@@ -127,5 +212,19 @@ void draw_pq_world(pq_world* world)
 		return;
 	}
 
-	gf2d_sprite_draw_image(world->tile_layer, vector2d(0, 0));
+	gf2d_sprite_draw_image(world->tile_layer, offset);
+}
+
+void setup_camera_pq_world(pq_world* world)
+{
+	if (!world) return;
+
+	if (!world->tile_layer || !world->tile_layer->surface)
+	{
+		slog("world->tile_layer or world->tile_layer->surface = NULL, Cannot setup camera with no tile_layer with surface.");
+		return;
+	}
+	pq_camera_set_bounds(gfc_rect(0, 0, world->tile_layer->surface->w, world->tile_layer->surface->h));
+	pq_camera_apply_bounds();
+	pq_camera_enable_binding(1);
 }

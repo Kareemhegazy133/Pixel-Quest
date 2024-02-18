@@ -1,0 +1,28 @@
+{
+	"items":[
+		{
+			"name": "short_sword",
+			"displayName": "Short Sword",
+			"sprite":
+			{
+				"fileName": "images/items/short_sword.png",
+				"frame": 1
+			}
+			"type": "melee",
+			"damage": 5
+		},
+		{
+			"name": "shield",
+			"displayName": "Shield",
+			"type": "melee",
+			"defense": 10
+		},
+		{
+			"name": "health_potion",
+			"displayName": "Health Potion",
+			"type": "potion",
+			"heal": 10,
+			"stackable": 1
+		}
+	]
+}

@@ -4,6 +4,7 @@
 #include <gf2d_graphics.h>
 #include <gf2d_sprite.h>
 
+#include <pq_camera.h>
 #include <pq_entity.h>
 #include <pq_player.h>
 #include <pq_world.h>
@@ -36,9 +37,13 @@ int main(int argc, char * argv[])
     gf2d_sprite_init(1024);
     init_pq_entity_system(1024);
     SDL_ShowCursor(SDL_DISABLE);
+
+    //Setup camera
+    pq_camera_set_size(vector2d(1280, 720));
     
     /*demo setup*/
-    world = test_new_world();
+    world = load_pq_world("maps/pq_mp_test_world.json");
+
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16,0);
     player = new_pq_player();
 

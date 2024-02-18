@@ -1,6 +1,15 @@
 #include <simple_logger.h>
 
+#include <pq_camera.h>
 #include <pq_player.h>
+#include <pq_inventory.h>
+
+typedef struct {
+	int level;
+	int experience;
+	TextLine class_name;
+	pq_inventory inventory;
+}pq_player_data;
 
 pq_entity* new_pq_player()
 {
@@ -32,6 +41,13 @@ pq_entity* new_pq_player()
 	player->update = pq_player_update;
 	player->free = pq_player_free;
 
+	pq_player_data* data = gfc_allocate_array(sizeof(pq_player_data), 1);
+	if (data)
+	{
+		player->data = data;
+		init_pq_inventory(&data->inventory);
+	}
+
 	return player;
 }
 
@@ -57,11 +73,17 @@ void pq_player_handle_input(pq_entity* player)
 		direction.x = 1;
 	}
 
-	// Jump when when 'W' or up arrow key or 'Space' key is pressed
+	// Jump when 'W' or up arrow key or 'Space' key is pressed
 	if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_SPACE])
 	{
 		// TODO : Jump Logic
 		direction.y = -1;
+	}
+
+	// Move down when 'S' or down arrow key is pressed (testing only)
+	if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN])
+	{
+		direction.y = 1;
 	}
 
 	vector2d_normalize(&direction);
@@ -112,9 +134,14 @@ void pq_player_update(pq_entity* player)
 	}
 
 	vector2d_add(player->position, player->position, player->velocity);
+	pq_camera_center_on(player->position);
 }
 
 void pq_player_free(pq_entity* player)
 {
-	if (!player) return;
+	if (!player || !player->data) return;
+
+	pq_player_data* data = (pq_player_data*)player->data;
+	pq_inventory_cleanup(&data->inventory);
+	free(data);
 }

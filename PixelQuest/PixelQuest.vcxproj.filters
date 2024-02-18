@@ -108,6 +108,15 @@
     <ClCompile Include="src\pq_world.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pq_camera.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pq_item.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pq_inventory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\gf2d_draw.h">
@@ -200,5 +209,17 @@
     <ClInclude Include="include\pq_world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\pq_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pq_item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pq_inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="maps\pq_test_world.map" />
   </ItemGroup>
 </Project>
