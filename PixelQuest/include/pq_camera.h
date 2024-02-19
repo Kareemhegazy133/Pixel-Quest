@@ -56,3 +56,9 @@ void pq_camera_apply_bounds();
 * @param target: The target in which the camera will be centered on.
 */
 void pq_camera_center_on(Vector2D target);
+
+/**
+* @brief: This function makes the pixel quest camera's follow its target.
+* @param target: The target in which the camera will be following.
+*/
+void pq_camera_follow(Vector2D target);

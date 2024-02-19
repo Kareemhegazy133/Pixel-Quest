@@ -1,8 +1,6 @@
 #include <simple_logger.h>
 
-#include <pq_camera.h>
 #include <pq_player.h>
-#include <pq_inventory.h>
 
 typedef struct {
 	int level;
@@ -24,7 +22,7 @@ pq_entity* new_pq_player()
 
 	player->sprite = gf2d_sprite_load_all("images/entities/Swordsman/Idle.png", 128, 128, 8, 0);
 	player->frame = 0;
-	player->position = vector2d(0, 400);
+	player->position = vector2d(640, 575);
 
 	// Initialize player stats
 	player->health = 100;
@@ -122,6 +120,9 @@ void pq_player_think(pq_entity* player)
 
 	pq_player_handle_input(player);
 
+	// Check for collisions with the tiles
+	pq_player_check_tile_collision(player, get_pq_world());
+
 }
 
 void pq_player_update(pq_entity* player)
@@ -134,7 +135,47 @@ void pq_player_update(pq_entity* player)
 	}
 
 	vector2d_add(player->position, player->position, player->velocity);
+	//pq_camera_follow(player->position);
 	pq_camera_center_on(player->position);
+}
+
+void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
+{
+	if (!player || !world) return;
+
+	// Calculate player's bounding box after velocity is applied
+	Rect playerBox = {
+		player->position.x + player->velocity.x,
+		player->position.y + player->velocity.y,
+		player->sprite->frame_w,
+		player->sprite->frame_h
+	};
+
+	// Iterate through the tiles and check for collision
+	for (int i = 0; i < world->tile_height; i++)
+	{
+		for (int j = 0; j < world->tile_width; j++)
+		{
+			Uint32 index = j + (i * world->tile_width);
+			if (world->tile_map[index] == 0) continue; // Skip empty tiles
+
+			// Calculate tile's bounding box
+			Rect tileBox = {
+				j * world->tile_set->frame_w,
+				i * world->tile_set->frame_h,
+				world->tile_set->frame_w,
+				world->tile_set->frame_h
+			};
+
+			// Check for collision
+			if (gfc_rect_overlap(playerBox, tileBox))
+			{
+				// Handle collision, for example, stop player's movement
+				slog("Colliding");
+				vector2d_clear(player->velocity);
+			}
+		}
+	}
 }
 
 void pq_player_free(pq_entity* player)

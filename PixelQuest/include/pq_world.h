@@ -1,13 +1,16 @@
 #pragma once
 
+#include <gf2d_graphics.h>
+#include <gf2d_sprite.h>
+
 typedef struct
 {
-	Sprite* background;			// This is the background image for the world
-	Sprite* tile_layer;			// This is the sprite containing a prerendered layer of the tiles for the world
-	Sprite* tile_set;			// This is the sprite containing tiles for the world
-	Uint8*	tile_map;			// This is the tiles that make up the world
-	Uint32	tile_height;		// This is how many tiles tall the map is
-	Uint32	tile_width;			// This is how many tiles wide the map is
+	Sprite* background;				// This is the background image for the world
+	Sprite* tile_layer;				// This is the sprite containing a prerendered layer of the tiles for the world
+	Sprite* tile_set;				// This is the sprite containing tiles for the world
+	Uint8*	tile_map;				// This is the tiles that make up the world
+	Uint32	tile_height;			// This is how many tiles tall the map is
+	Uint32	tile_width;				// This is how many tiles wide the map is
 } pq_world;
 
 /**
@@ -30,6 +33,19 @@ pq_world* load_pq_world(const char* file_name);
 * @return: If there was any error in creating a new world entity, it returns NULL, otherwise a new pq_world pointer.
 */
 pq_world* new_pq_world(Uint32 width, Uint32 height);
+
+
+/**
+ * @brief This function gets the pq_world pointer.
+ * @return A pointer to the pq_world.
+ */
+pq_world* get_pq_world();
+
+/**
+ * @brief This function sets the pq_world pointer.
+ * @param world: The world pointer to be referenced globally.
+ */
+void set_pq_world(pq_world* world);
 
 /**
 * @brief: This function frees up the passed in pixel quest world.

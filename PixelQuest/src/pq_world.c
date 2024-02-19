@@ -1,9 +1,9 @@
 #include <simple_logger.h>
-#include <gf2d_graphics.h>
-#include <gf2d_sprite.h>
 
 #include <pq_camera.h>
 #include <pq_world.h>
+
+static pq_world* g_pq_world = NULL;  // Global variable to store the world pointer
 
 void pq_world_build_tile_layer(pq_world* world)
 {
@@ -184,7 +184,18 @@ pq_world* new_pq_world(Uint32 width, Uint32 height)
 	world->tile_map = gfc_allocate_array(sizeof(Uint8), height * width);
 	world->tile_height = height;
 	world->tile_width = width;
+
+	set_pq_world(world);
 	return world;
+}
+
+pq_world* get_pq_world()
+{
+	return g_pq_world;
+}
+
+void set_pq_world(pq_world* world) {
+	g_pq_world = world;
 }
 
 void free_pq_world(pq_world* world)

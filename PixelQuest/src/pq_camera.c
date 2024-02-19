@@ -73,3 +73,8 @@ void pq_camera_center_on(Vector2D target)
 		pq_camera_apply_bounds();
 	}
 }
+
+void pq_camera_follow(Vector2D target)
+{
+
+}

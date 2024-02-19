@@ -1,6 +1,9 @@
 #pragma once
 
 #include <pq_entity.h>
+#include <pq_world.h>
+#include <pq_camera.h>
+#include <pq_inventory.h>
 
 /**
 * @brief: This function creates a new pixel quest player entity.
@@ -32,6 +35,13 @@ void pq_player_think(pq_entity* player);
 * @param player: This is the pixel quest player entity in which we execute decisions for.
 */
 void pq_player_update(pq_entity* player);
+
+/**
+* @brief: This function checks for collisions between the player entity and the world entity.
+* @param player: This is the pixel quest player entity.
+* @param world: This is the pixel quest world entity.
+*/
+void pq_player_check_tile_collision(pq_entity* player, pq_world* world);
 
 /**
 * @brief: This function frees up the passed in pixel quest player entity.

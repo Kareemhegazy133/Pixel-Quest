@@ -33,9 +33,6 @@ typedef struct PQ_Entity_S
 	///////// <Player Only> /////////
 
 	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
-
-	///////// <Collectibles/Items Only> /////////
-
 	
 } pq_entity;
 
