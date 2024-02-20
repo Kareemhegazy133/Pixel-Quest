@@ -159,7 +159,7 @@ void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
 		for (int j = 0; j < world->tile_width; j++)
 		{
 			Uint32 index = j + (i * world->tile_width);
-			if (world->tile_map[index] == 0) continue; // Skip empty tiles
+			if (world->map[index] == 0) continue; // Skip empty tiles
 
 			// Calculate tile's bounding box
 			Rect tileBox = {

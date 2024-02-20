@@ -95,9 +95,6 @@ int main(int argc, char * argv[])
     free_pq_entity(player);
     free_pq_world(world);
 
-    // Quit SDL_image subsystem
-    IMG_Quit();
-
     slog("---==== END ====---");
     return 0;
 }

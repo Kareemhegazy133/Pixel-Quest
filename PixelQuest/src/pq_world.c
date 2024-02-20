@@ -2,6 +2,7 @@
 
 #include <pq_camera.h>
 #include <pq_world.h>
+#include <pq_item.h>
 
 static pq_world* g_pq_world = NULL;  // Global variable to store the world pointer
 
@@ -37,10 +38,10 @@ void pq_world_build_tile_layer(pq_world* world)
 		for (int j = 0; j < world->tile_width; j++)
 		{
 			Uint32 index = j + (i * world->tile_width);
-			if (world->tile_map[index] == 0) continue;
+			if (world->map[index] == 0) continue;
 
 			Vector2D position = vector2d(j * world->tile_set->frame_w, i * world->tile_set->frame_h);
-			Uint32 frame = world->tile_map[index] - 1;
+			Uint32 frame = world->map[index] - 1;
 			gf2d_sprite_draw_to_surface(world->tile_set, position, NULL, NULL, frame, world->tile_layer->surface);
 		}
 	}
@@ -53,6 +54,28 @@ void pq_world_build_tile_layer(pq_world* world)
 	}
 }
 
+void load_world_pq_items(SJson* world_json, pq_world* world)
+{
+	SJson* itemsList = sj_object_get_value(world_json, "items");
+	if (!itemsList)
+	{
+		slog("This world_json is missing the items object.");
+		return;
+	}
+
+	for (int i = 0; i < sj_array_get_count(itemsList); i++)
+	{
+		SJson* item_data = sj_array_get_nth(itemsList, i);
+		if (!item_data) continue;
+
+		pq_entity* item = new_pq_item(item_data);
+		if (!item) continue;
+
+		world->items[world->items_count] = item;
+		world->items_count++;
+		slog("Loaded an Item");
+	}
+}
 pq_world* load_pq_world(const char* file_name)
 {
 	if (!file_name)
@@ -78,10 +101,10 @@ pq_world* load_pq_world(const char* file_name)
 		return NULL;
 	}
 
-	SJson* vertical = sj_object_get_value(world_json, "tile_map");
+	SJson* vertical = sj_object_get_value(world_json, "map");
 	if (!vertical)
 	{
-		slog("%s is missing the tile_map object.", file_name);
+		slog("%s is missing the map object.", file_name);
 		sj_free(map_file_json);
 		return NULL;
 	}
@@ -112,9 +135,9 @@ pq_world* load_pq_world(const char* file_name)
 		{
 			SJson* item = sj_array_get_nth(horizontal, j);
 			if (!item) continue;
-			int tile = 0;
-			sj_get_integer_value(item, &tile);
-			world->tile_map[j + i * w] = tile;
+			int sprite_number = 0;
+			sj_get_integer_value(item, &sprite_number);
+			world->map[j + i * w] = sprite_number;
 		}
 	}
 	const char* background = sj_object_get_value_as_string(world_json, "background");
@@ -129,6 +152,8 @@ pq_world* load_pq_world(const char* file_name)
 
 	world->tile_set = gf2d_sprite_load_all(tile_set, frame_width, frame_height, frames_per_line, 1);
 	pq_world_build_tile_layer(world);
+
+	load_world_pq_items(world_json, world);
 
 	sj_free(map_file_json);
 	return world;
@@ -150,14 +175,14 @@ pq_world* test_new_world()
 
 	for (int i = 0; i < height; i++)
 	{
-		world->tile_map[i * width] = 1;
-		world->tile_map[i * width + (width - 1)] = 1;
+		world->map[i * width] = 1;
+		world->map[i * width + (width - 1)] = 1;
 	}
 
 	for (int i = 0; i < width; i++)
 	{
-		world->tile_map[i] = 1;
-		world->tile_map[i + (height - 1) * width] = 1;
+		world->map[i] = 1;
+		world->map[i + (height - 1) * width] = 1;
 	}
 
 	pq_world_build_tile_layer(world);
@@ -181,9 +206,12 @@ pq_world* new_pq_world(Uint32 width, Uint32 height)
 		return NULL;
 	}
 
-	world->tile_map = gfc_allocate_array(sizeof(Uint8), height * width);
+	world->map = gfc_allocate_array(sizeof(Uint8), height * width);
 	world->tile_height = height;
 	world->tile_width = width;
+
+	world->items_count = 0;
+	memset(world->items, 0, sizeof(pq_entity*) * MAX_ITEMS);
 
 	set_pq_world(world);
 	return world;
@@ -205,7 +233,7 @@ void free_pq_world(pq_world* world)
 	gf2d_sprite_free(world->background);
 	gf2d_sprite_free(world->tile_set);
 	gf2d_sprite_free(world->tile_layer);
-	free(world->tile_map);
+	free(world->map);
 	free(world);
 }
 

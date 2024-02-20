@@ -2,98 +2,47 @@
 
 #include <pq_item.h>
 
-static SJson* _itemJson = NULL;
-static SJson* _itemDefs = NULL;
-
-void close_items();
-
-void pq_init_items(const char* fileName)
+pq_entity* new_pq_item(SJson* item_data)
 {
-	if (!fileName)
-	{
-		slog("No file name was provided for initializing items.");
-		return;
-	}
-	
-	_itemJson = sj_load(fileName);
-	if (_itemJson)
-	{
-		slog("Failed to load the json for the item definition.");
-		return;
-	}
+	pq_entity* item;
 
-	_itemDefs = sj_object_get_value(_itemJson, "items");
-	if (!_itemDefs)
-	{
-		slog("Item definition json file %s does not contain items list", fileName);
-		sj_free(_itemJson);
-		_itemJson = NULL;
-		return;
-	}
+	item = new_pq_entity();
 
-	atexit(close_items);
-}
-
-void close_items()
-{
-	if (_itemJson)
-	{
-		sj_free(_itemJson);
-	}
-	_itemJson = NULL;
-	_itemDefs = NULL;
-}
-
-SJson* get_pq_item_def_by_name(const char* name)
-{
-	if (!name)
-	{
-		slog("Cannot find an item without providing a name.", name);
+	if (!item) {
+		slog("item = NULL, Failed to create a pq_item entity.");
 		return NULL;
 	}
 
-	if (!_itemDefs)
-	{
-		slog("No Item definitions loaded.");
-		return NULL;
-	}
+	item->frame = 0;
+	item->update = pq_item_update;
+	item->free = pq_item_free;
 
-	SJson* item;
-	const char* item_name = NULL;
-	for (int i = 0; i < sj_array_get_count(_itemDefs); i++)
-	{
-		item = sj_array_get_nth(_itemDefs, i);
-		if (!item) continue;
-		item_name = sj_object_get_value_as_string(item, "name");
-		if (!item_name) continue;
-		if (gfc_strlcmp(name, item_name) == 0)
-		{
-			return item;
-		}
+	// Parse the rest of the properties from the json
+	gfc_word_cpy(item->display_name, sj_object_get_value_as_string(item_data, "displayName"));
 
-	}
-	slog("No item found with the name: %s", name);
-	return NULL;
-}
+	item->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "sprite"), 64, 64, 1, 0);
 
-pq_item* new_item(const char* name)
-{
-	SJson* itemDef = get_pq_item_def_by_name(name);
-	if (!itemDef) return NULL;
+	int pos_x, pos_y;
+	sj_object_get_value_as_int(item_data, "position_x", &pos_x);
+	sj_object_get_value_as_int(item_data, "position_y", &pos_y);
+	item->position = vector2d(pos_x, pos_y);
 
-	pq_item* item = gfc_allocate_array(sizeof(pq_item), 1);
-	if (!item) return NULL;
-
-	gfc_line_cpy(item->name, name);
-
-	// Set Item's Properties
-	//sj_object_get_value_as_int(itemDef, "");
-	item->count = 1;
+	sj_object_get_value_as_int(item_data, "count", &item->count);
 
 	return item;
 }
 
-void free_pq_item(pq_item* item)
+void pq_item_update(pq_entity* item)
+{
+	if (!item) return;
+
+	item->frame += 0.125;
+	if (item->frame >= 6) {
+		item->frame = 0;
+	}
+}
+
+void pq_item_free(pq_entity* item)
 {
 	if (!item) return;
 

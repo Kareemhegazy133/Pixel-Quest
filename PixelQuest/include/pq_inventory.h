@@ -2,8 +2,6 @@
 
 #include <gfc_list.h>
 
-#define MAX_ITEMS = 128
-
 typedef enum
 {
 	II_ShortSword,

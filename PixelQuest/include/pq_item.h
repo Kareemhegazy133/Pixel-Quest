@@ -1,30 +1,22 @@
 #pragma once
 
 #include <simple_json.h>
-
-#include <gfc_text.h>
-#include <gf2d_sprite.h>
-
-typedef struct
-{
-	TextLine name;
-	Sprite* sprite;
-	int count;			// The amount of this item
-} pq_item;
+#include <pq_entity.h>
 
 /**
-* @brief: This function initializes and loads the items' definitions.
-* @param fileName: The json file name that contains the items data.
+* @brief: This function creates a new pixel quest item entity.
+* @return: If there was any error in creating a new item entity, it returns NULL, otherwise a new pq_item entity pointer.
 */
-void pq_init_items(const char* fileName);
+pq_entity* new_pq_item(SJson* item_data);
 
 /**
-* @brief: This function gets an item definition file by its name.
-* @param name: The name of the item to retrieve.
-* @return NULL if not found, otherwise the item's definition
+* @brief: This function executes updates for the item entity.
+* @param item: This is the pixel quest item entity in which we execute updates for.
 */
-SJson* get_pq_item_def_by_name(const char* name);
+void pq_item_update(pq_entity* item);
 
-pq_item* new_item(const char* name);
-
-void free_pq_item(pq_item* item);
+/**
+* @brief: This function frees up the passed in pixel quest item entity.
+* @param item: This is the pixel quest player item to be freed.
+*/
+void pq_item_free(pq_entity* item);

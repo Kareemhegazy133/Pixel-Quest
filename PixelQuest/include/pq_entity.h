@@ -35,7 +35,11 @@ typedef struct PQ_Entity_S
 	///////// <Player Only> /////////
 
 	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
-	
+
+	///////// <Items Only> /////////
+
+	TextWord	display_name;									// The display name of the item
+	int			count;											// The amount of the item
 } pq_entity;
 
 /**
