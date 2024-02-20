@@ -79,13 +79,24 @@ int main(int argc, char * argv[])
             (int)mf);
 
         gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
-        
-        if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_QUIT)
+            {
+                done = 1; // exit condition if the window is closed
+            }
+        }
+
         //slog("Rendering at %f FPS", gf2d_graphics_get_frames_per_second());
     }
 
     free_pq_entity(player);
     free_pq_world(world);
+
+    // Quit SDL_image subsystem
+    IMG_Quit();
 
     slog("---==== END ====---");
     return 0;

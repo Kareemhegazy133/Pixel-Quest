@@ -20,9 +20,11 @@ pq_entity* new_pq_player()
 		return NULL;
 	}
 
-	player->sprite = gf2d_sprite_load_all("images/entities/Swordsman/Idle.png", 128, 128, 8, 0);
+	player->sprite = gf2d_sprite_load_all("images/entities/Player/Player_Idle.png", 128, 128, 9, 0);
+	player->width = 90;
+	player->height = 120;
 	player->frame = 0;
-	player->position = vector2d(640, 575);
+	player->position = vector2d(640, 580);
 
 	// Initialize player stats
 	player->health = 100;
@@ -129,8 +131,8 @@ void pq_player_update(pq_entity* player)
 {
 	if (!player) return;
 
-	player->frame += 0.1;
-	if (player->frame >= 8) {
+	player->frame += 0.125;
+	if (player->frame >= 9) {
 		player->frame = 0;
 	}
 
@@ -147,8 +149,8 @@ void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
 	Rect playerBox = {
 		player->position.x + player->velocity.x,
 		player->position.y + player->velocity.y,
-		player->sprite->frame_w,
-		player->sprite->frame_h
+		player->width,
+		player->height
 	};
 
 	// Iterate through the tiles and check for collision
@@ -171,7 +173,8 @@ void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
 			if (gfc_rect_overlap(playerBox, tileBox))
 			{
 				// Handle collision, for example, stop player's movement
-				slog("Colliding");
+				//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
+				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
 				vector2d_clear(player->velocity);
 			}
 		}

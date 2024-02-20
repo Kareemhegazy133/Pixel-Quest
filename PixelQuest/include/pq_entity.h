@@ -14,6 +14,8 @@ typedef struct PQ_Entity_S
 	Uint8		_is_active;										// A flag for keeping track of memory usage
 	Sprite*		sprite;											// The entity's sprite (null if entity does not have one)
 	float		frame;											// The current frame of animation for the sprite
+	Uint16		width;											// The entity's collision box width
+	Uint16		height;											// The entity's collision box height
 	Vector2D	position;										// The entity's position
 	Vector2D	velocity;										// The entity's velocity
 	void (*think)(struct PQ_Entity_S* self);					// The function to call to make decisions
