@@ -122,8 +122,8 @@ void pq_player_think(pq_entity* player)
 
 	pq_player_handle_input(player);
 
-	// Check for collisions with the tiles
-	pq_player_check_tile_collision(player, get_pq_world());
+	// Check for collisions
+	pq_player_handle_collision(player, get_pq_world());
 
 }
 
@@ -141,7 +141,7 @@ void pq_player_update(pq_entity* player)
 	pq_camera_center_on(player->position);
 }
 
-void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
+void pq_player_handle_collision(pq_entity* player, pq_world* world)
 {
 	if (!player || !world) return;
 
@@ -153,7 +153,7 @@ void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
 		player->height
 	};
 
-	// Iterate through the tiles and check for collision
+	// Iterate through the tiles and check for collision with the tiles
 	for (int i = 0; i < world->tile_height; i++)
 	{
 		for (int j = 0; j < world->tile_width; j++)
@@ -177,6 +177,27 @@ void pq_player_check_tile_collision(pq_entity* player, pq_world* world)
 				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
 				vector2d_clear(player->velocity);
 			}
+		}
+	}
+
+	// Iterate through the world items and check for collision with any of the items
+	for (int i = 0; i < world->items_count; i++)
+	{
+		// Calculate item's bounding box
+		Rect itemBox = {
+			world->items[i]->position.x,
+			world->items[i]->position.y,
+			world->items[i]->width,
+			world->items[i]->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(playerBox, itemBox))
+		{
+			// Handle collision, for example, stop player's movement
+			//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
+			//slog("Item Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", itemBox.x, itemBox.y, itemBox.w, itemBox.h);
+			slog("Collected %s", world->items[i]->display_name);
 		}
 	}
 }

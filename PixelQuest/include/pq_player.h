@@ -37,11 +37,11 @@ void pq_player_think(pq_entity* player);
 void pq_player_update(pq_entity* player);
 
 /**
-* @brief: This function checks for collisions between the player entity and the world entity.
+* @brief: This function checks for collisions between the player entity and anything in the world entity.
 * @param player: This is the pixel quest player entity.
 * @param world: This is the pixel quest world entity.
 */
-void pq_player_check_tile_collision(pq_entity* player, pq_world* world);
+void pq_player_handle_collision(pq_entity* player, pq_world* world);
 
 /**
 * @brief: This function frees up the passed in pixel quest player entity.

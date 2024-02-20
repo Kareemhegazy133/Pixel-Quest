@@ -12,7 +12,8 @@ pq_entity* new_pq_item(SJson* item_data)
 		slog("item = NULL, Failed to create a pq_item entity.");
 		return NULL;
 	}
-
+	item->width = 64;
+	item->height = 64;
 	item->frame = 0;
 	item->update = pq_item_update;
 	item->free = pq_item_free;
