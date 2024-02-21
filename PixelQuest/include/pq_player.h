@@ -5,6 +5,10 @@
 #include <pq_camera.h>
 #include <pq_inventory.h>
 
+typedef struct {
+	pq_inventory* inventory;
+}pq_player_data;
+
 /**
 * @brief: This function creates a new pixel quest player entity.
 * @return: If there was any error in creating a new player entity, it returns NULL, otherwise a new pq_player entity pointer.

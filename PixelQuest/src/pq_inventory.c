@@ -1,26 +1,105 @@
 #include <simple_logger.h>
-#include <pq_item.h>
+
 #include <pq_inventory.h>
 
-void init_pq_inventory(pq_inventory* inventory)
+pq_inventory* init_pq_inventory()
 {
-	if (!inventory) return;
+    pq_inventory* inventory = gfc_allocate_array(sizeof(pq_inventory), 1);
+    if (!inventory) {
+        slog("inventory = NULL, Failed to create a pq_inventory.");
+        return NULL;
+    }
+    memset(inventory->items, 0, sizeof(pq_entity*) * MAX_INVENTORY_SIZE);
 
-	inventory->items_list = gfc_list_new();
+    return inventory;
 }
 
-pq_entity* pq_inventory_get_item_by_name(pq_inventory* inventory, const char* name)
+int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item)
 {
-	if (!inventory) return NULL;
+    if (!inventory || !item)
+    {
+        slog("inventory or item = NULL, failed to add item to the inventory.");
+        return 0;
+    }
 
-	return NULL;
+    if (inventory->count >= MAX_INVENTORY_SIZE)
+    {
+        slog("Inventory is full. Cannot add more items.");
+        return 0;
+    }
+
+    // Add the item to the inventory
+    inventory->items[inventory->count++] = item;
+    return 1;
 }
 
-void pq_inventory_cleanup(pq_inventory* inventory)
+int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item)
 {
-	if (!inventory) return;
+    if (!inventory || !item)
+    {
+        slog("inventory or item = NULL, failed to remove item to the inventory.");
+        return 0;
+    }
 
-	gfc_list_foreach(inventory->items_list, (gfc_work_func*)pq_item_free);
-	gfc_list_delete(inventory->items_list);
-	inventory->items_list = NULL;
+    // Find the item in the inventory
+    for (int i = 0; i < inventory->count; i++)
+    {
+        if (inventory->items[i] == item)
+        {
+            // Shift items to fill the gap
+            for (int j = i; j < inventory->count - 1; j++)
+            {
+                inventory->items[j] = inventory->items[j + 1];
+            }
+
+            // Clear the last slot and update the count
+            inventory->items[inventory->count - 1] = NULL;
+            inventory->count--;
+
+            return 1; // Item removed successfully
+        }
+    }
+
+    // Item not found in the inventory
+    slog("Item not found in the inventory.");
+    return 0;
+}
+
+void pq_inventory_display(pq_inventory* inventory)
+{
+    if (!inventory)
+    {
+        slog("inventory = NULL, Failed to display a pq_inventory.");
+        return;
+    }
+
+    slog("Inventory:");
+
+    if (inventory->count == 0)
+    {
+        slog("Empty");
+        return;
+    }
+
+    for (int i = 0; i < inventory->count; i++)
+    {
+        slog("Item %d: %s", i + 1, inventory->items[i]->display_name);
+    }
+}
+
+void pq_inventory_free(pq_inventory* inventory)
+{
+    if (!inventory)
+    {
+        slog("inventory = NULL, Failed to free pq_inventory.");
+        return;
+    }
+
+    // Free the memory of individual items
+    for (int i = 0; i < inventory->count; i++)
+    {
+        pq_item_free(inventory->items[i]);
+    }
+
+    free(inventory);
 }

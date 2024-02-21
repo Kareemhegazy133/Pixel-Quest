@@ -198,9 +198,7 @@ pq_world* new_pq_world(Uint32 width, Uint32 height)
 		return NULL;
 	}
 
-	pq_world* world;
-
-	world = gfc_allocate_array(sizeof(pq_world), 1);
+	pq_world* world = gfc_allocate_array(sizeof(pq_world), 1);
 	if (!world) {
 		slog("world = NULL, Failed to create a pq_world entity.");
 		return NULL;

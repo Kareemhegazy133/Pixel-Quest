@@ -2,7 +2,6 @@
 
 #include <gfc_types.h>
 #include <gf2d_sprite.h>
-
 /**
 * @purpose: This struct defines a pixel quest entity
 */

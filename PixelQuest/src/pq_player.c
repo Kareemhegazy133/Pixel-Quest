@@ -2,13 +2,6 @@
 
 #include <pq_player.h>
 
-typedef struct {
-	int level;
-	int experience;
-	TextLine class_name;
-	pq_inventory inventory;
-}pq_player_data;
-
 pq_entity* new_pq_player()
 {
 	pq_entity* player;
@@ -34,19 +27,19 @@ pq_entity* new_pq_player()
 
 	player->take_damage = pq_player_take_damage;
 
+	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
+	if (player_data)
+	{
+		player->data = player_data;
+		init_pq_inventory(&player_data->inventory);
+	}
+
 	// Initialize the input handling function for the player
 	player->handle_input = pq_player_handle_input;
 
 	player->think = pq_player_think;
 	player->update = pq_player_update;
 	player->free = pq_player_free;
-
-	pq_player_data* data = gfc_allocate_array(sizeof(pq_player_data), 1);
-	if (data)
-	{
-		player->data = data;
-		init_pq_inventory(&data->inventory);
-	}
 
 	return player;
 }
@@ -59,6 +52,8 @@ void pq_player_handle_input(pq_entity* player)
 	}
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
+
+	///////// <Movement> /////////
 
 	Vector2D direction = { 0 };
 
@@ -88,6 +83,19 @@ void pq_player_handle_input(pq_entity* player)
 
 	vector2d_normalize(&direction);
 	vector2d_scale(player->velocity, direction, 2);
+
+	// 'I' key to display inventory
+	if (keys[SDL_SCANCODE_I])
+	{
+		// Cast data to pq_player_data
+		pq_player_data* player_data = (pq_player_data*)player->data;
+		if (!player_data || !player_data->inventory)
+		{
+			slog("player_data or player_data->inventory = NULL, Failed to display player inventory.");
+			return;
+		}
+		pq_inventory_display(player_data->inventory);
+	}
 }
 
 void pq_player_take_damage(pq_entity* player, int damage)
@@ -206,7 +214,8 @@ void pq_player_free(pq_entity* player)
 {
 	if (!player || !player->data) return;
 
-	pq_player_data* data = (pq_player_data*)player->data;
-	pq_inventory_cleanup(&data->inventory);
-	free(data);
+	pq_player_data* player_data = (pq_player_data*)player->data;
+
+	pq_inventory_free(player_data->inventory);
+	free(player_data);
 }

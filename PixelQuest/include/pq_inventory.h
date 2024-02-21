@@ -1,26 +1,46 @@
 #pragma once
 
-#include <gfc_list.h>
+#include <pq_entity.h>
+#include <pq_item.h>
 
-typedef enum
-{
-	II_ShortSword,
-	II_Shield,
-	II_HealthPotion,
-	II_MAX
-}pq_item_indices;
+#define MAX_INVENTORY_SIZE 10
 
 typedef struct
 {
-	//int items_list[II_MAX];
-	List* items_list;
-	int weight;
-	int weight_limit;
+    pq_entity* items[MAX_INVENTORY_SIZE];
+    int count;
+} pq_inventory;
 
-}pq_inventory;
+/**
+* @brief: Initialize the player's inventory.
+* @return: A pointer to the created inventory.
+*/
+pq_inventory* init_pq_inventory();
 
-void init_pq_inventory(pq_inventory* inventory);
+/**
+* @brief: Add an item to the player's inventory.
+* @param inventory: The player's inventory.
+* @param item: The item to add to the inventory.
+* @return: 1 if successful, 0 if the inventory is full.
+*/
+int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item);
 
-void pq_inventory_cleanup(pq_inventory* inventory);
+/**
+* @brief: Remove an item from the player's inventory.
+* @param inventory: The player's inventory.
+* @param item: The item to remove from the inventory.
+* @return: 1 if successful, 0 if the item is not in the inventory.
+*/
+int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item);
 
-void pq_inventory_add_item(pq_inventory* inventory, const char* name);
+/**
+* @brief: Display the player's inventory.
+* @param inventory: The player's inventory.
+*/
+void pq_inventory_display(pq_inventory* inventory);
+
+/**
+* @brief: Free the memory allocated for the player's inventory.
+* @param inventory: The player's inventory.
+*/
+void pq_inventory_free(pq_inventory* inventory);
