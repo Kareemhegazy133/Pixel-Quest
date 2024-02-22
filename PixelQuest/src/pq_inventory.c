@@ -30,6 +30,7 @@ int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item)
 
     // Add the item to the inventory
     inventory->items[inventory->count++] = item;
+    slog("Added %s to player's inventory", item->display_name);
     return 1;
 }
 

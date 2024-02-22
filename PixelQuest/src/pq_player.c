@@ -31,7 +31,7 @@ pq_entity* new_pq_player()
 	if (player_data)
 	{
 		player->data = player_data;
-		init_pq_inventory(&player_data->inventory);
+		player_data->inventory = init_pq_inventory();
 	}
 
 	// Initialize the input handling function for the player
@@ -191,6 +191,8 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 	// Iterate through the world items and check for collision with any of the items
 	for (int i = 0; i < world->items_count; i++)
 	{
+		// Skip collected items
+		if (world->items[i]->collected == 1) continue;
 		// Calculate item's bounding box
 		Rect itemBox = {
 			world->items[i]->position.x,
@@ -202,12 +204,28 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		// Check for collision
 		if (gfc_rect_overlap(playerBox, itemBox))
 		{
-			// Handle collision, for example, stop player's movement
 			//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
 			//slog("Item Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", itemBox.x, itemBox.y, itemBox.w, itemBox.h);
-			slog("Collected %s", world->items[i]->display_name);
+
+			// Add the item to the player's inventory
+			pq_player_collect_item(player, world, i);
 		}
 	}
+}
+
+void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
+{
+	pq_player_data* player_data = (pq_player_data*)player->data;
+	if (player_data && player_data->inventory)
+	{
+		pq_inventory_add_item(player_data->inventory, world->items[itemIndex]);
+	}
+
+	// Set item status to collected
+	world->items[itemIndex]->collected = 1;
+	world->items[itemIndex]->sprite = NULL;
+	slog("Collected %s", world->items[itemIndex]->display_name);
+	pq_inventory_display(player_data->inventory);
 }
 
 void pq_player_free(pq_entity* player)

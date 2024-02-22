@@ -38,7 +38,9 @@ typedef struct PQ_Entity_S
 	///////// <Items Only> /////////
 
 	TextWord	display_name;									// The display name of the item
+	Sprite*		inventory_sprite;								// The item's inventory sprite (null if entity does not have one)
 	int			count;											// The amount of the item
+	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
 } pq_entity;
 
 /**

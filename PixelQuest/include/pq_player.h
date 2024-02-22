@@ -48,6 +48,14 @@ void pq_player_update(pq_entity* player);
 void pq_player_handle_collision(pq_entity* player, pq_world* world);
 
 /**
+* @brief: This function collects an item from the world and adds it to the player's inventory.
+* @param player: This is the pixel quest player entity.
+* @param world: This is the pixel quest world entity.
+* @param itemIndex: This is the index of the pixel quest item entity to be collected.
+*/
+void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex);
+
+/**
 * @brief: This function frees up the passed in pixel quest player entity.
 * @param player: This is the pixel quest player entity to be freed.
 */

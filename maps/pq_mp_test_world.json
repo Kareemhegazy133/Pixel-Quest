@@ -30,6 +30,7 @@
 				"name": "coin",
 				"displayName": "Coin",
 				"sprite": "images/items/coin.png",
+				"inventory_sprite": "images/items/inventory_coin.png",
 				"frame": 6,
 				"position_x": 775,
 				"position_y": 625,

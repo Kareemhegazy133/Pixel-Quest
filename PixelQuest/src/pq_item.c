@@ -22,6 +22,7 @@ pq_entity* new_pq_item(SJson* item_data)
 	gfc_word_cpy(item->display_name, sj_object_get_value_as_string(item_data, "displayName"));
 
 	item->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "sprite"), 64, 64, 1, 0);
+	item->inventory_sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "inventory_sprite"), 64, 64, 1, 0);
 
 	int pos_x, pos_y;
 	sj_object_get_value_as_int(item_data, "position_x", &pos_x);
@@ -29,6 +30,8 @@ pq_entity* new_pq_item(SJson* item_data)
 	item->position = vector2d(pos_x, pos_y);
 
 	sj_object_get_value_as_int(item_data, "count", &item->count);
+
+	item->collected = 0;
 
 	return item;
 }
@@ -48,5 +51,6 @@ void pq_item_free(pq_entity* item)
 	if (!item) return;
 
 	gf2d_sprite_free(item->sprite);
+	gf2d_sprite_free(item->inventory_sprite);
 	free(item);
 }

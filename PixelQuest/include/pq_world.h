@@ -39,7 +39,6 @@ pq_world* load_pq_world(const char* file_name);
 */
 pq_world* new_pq_world(Uint32 width, Uint32 height);
 
-
 /**
  * @brief This function gets the pq_world pointer.
  * @return A pointer to the pq_world.
