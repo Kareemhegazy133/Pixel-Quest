@@ -1,0 +1,9 @@
+{
+	"abilities":[
+		{
+			"name": "Fireball",
+			"cooldown": 5,
+			"damage": 10
+		}
+	]
+}

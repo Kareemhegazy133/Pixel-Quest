@@ -38,6 +38,8 @@ int main(int argc, char * argv[])
     init_pq_entity_system(1024);
     SDL_ShowCursor(SDL_DISABLE);
 
+    load_pq_abilities("defs/pq_abilities.json");
+
     //Setup camera
     pq_camera_set_size(vector2d(1280, 720));
     

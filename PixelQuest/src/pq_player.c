@@ -13,17 +13,47 @@ pq_entity* new_pq_player()
 		return NULL;
 	}
 
-	player->sprite = gf2d_sprite_load_all("images/entities/Player/Player_Idle.png", 128, 128, 9, 0);
-	player->width = 90;
-	player->height = 120;
+	SJson* player_file_json = sj_load("defs/pq_player.json");
+
+	if (!player_file_json)
+	{
+		slog("player_file_json = NULL, Failed to load player def file.");
+		return NULL;
+	}
+
+	int frame_width, frame_height, frames_per_line;
+	sj_object_get_value_as_int(player_file_json, "frame_width", &frame_width);
+	sj_object_get_value_as_int(player_file_json, "frame_height", &frame_height);
+	sj_object_get_value_as_int(player_file_json, "frames_per_line", &frames_per_line);
+	player->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(player_file_json, "sprite"),
+		frame_width, frame_height, frames_per_line, 0);
+
+	int width, height;
+	sj_object_get_value_as_int(player_file_json, "width", &width);
+	player->width = width;
+	sj_object_get_value_as_int(player_file_json, "height", &height);
+	player->height = height;
+
 	player->frame = 0;
 	player->position = vector2d(640, 580);
 
 	// Initialize player stats
-	player->health = 100;
-	player->max_health = 100;
-	player->damage = 10;
-	player->defense = 5;
+	int health, max_health, damage, defense, movement_speed;
+	sj_object_get_value_as_int(player_file_json, "health", &health);
+	player->health = health;
+
+	sj_object_get_value_as_int(player_file_json, "max_health", &max_health);
+	player->max_health = max_health;
+
+	sj_object_get_value_as_int(player_file_json, "damage", &damage);
+	player->damage = damage;
+
+	sj_object_get_value_as_int(player_file_json, "defense", &defense);
+	player->defense = defense;
+
+	sj_object_get_value_as_int(player_file_json, "movement_speed", &movement_speed);
+	player->movement_speed = movement_speed;
+
 
 	player->take_damage = pq_player_take_damage;
 
@@ -32,6 +62,45 @@ pq_entity* new_pq_player()
 	{
 		player->data = player_data;
 		player_data->inventory = init_pq_inventory();
+
+		SJson* abilities_json = sj_object_get_value(player_file_json, "abilities");
+		if (!abilities_json)
+		{
+			slog("Player def file is missing the abilities object.");
+			sj_free(player_file_json);
+			return NULL;
+		}
+
+		for (int i = 0; i < sj_array_get_count(abilities_json); i++) {
+			SJson* ability_data = sj_array_get_nth(abilities_json, i);
+			if (!ability_data) continue;
+
+			player_data->abilities[i] = gfc_allocate_array(sizeof(pq_ability), 1);
+
+			int ability_hotkey;
+			sj_object_get_value_as_int(ability_data, "hotkey", &ability_hotkey);
+			player_data->abilities[i]->hotkey = ability_hotkey;
+
+			switch (i)
+			{
+				case 0:
+					player_data->abilities[i] = init_pq_ability_fireball();
+					break;
+				case 1:
+
+					break;
+				case 2:
+
+					break;
+				case 3:
+
+					break;
+				case 4:
+
+					break;
+			}
+			slog("Player now has %s", player_data->abilities[i]->name);
+		}
 	}
 
 	// Initialize the input handling function for the player
@@ -41,6 +110,8 @@ pq_entity* new_pq_player()
 	player->update = pq_player_update;
 	player->free = pq_player_free;
 
+
+	sj_free(player_file_json);
 	return player;
 }
 
@@ -82,7 +153,7 @@ void pq_player_handle_input(pq_entity* player)
 	}
 
 	vector2d_normalize(&direction);
-	vector2d_scale(player->velocity, direction, 2);
+	vector2d_scale(player->velocity, direction, player->movement_speed);
 
 	// 'I' key to display inventory
 	if (keys[SDL_SCANCODE_I])
@@ -221,7 +292,7 @@ void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
 		pq_inventory_add_item(player_data->inventory, world->items[itemIndex]);
 	}
 
-	// Set item status to collected
+	// Set item status to collected and disable the sprite
 	world->items[itemIndex]->collected = 1;
 	world->items[itemIndex]->sprite = NULL;
 	slog("Collected %s", world->items[itemIndex]->display_name);
@@ -235,5 +306,14 @@ void pq_player_free(pq_entity* player)
 	pq_player_data* player_data = (pq_player_data*)player->data;
 
 	pq_inventory_free(player_data->inventory);
+	free(player_data->inventory);
+
+	for (int i = 0; i < MAX_ABILITIES; i++)
+	{
+		pq_ability_free(player_data->abilities[i]);
+	}
+	free(player_data->abilities);
+
 	free(player_data);
+	free(player);
 }

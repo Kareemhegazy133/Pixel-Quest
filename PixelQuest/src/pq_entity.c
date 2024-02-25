@@ -87,6 +87,7 @@ void free_pq_entity(pq_entity* entity)
 	{
 		entity->free(entity->data);
 	}
+	free(entity);
 }
 
 void pq_entity_think(pq_entity* entity)

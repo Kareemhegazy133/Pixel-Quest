@@ -6,6 +6,8 @@
 * @purpose: This struct defines a pixel quest entity
 */
 
+#define GRAVITY -10
+
 typedef struct PQ_Entity_S
 {
 	///////// <Commons> /////////
@@ -24,10 +26,12 @@ typedef struct PQ_Entity_S
 
 	///////// <Player and Enemies Only> /////////
 
-	int health;													// The player's health
-	int max_health;												// The player's max health
-	int damage;													// The player's damage
-	int defense;												// The player's defense
+	int health;													// The character's health
+	int max_health;												// The character's max health
+	int damage;													// The character's damage
+	int defense;												// The character's defense
+	int movement_speed;											// The character's movement speed
+	int jump_force;												// The character's jump force
 
 	void (*take_damage)(struct PQ_Entity_S* self);				// The function to call to handle taking damage
 

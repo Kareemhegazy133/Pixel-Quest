@@ -76,6 +76,7 @@ void load_world_pq_items(SJson* world_json, pq_world* world)
 		slog("Loaded an Item");
 	}
 }
+
 pq_world* load_pq_world(const char* file_name)
 {
 	if (!file_name)

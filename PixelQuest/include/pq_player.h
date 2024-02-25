@@ -4,10 +4,13 @@
 #include <pq_world.h>
 #include <pq_camera.h>
 #include <pq_inventory.h>
+#include <pq_ability.h>
 
-typedef struct {
+typedef struct
+{
 	pq_inventory* inventory;
-}pq_player_data;
+	pq_ability* abilities[MAX_ABILITIES];
+} pq_player_data;
 
 /**
 * @brief: This function creates a new pixel quest player entity.
