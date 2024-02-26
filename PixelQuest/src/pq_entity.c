@@ -138,16 +138,7 @@ void pq_entity_draw(pq_entity* entity)
 	vector2d_add(position, entity->position, offset);
 
 	if (entity->sprite) {
-		// Do not render collected items' sprites
-		if (entity->collected && entity->collected == 1)
-		{
-
-		}
-		// Render everything else
-		else
-		{
-			gf2d_sprite_render(entity->sprite, position, NULL, NULL, NULL, NULL, NULL, NULL, (Uint32)entity->frame);
-		}
+		gf2d_sprite_render(entity->sprite, position, NULL, NULL, NULL, NULL, NULL, NULL, (Uint32)entity->frame);
 	}
 }
 

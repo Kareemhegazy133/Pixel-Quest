@@ -75,11 +75,12 @@ pq_entity* new_pq_player()
 			SJson* ability_data = sj_array_get_nth(abilities_json, i);
 			if (!ability_data) continue;
 
-			player_data->abilities[i] = gfc_allocate_array(sizeof(pq_ability), 1);
+			player_data->abilities[i] = gfc_allocate_array(sizeof(pq_entity), 1);
 
 			int ability_hotkey;
 			sj_object_get_value_as_int(ability_data, "hotkey", &ability_hotkey);
 			player_data->abilities[i]->hotkey = ability_hotkey;
+			player_data->cooldowns[i] = 0.f;
 
 			switch (i)
 			{
@@ -155,17 +156,62 @@ void pq_player_handle_input(pq_entity* player)
 	vector2d_normalize(&direction);
 	vector2d_scale(player->velocity, direction, player->movement_speed);
 
+	// Cast data to pq_player_data
+	pq_player_data* player_data = (pq_player_data*)player->data;
+	if (!player_data)
+	{
+		slog("player_data = NULL.");
+		return;
+	}
+
 	// 'I' key to display inventory
 	if (keys[SDL_SCANCODE_I])
 	{
-		// Cast data to pq_player_data
-		pq_player_data* player_data = (pq_player_data*)player->data;
-		if (!player_data || !player_data->inventory)
+		if (!player_data->inventory)
 		{
-			slog("player_data or player_data->inventory = NULL, Failed to display player inventory.");
+			slog("player_data->inventory = NULL, Failed to display player inventory.");
 			return;
 		}
 		pq_inventory_display(player_data->inventory);
+	}
+
+	if (!player_data->abilities)
+	{
+		slog("player_data->abilities = NULL, Failed to trigger any player ability.");
+		return;
+	}
+
+	// '1' through '5' keys to use abilities
+	if (keys[SDL_SCANCODE_1])
+	{
+		if (!player_data->abilities[0])
+		{
+			slog("player_data->abilities[0] aka fireball = NULL.");
+			return;
+		}
+
+		if (!player_data->cooldowns[0])
+		{
+			slog("player_data->cooldowns[0] aka fireball's cooldown = NULL.");
+			return;
+		}
+
+		if (player_data->cooldowns[0] != 0)
+		{
+			slog("fireball is still on cooldown. fireball cooldown: %f", player_data->cooldowns[0]);
+			return;
+		}
+
+		pq_ability_data* ability_data = (pq_ability_data*)player_data->abilities[0]->data;
+		if (!ability_data)
+		{
+			slog("ability_data = NULL.");
+			return;
+		}
+		ability_data->caster = player;
+		player_data->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		player_data->cooldowns[0] = player_data->abilities[0]->cooldown;
+		player_data->abilities[0]->_is_active = 1;
 	}
 }
 
@@ -214,6 +260,8 @@ void pq_player_update(pq_entity* player)
 	if (player->frame >= 9) {
 		player->frame = 0;
 	}
+
+	pq_player_update_cooldowns(player);
 
 	vector2d_add(player->position, player->position, player->velocity);
 	//pq_camera_follow(player->position);
@@ -282,6 +330,38 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 			pq_player_collect_item(player, world, i);
 		}
 	}
+}
+
+void pq_player_update_cooldowns(pq_entity* player)
+{
+	if (!player) return;
+
+	pq_player_data* player_data = (pq_player_data*)player->data;
+	if (!player_data)
+	{
+		slog("player_data = NULL.");
+		return;
+	}
+
+	if (!player_data->cooldowns)
+	{
+		slog("player_data->cooldowns = NULL, failed to update cooldowns for the player");
+		return;
+	}
+
+	for (int i = 0; i < MAX_ABILITIES; i++)
+	{
+		if (!player_data->abilities[i] || player_data->abilities[i]->_is_active == 0 || !player_data->cooldowns[i]) continue;
+
+		if (player_data->cooldowns[i] > 0.f)
+		{
+			player_data->cooldowns[i] -= 0.1f;
+		}
+		else {
+			player_data->cooldowns[i] = player_data->abilities[i]->cooldown;
+		}
+	}
+	
 }
 
 void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)

@@ -45,6 +45,15 @@ typedef struct PQ_Entity_S
 	Sprite*		inventory_sprite;								// The item's inventory sprite (null if entity does not have one)
 	int			count;											// The amount of the item
 	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
+
+	///////// <Abilities Only> /////////
+
+	TextWord name;												// Ability Name
+	int hotkey;													// The hotkey for the ability
+	float cooldown;												// The ability's default cooldown
+	int ability_damage;											// The ability's default damage
+	float duration;												// The ability's duration
+	float max_duration;											// The ability's max_duration
 } pq_entity;
 
 /**
