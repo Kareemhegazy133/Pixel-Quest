@@ -1,6 +1,5 @@
 #pragma once
 
-#include <gf2d_sprite.h>
 #include <pq_entity.h>
 #include <pq_world.h>
 
@@ -8,33 +7,34 @@
 
 typedef struct
 {
-	pq_entity* caster;			// The ability's caster
-} pq_ability_data;
+    pq_entity* abilities[MAX_ABILITIES];
+    int count;
+} pq_abilities_list;
 
 /**
-* @brief: This function loads the pixel quest abilities from a def file.
-* @param file_name: This is the file name of the pixel quest abilities def file.
-* @return: If there was any error in loading the abilities from the def file, it returns NULL, otherwise a SJson pointer to the abilities object.
+* @brief: Initialize the game's abilities.
+* @return: A pointer to the game's abilities.
 */
-SJson* load_pq_abilities(const char* file_name);
+pq_abilities_list* init_pq_abilities();
 
 /**
-*@brief This function gets the pq_abilitiesList Sjson's pointer.
-* @return A pointer to the pq_abilitiesList Sjson.
+* @brief: Load and initialize the nth ability from abilities def file.
+* @param n: The nth index of the ability to be loaded.
+* @return: A pointer to the created ability.
 */
-SJson* get_pq_abilitiesList();
+pq_entity* load_nth_pq_ability(int n);
 
 /**
- * @brief This function sets the pq_abilitiesList Sjson's pointer.
+* @brief This function gets the pq_abilitiesList Sjson's pointer.
+* @return A pointer to the pq_abilities_list Sjson.
+*/
+SJson* get_pq_abilities_list();
+
+/**
+ * @brief This function sets the pq_abilities_list Sjson's pointer.
  * @param world: The abilitiesList Sjson pointer to be referenced globally.
  */
-void set_pq_abilitiesList(SJson* abilitiesList);
-
-/**
-* @brief: Initialize the player's abilities.
-* @return: A pointer to the created inventory.
-*/
-pq_entity* init_pq_ability_fireball();
+void set_pq_abilities_list(SJson* abilitiesList);
 
 /**
 * @brief: This function makes decisions for the ability which will then get executed in pq_ability_update().
@@ -62,3 +62,9 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world);
 * @param ability: This is the pixel quest ability to be freed.
 */
 void pq_ability_free(pq_entity* ability);
+
+/**
+* @brief: Free the memory allocated for the game's abilities list.
+* @param abilities_list: The game's abilities list.
+*/
+void pq_abilities_free(pq_abilities_list* abilities_list);

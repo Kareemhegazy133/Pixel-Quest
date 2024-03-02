@@ -117,7 +117,7 @@
     <ClCompile Include="src\pq_inventory.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pq_ability.c">
+    <ClCompile Include="src\pq_abilities.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,7 +221,7 @@
     <ClInclude Include="include\pq_inventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pq_ability.h">
+    <ClInclude Include="include\pq_abilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

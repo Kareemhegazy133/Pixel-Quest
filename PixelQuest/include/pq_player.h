@@ -4,13 +4,12 @@
 #include <pq_world.h>
 #include <pq_camera.h>
 #include <pq_inventory.h>
-#include <pq_ability.h>
+#include <pq_abilities.h>
 
 typedef struct
 {
 	pq_inventory* inventory;
-	pq_entity* abilities[MAX_ABILITIES];
-	float cooldowns[MAX_ABILITIES];
+	pq_abilities_list* abilities;
 } pq_player_data;
 
 /**

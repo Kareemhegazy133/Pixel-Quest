@@ -54,7 +54,6 @@ pq_entity* new_pq_player()
 	sj_object_get_value_as_int(player_file_json, "movement_speed", &movement_speed);
 	player->movement_speed = movement_speed;
 
-
 	player->take_damage = pq_player_take_damage;
 
 	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
@@ -62,45 +61,23 @@ pq_entity* new_pq_player()
 	{
 		player->data = player_data;
 		player_data->inventory = init_pq_inventory();
+		player_data->inventory->count = 0;
+		player_data->abilities = init_pq_abilities();
+		player_data->abilities->count = 0;
 
-		SJson* abilities_json = sj_object_get_value(player_file_json, "abilities");
-		if (!abilities_json)
+		SJson* player_abilities = sj_object_get_value(player_file_json, "abilities");
+		if (!player_abilities)
 		{
-			slog("Player def file is missing the abilities object.");
-			sj_free(player_file_json);
-			return NULL;
+			slog("%s is missing the abilities list object.", player_file_json);
+			sj_free(player_abilities);
 		}
-
-		for (int i = 0; i < sj_array_get_count(abilities_json); i++) {
-			SJson* ability_data = sj_array_get_nth(abilities_json, i);
-			if (!ability_data) continue;
-
-			player_data->abilities[i] = gfc_allocate_array(sizeof(pq_entity), 1);
-
-			int ability_hotkey;
-			sj_object_get_value_as_int(ability_data, "hotkey", &ability_hotkey);
-			player_data->abilities[i]->hotkey = ability_hotkey;
-			player_data->cooldowns[i] = 0.f;
-
-			switch (i)
+		else {
+			for (int i = 0; i < sj_array_get_count(player_abilities); i++)
 			{
-				case 0:
-					player_data->abilities[i] = init_pq_ability_fireball();
-					break;
-				case 1:
-
-					break;
-				case 2:
-
-					break;
-				case 3:
-
-					break;
-				case 4:
-
-					break;
+				player_data->abilities->abilities[i] = load_nth_pq_ability(i);
+				player_data->abilities->count++;
+				slog("Loaded ability: %s", player_data->abilities->abilities[i]->name);
 			}
-			slog("Player now has %s", player_data->abilities[i]->name);
 		}
 	}
 
@@ -110,7 +87,6 @@ pq_entity* new_pq_player()
 	player->think = pq_player_think;
 	player->update = pq_player_update;
 	player->free = pq_player_free;
-
 
 	sj_free(player_file_json);
 	return player;
@@ -184,34 +160,20 @@ void pq_player_handle_input(pq_entity* player)
 	// '1' through '5' keys to use abilities
 	if (keys[SDL_SCANCODE_1])
 	{
-		if (!player_data->abilities[0])
+		if (!player_data->abilities->abilities[0])
 		{
-			slog("player_data->abilities[0] aka fireball = NULL.");
+			slog("player_data->abilities->abilities[0] aka fireball = NULL.");
 			return;
 		}
 
-		if (!player_data->cooldowns[0])
+		if (player_data->abilities->abilities[0]->duration != 0)
 		{
-			slog("player_data->cooldowns[0] aka fireball's cooldown = NULL.");
+			slog("player_data->abilities->abilities[0] aka fireball is on cooldown.");
 			return;
 		}
 
-		if (player_data->cooldowns[0] != 0)
-		{
-			slog("fireball is still on cooldown. fireball cooldown: %f", player_data->cooldowns[0]);
-			return;
-		}
-
-		pq_ability_data* ability_data = (pq_ability_data*)player_data->abilities[0]->data;
-		if (!ability_data)
-		{
-			slog("ability_data = NULL.");
-			return;
-		}
-		ability_data->caster = player;
-		player_data->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
-		player_data->cooldowns[0] = player_data->abilities[0]->cooldown;
-		player_data->abilities[0]->_is_active = 1;
+		player_data->abilities->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		player_data->abilities->abilities[0]->_is_active = 1;
 	}
 }
 
@@ -260,8 +222,6 @@ void pq_player_update(pq_entity* player)
 	if (player->frame >= 9) {
 		player->frame = 0;
 	}
-
-	pq_player_update_cooldowns(player);
 
 	vector2d_add(player->position, player->position, player->velocity);
 	//pq_camera_follow(player->position);
@@ -332,38 +292,6 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 	}
 }
 
-void pq_player_update_cooldowns(pq_entity* player)
-{
-	if (!player) return;
-
-	pq_player_data* player_data = (pq_player_data*)player->data;
-	if (!player_data)
-	{
-		slog("player_data = NULL.");
-		return;
-	}
-
-	if (!player_data->cooldowns)
-	{
-		slog("player_data->cooldowns = NULL, failed to update cooldowns for the player");
-		return;
-	}
-
-	for (int i = 0; i < MAX_ABILITIES; i++)
-	{
-		if (!player_data->abilities[i] || player_data->abilities[i]->_is_active == 0 || !player_data->cooldowns[i]) continue;
-
-		if (player_data->cooldowns[i] > 0.f)
-		{
-			player_data->cooldowns[i] -= 0.1f;
-		}
-		else {
-			player_data->cooldowns[i] = player_data->abilities[i]->cooldown;
-		}
-	}
-	
-}
-
 void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
 {
 	pq_player_data* player_data = (pq_player_data*)player->data;
@@ -385,14 +313,12 @@ void pq_player_free(pq_entity* player)
 
 	pq_player_data* player_data = (pq_player_data*)player->data;
 
-	pq_inventory_free(player_data->inventory);
-	free(player_data->inventory);
-
-	for (int i = 0; i < MAX_ABILITIES; i++)
+	if (player_data->inventory->count > 0)
 	{
-		pq_ability_free(player_data->abilities[i]);
+		pq_inventory_free(player_data->inventory);
 	}
-	free(player_data->abilities);
+
+	pq_abilities_free(player_data->abilities);
 
 	free(player_data);
 	free(player);

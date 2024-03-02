@@ -26,7 +26,7 @@ C:\dev\PixelQuest\src\game.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\game.obj
 C:\dev\PixelQuest\src\gf2d_draw.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_draw.obj
 C:\dev\PixelQuest\src\gf2d_graphics.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_graphics.obj
 C:\dev\PixelQuest\src\gf2d_sprite.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_sprite.obj
-C:\dev\PixelQuest\PixelQuest\src\pq_ability.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_ability.obj
+C:\dev\PixelQuest\PixelQuest\src\pq_abilities.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_abilities.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_camera.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_camera.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_entity.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_entity.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_inventory.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_inventory.obj
