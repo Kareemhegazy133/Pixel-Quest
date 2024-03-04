@@ -148,8 +148,11 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world)
 void pq_ability_free(pq_entity* ability)
 {
     if (!ability) return;
-
-    gf2d_sprite_free(ability->sprite);
+	
+	if (ability->sprite)
+	{
+		gf2d_sprite_free(ability->sprite);
+	}
 
     free(ability);
 }

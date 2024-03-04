@@ -50,7 +50,11 @@ void pq_item_free(pq_entity* item)
 {
 	if (!item) return;
 
-	gf2d_sprite_free(item->sprite);
+	if (item->sprite)
+	{
+		gf2d_sprite_free(item->sprite);
+	}
+
 	gf2d_sprite_free(item->inventory_sprite);
 	free(item);
 }

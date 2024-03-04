@@ -53,7 +53,7 @@ void clear_all_pq_entities(pq_entity* ignored_entity)
 	for (i = 0; i < _pq_entity_manager.max_entities; i++)
 	{
 		if (&_pq_entity_manager.entities_list[i] == ignored_entity) continue;
-		if (!_pq_entity_manager.entities_list[i]._is_active) continue;
+		//if (!_pq_entity_manager.entities_list[i]._is_active) continue;
 
 		free_pq_entity(&_pq_entity_manager.entities_list[i]);
 	}
