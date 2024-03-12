@@ -70,6 +70,8 @@ pq_entity* load_nth_pq_ability(int n)
 		slog("Ability is missing from the abilities list object in pq_abilities def file.");
 		return NULL;
 	}
+
+	ability->type = ABILITY_ENTITY;
 	ability->_is_active = 0;
 	ability->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(ability_def, "sprite"), 52, 40, 3, 0);
 	ability->frame = 0;

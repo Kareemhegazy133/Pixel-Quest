@@ -2,11 +2,26 @@
 
 #include <gfc_types.h>
 #include <gf2d_sprite.h>
+
+#define GRAVITY 0.25f
+
+typedef enum
+{
+	IDLE,
+	GROUNDED
+} EntityState;
+
+typedef enum
+{
+	PLAYER_ENTITY,
+	ENEMY_ENTITY,
+	ITEM_ENTITY,
+	ABILITY_ENTITY
+} EntityType;
+
 /**
 * @purpose: This struct defines a pixel quest entity
 */
-
-#define GRAVITY -10
 
 typedef struct PQ_Entity_S
 {
@@ -23,6 +38,8 @@ typedef struct PQ_Entity_S
 	void (*update)(struct PQ_Entity_S* self);					// The function to call to execute the think function's decisions
 	void (*free)(struct PQ_Entity_S* self);						// The function to call to clean up any custom allocated data
 	void* data;													// For ad hoc addition data for the entity
+	EntityType  type;											// The type of this entity
+	EntityState current_state;									// The current state of this entity
 
 	///////// <Player and Enemies Only> /////////
 

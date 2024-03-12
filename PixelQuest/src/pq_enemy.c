@@ -20,6 +20,9 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 
 	gfc_word_cpy(enemy->name, sj_object_get_value_as_string(enemy_json_data, "name"));
 
+	enemy->type = ENEMY_ENTITY;
+	enemy->current_state = IDLE;
+
 	int frame_width, frame_height, frames_per_line;
 	sj_object_get_value_as_int(enemy_json_data, "frame_width", &frame_width);
 	sj_object_get_value_as_int(enemy_json_data, "frame_height", &frame_height);
@@ -142,6 +145,10 @@ void pq_enemy_think(pq_entity* enemy)
 
 	pq_enemy_handle_actions(enemy);
 
+	if (enemy->current_state != GROUNDED) {
+		enemy->velocity.y += GRAVITY;
+	}
+
 	// Check for collisions
 	pq_enemy_handle_collision(enemy, get_pq_world());
 }
@@ -192,6 +199,7 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 				// Handle collision, for example, stop enemy's movement
 				//slog("Enemy Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", enemyBox.x, enemyBox.y, enemyBox.w, enemyBox.h);
 				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
+				enemy->current_state = GROUNDED;
 				vector2d_clear(enemy->velocity);
 			}
 		}

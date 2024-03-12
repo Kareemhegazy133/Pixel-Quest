@@ -114,6 +114,7 @@ void pq_entity_update(pq_entity* entity)
 	if (!entity) return;
 
 	if (entity->update) {
+
 		entity->update(entity);
 	}
 }

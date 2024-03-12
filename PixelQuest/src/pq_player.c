@@ -21,6 +21,9 @@ pq_entity* new_pq_player()
 		return NULL;
 	}
 
+	player->type = PLAYER_ENTITY;
+	player->current_state = IDLE;
+
 	int frame_width, frame_height, frames_per_line;
 	sj_object_get_value_as_int(player_file_json, "frame_width", &frame_width);
 	sj_object_get_value_as_int(player_file_json, "frame_height", &frame_height);
@@ -213,6 +216,10 @@ void pq_player_think(pq_entity* player)
 
 	pq_player_handle_input(player);
 
+	if (player->current_state != GROUNDED) {
+		player->velocity.y += GRAVITY;
+	}
+
 	// Check for collisions
 	pq_player_handle_collision(player, get_pq_world());
 
@@ -244,6 +251,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		player->height
 	};
 
+	Uint8 isStillGrounded = 0;
 	// Iterate through the tiles and check for collision with the tiles
 	for (int i = 0; i < world->tile_height; i++)
 	{
@@ -266,9 +274,15 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 				// Handle collision, for example, stop player's movement
 				//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
 				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
+				isStillGrounded = 1;
+				player->current_state = GROUNDED;
 				vector2d_clear(player->velocity);
 			}
 		}
+	}
+
+	if (isStillGrounded == 0) {
+		player->current_state = IDLE;
 	}
 
 	// Iterate through the world items and check for collision with any of the items
