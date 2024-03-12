@@ -271,9 +271,6 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 			// Check for collision
 			if (gfc_rect_overlap(playerBox, tileBox))
 			{
-				// Handle collision, for example, stop player's movement
-				//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
-				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
 				isStillGrounded = 1;
 				player->current_state = GROUNDED;
 				vector2d_clear(player->velocity);
@@ -301,11 +298,26 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		// Check for collision
 		if (gfc_rect_overlap(playerBox, itemBox))
 		{
-			//slog("Player Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", playerBox.x, playerBox.y, playerBox.w, playerBox.h);
-			//slog("Item Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", itemBox.x, itemBox.y, itemBox.w, itemBox.h);
-
 			// Add the item to the player's inventory
 			pq_player_collect_item(player, world, i);
+		}
+	}
+
+	// Iterate through the world enemies and check for collision with any of them
+	for (int i = 0; i < world->enemies_count; i++)
+	{
+		// Calculate enemy's bounding box
+		Rect enemyBox = {
+			world->enemies[i]->position.x,
+			world->enemies[i]->position.y,
+			world->enemies[i]->width,
+			world->enemies[i]->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(playerBox, enemyBox))
+		{
+			vector2d_clear(player->velocity);
 		}
 	}
 }

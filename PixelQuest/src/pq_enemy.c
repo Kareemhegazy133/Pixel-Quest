@@ -177,6 +177,7 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 		enemy->height
 	};
 
+	Uint8 isStillGrounded = 0;
 	// Iterate through the tiles and check for collision with the tiles
 	for (int i = 0; i < world->tile_height; i++)
 	{
@@ -197,12 +198,15 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 			if (gfc_rect_overlap(enemyBox, tileBox))
 			{
 				// Handle collision, for example, stop enemy's movement
-				//slog("Enemy Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f\n", enemyBox.x, enemyBox.y, enemyBox.w, enemyBox.h);
-				//slog("Tile Box: x=%.2f, y=%.2f, w=%.2f, h=%.2f", tileBox.x, tileBox.y, tileBox.w, tileBox.h);
+				isStillGrounded = 1;
 				enemy->current_state = GROUNDED;
 				vector2d_clear(enemy->velocity);
 			}
 		}
+	}
+
+	if (isStillGrounded == 0) {
+		enemy->current_state = IDLE;
 	}
 
 }
