@@ -5,6 +5,7 @@
 #include <pq_item.h>
 
 #define MAX_ITEMS 128
+#define MAX_ENEMIES 20
 
 typedef struct
 {
@@ -16,6 +17,8 @@ typedef struct
 	Uint32	tile_width;						// This is how many tiles wide the map is
 	pq_entity* items[MAX_ITEMS];			// This is the list of items in the world
 	Uint16	items_count;					// This is how many items are in the world
+	pq_entity* enemies[MAX_ENEMIES];		// This is the list of enemies in the world
+	Uint16	enemies_count;					// This is how many enemies are in the world
 } pq_world;
 
 /**

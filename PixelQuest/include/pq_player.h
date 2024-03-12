@@ -51,12 +51,6 @@ void pq_player_update(pq_entity* player);
 void pq_player_handle_collision(pq_entity* player, pq_world* world);
 
 /**
-* @brief: This function updates the cooldowns for the player entity's abilities.
-* @param player: This is the pixel quest player entity in which we update the abilities' cooldowns for.
-*/
-void pq_player_update_cooldowns(pq_entity* player);
-
-/**
 * @brief: This function collects an item from the world and adds it to the player's inventory.
 * @param player: This is the pixel quest player entity.
 * @param world: This is the pixel quest world entity.

@@ -3,6 +3,7 @@
 #include <pq_camera.h>
 #include <pq_world.h>
 #include <pq_item.h>
+#include <pq_enemy.h>
 
 static pq_world* g_pq_world = NULL;  // Global variable to store the world pointer
 
@@ -73,7 +74,30 @@ void load_world_pq_items(SJson* world_json, pq_world* world)
 
 		world->items[world->items_count] = item;
 		world->items_count++;
-		slog("Loaded an Item");
+		slog("Loaded an Item: %s", item->display_name);
+	}
+}
+
+void load_world_pq_enemies(SJson* world_json, pq_world* world)
+{
+	SJson* enemiesList = sj_object_get_value(world_json, "enemies");
+	if (!enemiesList)
+	{
+		slog("This world_json is missing the enemies object.");
+		return;
+	}
+
+	for (int i = 0; i < sj_array_get_count(enemiesList); i++)
+	{
+		SJson* enemy_data = sj_array_get_nth(enemiesList, i);
+		if (!enemy_data) continue;
+
+		pq_entity* enemy = new_pq_enemy(enemy_data);
+		if (!enemy) continue;
+
+		world->enemies[world->enemies_count] = enemy;
+		world->enemies_count++;
+		slog("Loaded an Enemy: %s", enemy->name);
 	}
 }
 
@@ -155,8 +179,12 @@ pq_world* load_pq_world(const char* file_name)
 	pq_world_build_tile_layer(world);
 
 	load_world_pq_items(world_json, world);
+	slog("Loaded all world items.");
+	load_world_pq_enemies(world_json, world);
+	slog("Loaded all world enemies.");
 
 	sj_free(map_file_json);
+	slog("Loaded World");
 	return world;
 }
 
@@ -211,6 +239,9 @@ pq_world* new_pq_world(Uint32 width, Uint32 height)
 
 	world->items_count = 0;
 	memset(world->items, 0, sizeof(pq_entity*) * MAX_ITEMS);
+
+	world->enemies_count = 0;
+	memset(world->enemies, 0, sizeof(pq_entity*) * MAX_ENEMIES);
 
 	set_pq_world(world);
 	return world;

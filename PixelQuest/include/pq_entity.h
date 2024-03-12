@@ -39,6 +39,9 @@ typedef struct PQ_Entity_S
 
 	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
 
+	///////// <Enemies Only> /////////
+	void (*handle_actions)(struct PQ_Entity_S* self);			// The function to call to handle enemy's actions
+
 	///////// <Items Only> /////////
 
 	TextWord	display_name;									// The display name of the item

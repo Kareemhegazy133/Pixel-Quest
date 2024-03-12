@@ -35,7 +35,11 @@ pq_entity* new_pq_player()
 	player->height = height;
 
 	player->frame = 0;
-	player->position = vector2d(640, 580);
+
+	int pos_x, pos_y;
+	sj_object_get_value_as_int(player_file_json, "position_x", &pos_x);
+	sj_object_get_value_as_int(player_file_json, "position_y", &pos_y);
+	player->position = vector2d(pos_x, pos_y);
 
 	// Initialize player stats
 	int health, max_health, damage, defense, movement_speed;
@@ -76,7 +80,7 @@ pq_entity* new_pq_player()
 			{
 				player_data->abilities->abilities[i] = load_nth_pq_ability(i);
 				player_data->abilities->count++;
-				slog("Loaded ability: %s", player_data->abilities->abilities[i]->name);
+				slog("Loaded player ability: %s", player_data->abilities->abilities[i]->name);
 			}
 		}
 	}
