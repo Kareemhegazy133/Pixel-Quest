@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
-    init_pq_entity_system(1024);
+    init_pq_entity_system();
     SDL_ShowCursor(SDL_DISABLE);
 
     load_pq_abilities_json("defs/pq_abilities.json");

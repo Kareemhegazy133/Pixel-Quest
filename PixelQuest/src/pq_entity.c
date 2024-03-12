@@ -6,33 +6,28 @@
 typedef struct
 {
 	pq_entity* entities_list;
-	Uint32 max_entities;
+	Uint32 count;
 } pq_entity_manager;
 
 void close_pq_entity_system();
 
 static pq_entity_manager _pq_entity_manager = { 0 }; // Initialize a LOCAL global pixel quest entity manager.
 
-void init_pq_entity_system(Uint32 max_amount)
+void init_pq_entity_system()
 {
 	if (_pq_entity_manager.entities_list)
 	{
 		slog("Cannot have two instances of pq_entity_manager.");
 		return;
 	}
-	if (max_amount == 0)
-	{
-		slog("max_amount = 0, Cannot allocate 0 pixel quest entities.");
-		return;
-	}
 
-	_pq_entity_manager.entities_list = gfc_allocate_array(sizeof(pq_entity), max_amount);
+	_pq_entity_manager.entities_list = gfc_allocate_array(sizeof(pq_entity), MAX_ENTITIES);
 	if (!_pq_entity_manager.entities_list)
 	{
 		slog("_pq_entity_manager.entities_list = NULL, Failed to allocate global entities list.");
 		return;
 	}
-	_pq_entity_manager.max_entities = max_amount;
+	_pq_entity_manager.count = MAX_ENTITIES;
 	atexit(close_pq_entity_system);
 
 }
@@ -50,7 +45,7 @@ void close_pq_entity_system()
 void clear_all_pq_entities(pq_entity* ignored_entity)
 {
 	int i;
-	for (i = 0; i < _pq_entity_manager.max_entities; i++)
+	for (i = 0; i < _pq_entity_manager.count; i++)
 	{
 		if (&_pq_entity_manager.entities_list[i] == ignored_entity) continue;
 		//if (!_pq_entity_manager.entities_list[i]._is_active) continue;
@@ -62,7 +57,7 @@ void clear_all_pq_entities(pq_entity* ignored_entity)
 pq_entity* new_pq_entity()
 {
 	int i;
-	for (i = 0; i < _pq_entity_manager.max_entities; i++)
+	for (i = 0; i < _pq_entity_manager.count; i++)
 	{
 		if (_pq_entity_manager.entities_list[i]._is_active) continue;
 
@@ -102,7 +97,7 @@ void pq_entity_think(pq_entity* entity)
 void pq_entity_system_think()
 {
 	int i;
-	for (i = 0; i < _pq_entity_manager.max_entities; i++)
+	for (i = 0; i < _pq_entity_manager.count; i++)
 	{
 		if (!_pq_entity_manager.entities_list[i]._is_active) continue;
 		pq_entity_think(&_pq_entity_manager.entities_list[i]);
@@ -122,7 +117,7 @@ void pq_entity_update(pq_entity* entity)
 void pq_entity_system_update()
 {
 	int i;
-	for (i = 0; i < _pq_entity_manager.max_entities; i++)
+	for (i = 0; i < _pq_entity_manager.count; i++)
 	{
 		if (!_pq_entity_manager.entities_list[i]._is_active) continue;
 		pq_entity_update(&_pq_entity_manager.entities_list[i]);
@@ -146,7 +141,7 @@ void pq_entity_draw(pq_entity* entity)
 void pq_entity_system_draw()
 {
 	int i;
-	for (i = 0; i < _pq_entity_manager.max_entities; i++)
+	for (i = 0; i < _pq_entity_manager.count; i++)
 	{
 		if (!_pq_entity_manager.entities_list[i]._is_active) continue;
 		pq_entity_draw(&_pq_entity_manager.entities_list[i]);

@@ -109,7 +109,7 @@ void pq_ability_think(pq_entity* ability)
 	vector2d_scale(ability->velocity, direction, 5);
 
 	// Check for ability collisions
-	//pq_ability_handle_collision(ability, get_pq_world());
+	pq_ability_handle_collision(ability, get_pq_world());
 
 }
 
@@ -133,9 +133,11 @@ void pq_ability_update(pq_entity* ability)
 	vector2d_add(ability->position, ability->position, ability->velocity);
 }
 
-void pq_ability_handle_collision(pq_entity* ability, pq_world* world)
+void pq_ability_handle_collision(pq_entity* ability)
 {
-	if (!ability || !world) return;
+	// Access the entities list
+
+	if (!ability) return;
 
 	// Calculate ability's bounding box after velocity is applied
 	Rect abilityBox = {
@@ -145,6 +147,28 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world)
 		ability->height
 	};
 
+	/*// Iterate through the world entities and check for collision with any of them
+	for (int i = 0; i < MAX_ENTITIES; i++)
+	{
+
+		// Skip anything that is not the player or an enemy
+		//if (!currentEntity || currentEntity->type != PLAYER_ENTITY || currentEntity->type != ENEMY_ENTITY) continue;
+
+		// Calculate entity's bounding box
+		Rect entityBox = {
+			currentEntity->position.x,
+			currentEntity->position.y,
+			currentEntity->width,
+			currentEntity->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(abilityBox, entityBox))
+		{
+			vector2d_clear(ability->velocity);
+			// Apply Damage
+		}
+	}*/
 }
 
 void pq_ability_free(pq_entity* ability)

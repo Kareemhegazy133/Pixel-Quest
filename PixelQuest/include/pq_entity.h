@@ -3,6 +3,8 @@
 #include <gfc_types.h>
 #include <gf2d_sprite.h>
 
+#define MAX_ENTITIES 1024
+
 #define GRAVITY 0.25f
 
 typedef enum
@@ -80,7 +82,7 @@ typedef struct PQ_Entity_S
 * @brief: This function initializes the pixel quest entity management system and queues up cleanup on exit.
 * @param max_amount: This is the maximum number of entities that can exist at the same time.
 */
-void init_pq_entity_system(Uint32 max_amount);
+void init_pq_entity_system();
 
 /**
 * @brief: This function cleans up all the pixel quest entities except the passed in pixel quest entity.
