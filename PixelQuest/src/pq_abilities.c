@@ -2,6 +2,7 @@
 #include <simple_logger.h>
 #include <gfc_shape.h>
 #include <pq_abilities.h>
+#include <pq_player.h>
 
 static SJson* pq_abilities_list_json = NULL;  // Global variable to store the abilities list sjson pointer
 
@@ -109,7 +110,7 @@ void pq_ability_think(pq_entity* ability)
 	vector2d_scale(ability->velocity, direction, 5);
 
 	// Check for ability collisions
-	pq_ability_handle_collision(ability, get_pq_world());
+	pq_ability_handle_collision(ability, get_pq_world(), get_pq_player());
 
 }
 
@@ -125,19 +126,15 @@ void pq_ability_update(pq_entity* ability)
 	ability->duration += 0.1;
 	if (ability->duration >= ability->max_duration)
 	{
-		// Set defaults back
-		ability->duration = 0.f;
-		ability->_is_active = 0;
+		pq_ability_end(ability);
 	}
 
 	vector2d_add(ability->position, ability->position, ability->velocity);
 }
 
-void pq_ability_handle_collision(pq_entity* ability)
+void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity* player)
 {
-	// Access the entities list
-
-	if (!ability) return;
+	if (!ability || !world || !player) return;
 
 	// Calculate ability's bounding box after velocity is applied
 	Rect abilityBox = {
@@ -147,28 +144,34 @@ void pq_ability_handle_collision(pq_entity* ability)
 		ability->height
 	};
 
-	/*// Iterate through the world entities and check for collision with any of them
-	for (int i = 0; i < MAX_ENTITIES; i++)
+	// Iterate through the world enemies and check for collision with any of them
+	for (int i = 0; i < world->enemies_count; i++)
 	{
-
-		// Skip anything that is not the player or an enemy
-		//if (!currentEntity || currentEntity->type != PLAYER_ENTITY || currentEntity->type != ENEMY_ENTITY) continue;
-
-		// Calculate entity's bounding box
-		Rect entityBox = {
-			currentEntity->position.x,
-			currentEntity->position.y,
-			currentEntity->width,
-			currentEntity->height
+		// Calculate enemy's bounding box
+		Rect enemyBox = {
+			world->enemies[i]->position.x,
+			world->enemies[i]->position.y,
+			world->enemies[i]->width,
+			world->enemies[i]->height
 		};
 
 		// Check for collision
-		if (gfc_rect_overlap(abilityBox, entityBox))
+		if (gfc_rect_overlap(abilityBox, enemyBox))
 		{
-			vector2d_clear(ability->velocity);
-			// Apply Damage
+			pq_entity_take_damage(world->enemies[i], ability->ability_damage);
+			pq_ability_end(ability);
 		}
-	}*/
+	}
+}
+
+void pq_ability_end(pq_entity* ability)
+{
+	if (!ability) return;
+
+	// Set defaults back
+	vector2d_clear(ability->velocity);
+	ability->duration = 0.f;
+	ability->_is_active = 0;
 }
 
 void pq_ability_free(pq_entity* ability)

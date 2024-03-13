@@ -2,6 +2,8 @@
 
 #include <pq_player.h>
 
+static pq_entity* g_pq_player = NULL;  // Global variable to store the player pointer
+
 pq_entity* new_pq_player()
 {
 	pq_entity* player;
@@ -61,8 +63,6 @@ pq_entity* new_pq_player()
 	sj_object_get_value_as_int(player_file_json, "movement_speed", &movement_speed);
 	player->movement_speed = movement_speed;
 
-	player->take_damage = pq_player_take_damage;
-
 	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
 	if (player_data)
 	{
@@ -95,8 +95,20 @@ pq_entity* new_pq_player()
 	player->update = pq_player_update;
 	player->free = pq_player_free;
 
+	player->die = pq_player_die;
+
+	set_pq_player(player);
 	sj_free(player_file_json);
 	return player;
+}
+
+pq_entity* get_pq_player()
+{
+	return g_pq_player;
+}
+
+void set_pq_player(pq_entity* player) {
+	g_pq_player = player;
 }
 
 void pq_player_handle_input(pq_entity* player)
@@ -175,38 +187,12 @@ void pq_player_handle_input(pq_entity* player)
 
 		if (player_data->abilities->abilities[0]->duration != 0)
 		{
-			slog("player_data->abilities->abilities[0] aka fireball is on cooldown.");
+			//slog("player_data->abilities->abilities[0] aka fireball is on cooldown.");
 			return;
 		}
 
 		player_data->abilities->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[0]->_is_active = 1;
-	}
-}
-
-void pq_player_take_damage(pq_entity* player, int damage)
-{
-	if (!player)
-	{
-		slog("player = NULL, Cannot take damage without a pq_player entity.");
-		return;
-	}
-
-	// Calculate actual damage after considering player's defense
-	int actual_damage = damage - player->defense;
-	if (actual_damage < 0)
-	{
-		actual_damage = 0;
-	}
-
-	// Update player's health
-	player->health -= actual_damage;
-
-	// Check if player's health is below or equal to zero (indicating death)
-	if (player->health <= 0)
-	{
-		// Player is defeated, handle game over or respawn logic
-		// pq_player_die(player) or pq_player_respawn(player);
 	}
 }
 
@@ -335,6 +321,13 @@ void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
 	world->items[itemIndex]->sprite = NULL;
 	slog("Collected %s", world->items[itemIndex]->display_name);
 	pq_inventory_display(player_data->inventory);
+}
+
+void pq_player_die(pq_entity* player)
+{
+	if (!player) return;
+
+	
 }
 
 void pq_player_free(pq_entity* player)

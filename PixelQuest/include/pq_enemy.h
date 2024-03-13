@@ -28,13 +28,6 @@ pq_entity* new_pq_enemy(SJson* enemy_data);
 void pq_enemy_handle_actions(pq_entity* enemy);
 
 /**
-* @brief: This function handles taking damage for the pixel quest enemy entity.
-* @param enemy: This is the pixel quest enemy entity that takes damage.
-* @param damage: The damage that the enemy will take.
-*/
-void pq_enemy_take_damage(pq_entity* enemy, int damage);
-
-/**
 * @brief: This function makes decisions for the enemy entity which will then get executed in pq_enemy_update().
 * @param enemy: This is the pixel quest enemy entity in which we will make decisions for.
 */
@@ -59,6 +52,12 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world);
 * @param world: This is the pixel quest world entity.
 */
 void pq_enemy_drop_items(pq_entity* enemy, pq_world* world);
+
+/**
+* @brief: This function kills for the pixel quest enemy.
+* @param enemy: This is the pixel quest enemy that will die.
+*/
+void pq_enemy_die(pq_entity* enemy);
 
 /**
 * @brief: This function frees up the passed in pixel quest enemy entity.

@@ -19,17 +19,22 @@ typedef struct
 pq_entity* new_pq_player();
 
 /**
+ * @brief This function gets the pq_player pointer.
+ * @return A pointer to the pq_player.
+ */
+pq_entity* get_pq_player();
+
+/**
+ * @brief This function sets the pq_player pointer.
+ * @param player: The player pointer to be referenced globally.
+ */
+void set_pq_player(pq_entity* player);
+
+/**
 * @brief: This function handles input for the pixel quest player entity.
 * @param player: This is the pixel quest player entity for which we handle input.
 */
 void pq_player_handle_input(pq_entity* player);
-
-/**
-* @brief: This function handles taking damage for the pixel quest player entity.
-* @param player: This is the pixel quest player entity that takes damage.
-* @param damage: The damage that the player will take.
-*/
-void pq_player_take_damage(pq_entity* player, int damage);
 
 /**
 * @brief: This function makes decisions for the player entity which will then get executed in pq_player_update().
@@ -57,6 +62,12 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world);
 * @param itemIndex: This is the index of the pixel quest item entity to be collected.
 */
 void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex);
+
+/**
+* @brief: This function kills for the pixel quest player.
+* @param player: This is the pixel quest player that will die.
+*/
+void pq_player_die(pq_entity* player);
 
 /**
 * @brief: This function frees up the passed in pixel quest player entity.

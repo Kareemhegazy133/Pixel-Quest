@@ -55,7 +55,13 @@ void pq_ability_update(pq_entity* ability);
 * @param ability: This is the pixel quest ability.
 * @param world: This is the pixel quest world entity.
 */
-void pq_ability_handle_collision(pq_entity* ability, pq_world* world);
+void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity* player);
+
+/**
+* @brief: This function is called when the pixel quest ability ends.
+* @param ability: This is the pixel quest ability to end.
+*/
+void pq_ability_end(pq_entity* ability);
 
 /**
 * @brief: This function frees up the passed in pixel quest ability.

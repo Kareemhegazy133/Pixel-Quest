@@ -147,3 +147,44 @@ void pq_entity_system_draw()
 		pq_entity_draw(&_pq_entity_manager.entities_list[i]);
 	}
 }
+
+void pq_entity_take_damage(pq_entity* entity, int damage)
+{
+	if (!entity)
+	{
+		slog("entity = NULL, Cannot take damage without a pq_entity.");
+		return;
+	}
+
+	// Calculate actual damage after considering entity's defense
+	int actual_damage = damage - entity->defense;
+	if (actual_damage < 0)
+	{
+		actual_damage = 0;
+	}
+
+	// Update entity's health
+	entity->health -= actual_damage;
+
+	// Check if entity's health is below or equal to zero (indicating death)
+	if (entity->health <= 0)
+	{
+		pq_entity_die(entity);
+	}
+}
+
+void pq_entity_die(pq_entity* entity)
+{
+	if (!entity)
+	{
+		slog("entity = NULL, Cannot kill entity without a pq_entity.");
+		return;
+	}
+
+	entity->_is_active = 0;
+	if (entity->die)
+	{
+		entity->die(entity);
+	}
+	slog("Entity is dead!");
+}

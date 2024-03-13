@@ -52,7 +52,7 @@ typedef struct PQ_Entity_S
 	int movement_speed;											// The character's movement speed
 	int jump_force;												// The character's jump force
 
-	void (*take_damage)(struct PQ_Entity_S* self);				// The function to call to handle taking damage
+	void (*die)(struct PQ_Entity_S* self);						// The function to call when entity dies
 
 	///////// <Player Only> /////////
 
@@ -116,3 +116,16 @@ void pq_entity_system_update();
 * @brief: This function will draw all the pixel quest entities on the screen.
 */
 void pq_entity_system_draw();
+
+/**
+* @brief: This function handles taking damage for the pixel quest entity.
+* @param entity: This is the pixel quest entity that takes damage.
+* @param damage: The damage that the entity will take.
+*/
+void pq_entity_take_damage(pq_entity* entity, int damage);
+
+/**
+* @brief: This function kills for the pixel quest entity.
+* @param entity: This is the pixel quest entity that will die.
+*/
+void pq_entity_die(pq_entity* entity);

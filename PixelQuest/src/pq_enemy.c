@@ -64,8 +64,6 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 	vector2d_normalize(&direction);
 	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
 
-	enemy->take_damage = pq_enemy_take_damage;
-
 	pq_enemy_data* enemy_data = gfc_allocate_array(sizeof(pq_enemy_data), 1);
 	if (enemy_data)
 	{
@@ -100,6 +98,8 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 	enemy->update = pq_enemy_update;
 	enemy->free = pq_enemy_free;
 
+	enemy->die = pq_enemy_die;
+
 	return enemy;
 }
 
@@ -111,32 +111,6 @@ void pq_enemy_handle_actions(pq_entity* enemy)
 	}
 
 	
-}
-
-void pq_enemy_take_damage(pq_entity* enemy, int damage)
-{
-	if (!enemy)
-	{
-		slog("enemy = NULL, Cannot take damage without a pq_enemy entity.");
-		return;
-	}
-
-	// Calculate actual damage after considering enemy's defense
-	int actual_damage = damage - enemy->defense;
-	if (actual_damage < 0)
-	{
-		actual_damage = 0;
-	}
-
-	// Update enemy's health
-	enemy->health -= actual_damage;
-
-	// Check if enemy's health is below or equal to zero (indicating death)
-	if (enemy->health <= 0)
-	{
-		// Enemy is defeated, handle game over or respawn logic
-		// pq_enemy_die(enemy) or pq_enemy_respawn(enemy);
-	}
 }
 
 void pq_enemy_think(pq_entity* enemy)
@@ -220,6 +194,14 @@ void pq_enemy_drop_items(pq_entity* enemy, pq_world* world)
 	}
 
 	
+}
+
+void pq_enemy_die(pq_entity* enemy)
+{
+	if (!enemy) return;
+	
+	enemy->width = NULL;
+	enemy->height = NULL;
 }
 
 void pq_enemy_free(pq_entity* enemy)
