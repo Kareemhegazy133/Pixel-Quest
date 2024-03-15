@@ -1,5 +1,6 @@
 #include <simple_logger.h>
 
+#include <pq_player.h>
 #include <pq_enemy.h>
 
 pq_entity* new_pq_enemy(SJson* enemy_json_data)
@@ -60,18 +61,45 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 	sj_object_get_value_as_int(enemy_json_data, "movement_speed", &movement_speed);
 	enemy->movement_speed = movement_speed;
 
-	Vector2D direction = { 0 };
-	vector2d_normalize(&direction);
-	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
+	float patrol_distance;
+	sj_object_get_value_as_float(enemy_json_data, "patrol_distance", &patrol_distance);
+	enemy->patrol_distance = patrol_distance;
+
+	enemy->direction = -1;
 
 	pq_enemy_data* enemy_data = gfc_allocate_array(sizeof(pq_enemy_data), 1);
 	if (enemy_data)
 	{
 		enemy->data = enemy_data;
-		/* Items initialize here
-		enemy_data->inventory = init_pq_inventory();
-		enemy_data->inventory->count = 0;
-		*/
+
+		// Load Items
+		SJson* enemy_items = sj_object_get_value(enemy_json_data, "items");
+		if (!enemy_items)
+		{
+			slog("%s is missing the items list object.", enemy_json_data);
+			sj_free(enemy_items);
+		}
+		else {
+			for (int i = 0; i < sj_array_get_count(enemy_items); i++)
+			{
+				SJson* item_data = sj_array_get_nth(enemy_items, i);
+				if (!item_data) {
+					slog("item_data is NULL, Failed to init item %d for enemy.", i);
+					break;
+				}
+
+				pq_entity* item = new_pq_item(item_data);
+				if (!item){
+					slog("item is NULL, Failed to init item %d for enemy.", i);
+					break;
+				}
+
+				enemy_data->items[i] = item;
+				slog("Loaded enemy item: %s", enemy_data->items[i]->display_name);
+			}
+		}
+
+		// Load Abilities
 		enemy_data->abilities = init_pq_abilities();
 		enemy_data->abilities->count = 0;
 
@@ -84,7 +112,7 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 		else {
 			for (int i = 0; i < sj_array_get_count(enemy_abilities); i++)
 			{
-				enemy_data->abilities->abilities[i] = load_nth_pq_ability(i);
+				enemy_data->abilities->abilities[i] = load_nth_pq_ability(i, enemy);
 				enemy_data->abilities->count++;
 				slog("Loaded enemy ability: %s", enemy_data->abilities->abilities[i]->name);
 			}
@@ -109,8 +137,79 @@ void pq_enemy_handle_actions(pq_entity* enemy)
 		slog("enemy = NULL, Cannot handle enemy actions without a pq_enemy entity.");
 		return;
 	}
+	pq_entity* player = get_pq_player();
+	if (!player) return;
 
+	float distance = fabs(player->position.x - enemy->position.x);
+
+	if (distance <= ENEMY_ATTACK_RANGE)
+	{
+		//slog("Enemy Attacking");
+		pq_enemy_attack(enemy);
+	}
+	else
+	{
+		//slog("Enemy Patrolling");
+		pq_enemy_patrol(enemy);
+	}
+}
+
+void pq_enemy_patrol(pq_entity* enemy)
+{
+	// Define the patrol points
+	Vector2D patrol_point1 = { 0 };
+	vector2d_add(patrol_point1, enemy->position, vector2d(-enemy->patrol_distance, 0));
+	Vector2D patrol_point2 = { 0 };
+	vector2d_add(patrol_point2, enemy->position, vector2d(enemy->patrol_distance, 0));
+
+	// Calculate the distance between the enemy and each patrol point
+	float distance_to_point1 = vector2d_magnitude_between(enemy->position, patrol_point1);
+	float distance_to_point2 = vector2d_magnitude_between(enemy->position, patrol_point2);
+
+	// Choose the closer patrol point as the target
+	Vector2D target_point;
+	if (distance_to_point1 < distance_to_point2)
+	{
+		target_point = patrol_point1;
+	}
+	else
+	{
+		target_point = patrol_point2;
+	}
+
+	// Calculate the direction towards the target point
+	Vector2D direction = { 0 };
+	vector2d_sub(direction, target_point, enemy->position);
+	vector2d_normalize(&direction);
+	enemy->direction = direction.x;
+	// Update the enemy's velocity to move towards the target point
+	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
+}
+
+void pq_enemy_attack(pq_entity* enemy)
+{
+	pq_enemy_data* enemy_data = (pq_enemy_data*)enemy->data;
+	if (!enemy_data) return;
+
+	if (enemy_data->abilities->abilities[0]->duration != 0)
+	{
+		slog("enemy_data->abilities->abilities[0] aka fireball is on cooldown.");
+		return;
+	}
+
+	float enemy_pos_x = enemy->position.x;
+	float player_pos_x = get_pq_player()->position.x;
+	// Player is on the left of enemy
+	if (player_pos_x < enemy_pos_x)
+	{
+		enemy_data->abilities->abilities[0]->position = vector2d(enemy->position.x - 100, enemy->position.y + 50);
+	}
+	else {
+		enemy_data->abilities->abilities[0]->position = vector2d(enemy->position.x + 100, enemy->position.y + 50);
+	}
 	
+	enemy_data->abilities->abilities[0]->_is_active = 1;
+
 }
 
 void pq_enemy_think(pq_entity* enemy)
@@ -190,7 +289,19 @@ void pq_enemy_drop_items(pq_entity* enemy, pq_world* world)
 	pq_enemy_data* enemy_data = (pq_enemy_data*)enemy->data;
 	if (enemy_data && enemy_data->items)
 	{
-		
+		// Iterate through the enemy's items and drop them in the game world
+		for (int i = 0; i < MAX_ENEMY_ITEMS; i++)
+		{
+			pq_entity* item = enemy_data->items[i];
+			if (item)
+			{
+				// Set the position of the dropped item
+				item->position = enemy->position;
+				// Add the item to the world items list
+				world->items[world->items_count] = item;
+				world->items_count++;
+			}
+		}
 	}
 
 	
@@ -199,9 +310,27 @@ void pq_enemy_drop_items(pq_entity* enemy, pq_world* world)
 void pq_enemy_die(pq_entity* enemy)
 {
 	if (!enemy) return;
-	
-	enemy->width = NULL;
-	enemy->height = NULL;
+
+	pq_world* world = get_pq_world();
+
+	// Remove the enemy from the world's enemies list
+	for (int i = 0; i < world->enemies_count; i++)
+	{
+		if (world->enemies[i] == enemy)
+		{
+			// Shift the remaining enemies in the list
+			for (int j = i; j < world->enemies_count - 1; j++)
+			{
+				world->enemies[j] = world->enemies[j + 1];
+			}
+			// Decrement the enemies count
+			world->enemies_count--;
+			break;
+		}
+	}
+
+	pq_enemy_drop_items(enemy, get_pq_world());
+
 }
 
 void pq_enemy_free(pq_entity* enemy)

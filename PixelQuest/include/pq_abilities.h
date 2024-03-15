@@ -7,6 +7,11 @@
 
 typedef struct
 {
+    pq_entity* owner;
+} pq_ability_data;
+
+typedef struct
+{
     pq_entity* abilities[MAX_ABILITIES];
     int count;
 } pq_abilities_list;
@@ -20,9 +25,10 @@ pq_abilities_list* init_pq_abilities();
 /**
 * @brief: Load and initialize the nth ability from abilities def file.
 * @param n: The nth index of the ability to be loaded.
+* @param caster: The caster of the ability to be loaded.
 * @return: A pointer to the created ability.
 */
-pq_entity* load_nth_pq_ability(int n);
+pq_entity* load_nth_pq_ability(int n, pq_entity* caster);
 
 /**
 * @brief This function gets the pq_abilitiesList Sjson's pointer.

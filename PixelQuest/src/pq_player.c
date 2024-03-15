@@ -63,6 +63,8 @@ pq_entity* new_pq_player()
 	sj_object_get_value_as_int(player_file_json, "movement_speed", &movement_speed);
 	player->movement_speed = movement_speed;
 
+	player->direction = 1;
+
 	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
 	if (player_data)
 	{
@@ -81,7 +83,7 @@ pq_entity* new_pq_player()
 		else {
 			for (int i = 0; i < sj_array_get_count(player_abilities); i++)
 			{
-				player_data->abilities->abilities[i] = load_nth_pq_ability(i);
+				player_data->abilities->abilities[i] = load_nth_pq_ability(i, player);
 				player_data->abilities->count++;
 				slog("Loaded player ability: %s", player_data->abilities->abilities[i]->name);
 			}
@@ -121,18 +123,18 @@ void pq_player_handle_input(pq_entity* player)
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
 	///////// <Movement> /////////
-
 	Vector2D direction = { 0 };
-
 	// Move left when 'A' or left arrow key is pressed
 	if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT])
 	{
 		direction.x = -1;
+		player->direction = -1;
 	}
 	// Move right when 'D' or right arrow key is pressed
 	else if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT])
 	{
 		direction.x = 1;
+		player->direction = 1;
 	}
 
 	// Jump when 'W' or up arrow key or 'Space' key is pressed
@@ -190,7 +192,7 @@ void pq_player_handle_input(pq_entity* player)
 			//slog("player_data->abilities->abilities[0] aka fireball is on cooldown.");
 			return;
 		}
-
+		slog("Player direction: %d", player->direction);
 		player_data->abilities->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[0]->_is_active = 1;
 	}
@@ -284,6 +286,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		// Check for collision
 		if (gfc_rect_overlap(playerBox, itemBox))
 		{
+			slog("colliding with item");
 			// Add the item to the player's inventory
 			pq_player_collect_item(player, world, i);
 		}
@@ -303,6 +306,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		// Check for collision
 		if (gfc_rect_overlap(playerBox, enemyBox))
 		{
+			slog("colliding with enemy");
 			vector2d_clear(player->velocity);
 		}
 	}

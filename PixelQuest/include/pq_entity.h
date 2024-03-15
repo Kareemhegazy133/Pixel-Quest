@@ -51,6 +51,7 @@ typedef struct PQ_Entity_S
 	int defense;												// The character's defense
 	int movement_speed;											// The character's movement speed
 	int jump_force;												// The character's jump force
+	Sint8 direction;											// The character's facing direction (x axis)
 
 	void (*die)(struct PQ_Entity_S* self);						// The function to call when entity dies
 
@@ -59,6 +60,7 @@ typedef struct PQ_Entity_S
 	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
 
 	///////// <Enemies Only> /////////
+	float patrol_distance;										// The distance in which the enemy patrol's back and forth from initial position
 	void (*handle_actions)(struct PQ_Entity_S* self);			// The function to call to handle enemy's actions
 
 	///////// <Items Only> /////////

@@ -43,19 +43,28 @@
 				"frame_width": 128,
 				"frame_height": 128,
 				"frames_per_line": 9,
-				"width": 90,
+				"width": 80,
 				"height": 118,
-				"position_x": 840,
-				"position_y": 280,
+				"position_x": 540,
+				"position_y": 580,
 				"health": 100,
 				"max_health": 100,
 				"damage": 10,
 				"defense": 5,
 				"movement_speed": 2,
+				"patrol_distance": 50,
 				"abilities":[
 					{
-						"name": "Fireball",
-						"hotkey": 1
+						"name": "Fireball"
+					}
+				],
+				"items":[
+					{
+						"name": "coin",
+						"displayName": "Coin",
+						"sprite": "images/items/coin.png",
+						"inventory_sprite": "images/items/inventory_coin.png",
+						"count": 1
 					}
 				]
 			}

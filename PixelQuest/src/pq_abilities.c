@@ -55,7 +55,7 @@ void set_pq_abilities_list(SJson* abilitiesList)
 	pq_abilities_list_json = abilitiesList;
 }
 
-pq_entity* load_nth_pq_ability(int n)
+pq_entity* load_nth_pq_ability(int n, pq_entity* caster)
 {
 	pq_entity* ability = new_pq_entity();
 	SJson* abilitiesList = get_pq_abilities_list();
@@ -83,6 +83,13 @@ pq_entity* load_nth_pq_ability(int n)
 	ability->update = pq_ability_update;
 	ability->free = pq_ability_free;
 
+	pq_ability_data* ability_data = gfc_allocate_array(sizeof(pq_ability_data), 1);
+	if (ability_data)
+	{
+		ability->data = ability_data;
+		ability_data->owner = caster;
+	}
+
 	const char* name = sj_object_get_value_as_string(ability_def, "name");
 	gfc_word_cpy(ability->name, name);
 
@@ -96,6 +103,7 @@ pq_entity* load_nth_pq_ability(int n)
 
 	ability->duration = 0.f;
 	ability->max_duration = 12.f;
+	ability->direction = 0;
 
 	return ability;
 }
@@ -104,8 +112,20 @@ void pq_ability_think(pq_entity* ability)
 {
 	if (!ability) return;
 
+	pq_ability_data* ability_data = (pq_ability_data*)ability->data;
+	if (!ability_data) return;
+
 	Vector2D direction = { 0 };
-	direction.x = 1;
+	slog("Owner direction: %d", ability_data->owner->direction);
+	// Take the owner's direction for the initial direction and keep it
+	if (ability->direction == 0)
+	{
+		direction.x = ability_data->owner->direction;
+		ability->direction = direction.x;
+	}
+	else {
+		direction.x = ability->direction;
+	}
 	vector2d_normalize(&direction);
 	vector2d_scale(ability->velocity, direction, 5);
 
@@ -144,24 +164,48 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 		ability->height
 	};
 
-	// Iterate through the world enemies and check for collision with any of them
-	for (int i = 0; i < world->enemies_count; i++)
+	pq_ability_data* ability_data = (pq_ability_data*)ability->data;
+	if (!ability_data) return;
+
+	pq_entity* caster = ability_data->owner;
+	if (caster == player)
 	{
-		// Calculate enemy's bounding box
-		Rect enemyBox = {
-			world->enemies[i]->position.x,
-			world->enemies[i]->position.y,
-			world->enemies[i]->width,
-			world->enemies[i]->height
+		// Iterate through the world enemies and check for collision with any of them
+		for (int i = 0; i < world->enemies_count; i++)
+		{
+			// Calculate enemy's bounding box
+			Rect enemyBox = {
+				world->enemies[i]->position.x,
+				world->enemies[i]->position.y,
+				world->enemies[i]->width,
+				world->enemies[i]->height
+			};
+
+			// Check for collision
+			if (gfc_rect_overlap(abilityBox, enemyBox))
+			{
+				pq_entity_take_damage(world->enemies[i], ability->ability_damage);
+				pq_ability_end(ability);
+			}
+		}
+	}
+	else {
+		// Calculate player's bounding box
+		Rect playerBox = {
+			player->position.x,
+			player->position.y,
+			player->width,
+			player->height
 		};
 
 		// Check for collision
-		if (gfc_rect_overlap(abilityBox, enemyBox))
+		if (gfc_rect_overlap(abilityBox, playerBox))
 		{
-			pq_entity_take_damage(world->enemies[i], ability->ability_damage);
+			pq_entity_take_damage(player, ability->ability_damage);
 			pq_ability_end(ability);
 		}
 	}
+	
 }
 
 void pq_ability_end(pq_entity* ability)
@@ -171,6 +215,7 @@ void pq_ability_end(pq_entity* ability)
 	// Set defaults back
 	vector2d_clear(ability->velocity);
 	ability->duration = 0.f;
+	ability->direction = 0;
 	ability->_is_active = 0;
 }
 

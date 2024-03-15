@@ -8,6 +8,7 @@
 #include <pq_abilities.h>
 
 #define MAX_ENEMY_ITEMS 1
+#define ENEMY_ATTACK_RANGE 300
 
 typedef struct
 {
@@ -26,6 +27,18 @@ pq_entity* new_pq_enemy(SJson* enemy_data);
 * @param enemy: This is the pixel quest enemy entity for which we handle actions.
 */
 void pq_enemy_handle_actions(pq_entity* enemy);
+
+/**
+* @brief: This function handles patrolling for the pixel quest enemy entity.
+* @param enemy: This is the pixel quest enemy entity for which we handle patrolling.
+*/
+void pq_enemy_patrol(pq_entity* enemy);
+
+/**
+* @brief: This function handles attacking for the pixel quest enemy entity.
+* @param enemy: This is the pixel quest enemy entity for which we handle attacking.
+*/
+void pq_enemy_attack(pq_entity* enemy);
 
 /**
 * @brief: This function makes decisions for the enemy entity which will then get executed in pq_enemy_update().
@@ -49,7 +62,6 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world);
 /**
 * @brief: This function drops all items from the enemy.
 * @param enemy: This is the pixel quest enemy entity.
-* @param world: This is the pixel quest world entity.
 */
 void pq_enemy_drop_items(pq_entity* enemy, pq_world* world);
 
