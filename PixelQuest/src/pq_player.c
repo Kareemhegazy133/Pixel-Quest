@@ -1,6 +1,7 @@
 #include <simple_logger.h>
-
+#include <pq_ui.h>
 #include <pq_player.h>
+
 
 static pq_entity* g_pq_player = NULL;  // Global variable to store the player pointer
 
@@ -331,8 +332,9 @@ void pq_player_die(pq_entity* player)
 {
 	if (!player) return;
 
-	slog("Played died!");
-	// Create an SDL quit event
+	slog("Player died!");
+	pq_render_announcement(RED, "Player died!", 48, 0, 0, 5000);
+	//Create an SDL quit event
 	SDL_Event quitEvent;
 	quitEvent.type = SDL_QUIT;
 	quitEvent.quit.timestamp = SDL_GetTicks();

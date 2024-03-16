@@ -123,6 +123,9 @@
     <ClCompile Include="src\pq_enemy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pq_ui.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\gf2d_draw.h">
@@ -228,6 +231,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pq_enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pq_ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
