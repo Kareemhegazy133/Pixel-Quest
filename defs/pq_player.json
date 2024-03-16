@@ -16,6 +16,18 @@
 		{
 			"name": "Fireball",
 			"hotkey": 1
+		},
+		{
+			"name": "Waterball",
+			"hotkey": 2
+		},
+		{
+			"name": "Tornado",
+			"hotkey": 3
+		},
+		{
+			"name": "Attack Power",
+			"hotkey": 4
 		}
 	]
 }

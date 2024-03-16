@@ -101,6 +101,18 @@ pq_entity* load_nth_pq_ability(int n, pq_entity* caster)
 	sj_object_get_value_as_float(ability_def, "cooldown", &cooldown);
 	ability->cooldown = cooldown;
 
+	int effect;
+	sj_object_get_value_as_int(ability_def, "effect", &effect);
+	ability->ability_effect = effect;
+
+	int type;
+	sj_object_get_value_as_int(ability_def, "type", &type);
+	ability->ability_type = type;
+
+	int movement_speed;
+	sj_object_get_value_as_int(ability_def, "movement_speed", &movement_speed);
+	ability->movement_speed = movement_speed;
+
 	ability->duration = 0.f;
 	ability->max_duration = 12.f;
 	ability->direction = 0;
@@ -116,18 +128,24 @@ void pq_ability_think(pq_entity* ability)
 	if (!ability_data) return;
 
 	Vector2D direction = { 0 };
-	slog("Owner direction: %d", ability_data->owner->direction);
-	// Take the owner's direction for the initial direction and keep it
-	if (ability->direction == 0)
+	//slog("Owner direction: %d", ability_data->owner->direction);
+	if (ability->ability_type == BUFF || ability->ability_type == DEBUFF)
 	{
-		direction.x = ability_data->owner->direction;
-		ability->direction = direction.x;
+		vector2d_copy(ability->velocity, ability_data->owner->velocity);
 	}
 	else {
-		direction.x = ability->direction;
+		// Take the owner's direction for the initial direction and keep it
+		if (ability->direction == 0)
+		{
+			direction.x = ability_data->owner->direction;
+			ability->direction = direction.x;
+		}
+		else {
+			direction.x = ability->direction;
+		}
+		vector2d_normalize(&direction);
+		vector2d_scale(ability->velocity, direction, ability->movement_speed);
 	}
-	vector2d_normalize(&direction);
-	vector2d_scale(ability->velocity, direction, 5);
 
 	// Check for ability collisions
 	pq_ability_handle_collision(ability, get_pq_world(), get_pq_player());

@@ -56,10 +56,9 @@ void clear_all_pq_entities(pq_entity* ignored_entity)
 
 pq_entity* new_pq_entity()
 {
-	int i;
-	for (i = 0; i < _pq_entity_manager.count; i++)
+	for (int i = 0; i < _pq_entity_manager.count; i++)
 	{
-		if (_pq_entity_manager.entities_list[i]._is_active) continue;
+		if (_pq_entity_manager.entities_list[i]._is_active || _pq_entity_manager.entities_list[i].type == ABILITY_ENTITY) continue;
 
 		memset(&_pq_entity_manager.entities_list[i], 0, sizeof(pq_entity));
 		

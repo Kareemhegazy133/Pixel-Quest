@@ -4,7 +4,37 @@
 			"sprite": "images/abilities/fireball.png",
 			"name": "Fireball",
 			"cooldown": 5,
-			"damage": 10
+			"damage": 10,
+			"effect": 0,
+			"type": 0,
+			"movement_speed": 5
+		},
+		{
+			"sprite": "images/abilities/waterball.png",
+			"name": "Waterball",
+			"cooldown": 5,
+			"damage": 10,
+			"effect": 2,
+			"type": 0,
+			"movement_speed": 5
+		},
+		{
+			"sprite": "images/abilities/tornado.png",
+			"name": "Tornado",
+			"cooldown": 5,
+			"damage": 10,
+			"effect": 1,
+			"type": 0,
+			"movement_speed": 5
+		},
+		{
+			"sprite": "images/abilities/attack_power.png",
+			"name": "Attack Power",
+			"cooldown": 5,
+			"damage": 10,
+			"effect": 3,
+			"type": 2,
+			"movement_speed": 5
 		}
 	]
 }

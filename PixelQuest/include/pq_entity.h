@@ -24,6 +24,23 @@ typedef enum
 	ABILITY_ENTITY
 } EntityType;
 
+typedef enum
+{
+	NONE,
+	STUN,
+	SLOW,
+	DAMAGE_BUFF,
+	DEFENSE_BUFF
+} AbilityEffect;
+
+typedef enum
+{
+	NORMAL,
+	SKILLSHOT,
+	BUFF,
+	DEBUFF
+} AbilityType;
+
 /**
 * @purpose: This struct defines a pixel quest entity
 */
@@ -39,6 +56,7 @@ typedef struct PQ_Entity_S
 	Uint16		height;											// The entity's collision box height
 	Vector2D	position;										// The entity's position
 	Vector2D	velocity;										// The entity's velocity
+	int movement_speed;											// The entity's movement speed
 	void (*think)(struct PQ_Entity_S* self);					// The function to call to make decisions
 	void (*update)(struct PQ_Entity_S* self);					// The function to call to execute the think function's decisions
 	void (*free)(struct PQ_Entity_S* self);						// The function to call to clean up any custom allocated data
@@ -53,7 +71,6 @@ typedef struct PQ_Entity_S
 	int max_health;												// The character's max health
 	int damage;													// The character's damage
 	int defense;												// The character's defense
-	int movement_speed;											// The character's movement speed
 	int jump_force;												// The character's jump force
 	Sint8 direction;											// The character's facing direction (x axis)
 
@@ -82,6 +99,8 @@ typedef struct PQ_Entity_S
 	int hotkey;													// The hotkey for the ability
 	float cooldown;												// The ability's default cooldown
 	int ability_damage;											// The ability's default damage
+	AbilityEffect ability_effect;								// The ability's effect
+	AbilityType ability_type;									// The ability's type
 	float duration;												// The ability's duration
 	float max_duration;											// The ability's max_duration
 } pq_entity;

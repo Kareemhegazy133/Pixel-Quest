@@ -2,7 +2,6 @@
 #include <pq_ui.h>
 #include <pq_player.h>
 
-
 static pq_entity* g_pq_player = NULL;  // Global variable to store the player pointer
 
 pq_entity* new_pq_player()
@@ -193,10 +192,82 @@ void pq_player_handle_input(pq_entity* player)
 			//slog("player_data->abilities->abilities[0] aka fireball is on cooldown.");
 			return;
 		}
-		slog("Player direction: %d", player->direction);
+		slog("%s: %d", player_data->abilities->abilities[0]->name, player_data->abilities->abilities[0]->ability_type);
 		player_data->abilities->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[0]->_is_active = 1;
 	}
+
+	if (keys[SDL_SCANCODE_2])
+	{
+		if (!player_data->abilities->abilities[1])
+		{
+			slog("player_data->abilities->abilities[1] aka waterball = NULL.");
+			return;
+		}
+
+		if (player_data->abilities->abilities[1]->duration != 0)
+		{
+			//slog("player_data->abilities->abilities[1] aka waterball is on cooldown.");
+			return;
+		}
+		slog("%s: %d", player_data->abilities->abilities[1]->name, player_data->abilities->abilities[1]->ability_type);
+		player_data->abilities->abilities[1]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		player_data->abilities->abilities[1]->_is_active = 1;
+	}
+
+	if (keys[SDL_SCANCODE_3])
+	{
+		if (!player_data->abilities->abilities[2])
+		{
+			slog("player_data->abilities->abilities[2] aka tornado = NULL.");
+			return;
+		}
+
+		if (player_data->abilities->abilities[2]->duration != 0)
+		{
+			//slog("player_data->abilities->abilities[2] aka tornado is on cooldown.");
+			return;
+		}
+		slog("%s: %d", player_data->abilities->abilities[2]->name, player_data->abilities->abilities[2]->ability_type);
+		player_data->abilities->abilities[2]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		player_data->abilities->abilities[2]->_is_active = 1;
+	}
+
+	if (keys[SDL_SCANCODE_4])
+	{
+		if (!player_data->abilities->abilities[3])
+		{
+			slog("player_data->abilities->abilities[3] aka attack_power = NULL.");
+			return;
+		}
+
+		if (player_data->abilities->abilities[3]->duration != 0)
+		{
+			//slog("player_data->abilities->abilities[3] aka attack_power is on cooldown.");
+			return;
+		}
+		slog("%s: %d", player_data->abilities->abilities[3]->name, player_data->abilities->abilities[3]->ability_type);
+		player_data->abilities->abilities[3]->position = vector2d(player->position.x + 50, player->position.y + 75);
+		player_data->abilities->abilities[3]->_is_active = 1;
+	}
+	/*
+	if (keys[SDL_SCANCODE_5])
+	{
+		if (!player_data->abilities->abilities[4])
+		{
+			slog("player_data->abilities->abilities[4] aka waterball = NULL.");
+			return;
+		}
+
+		if (player_data->abilities->abilities[4]->duration != 0)
+		{
+			//slog("player_data->abilities->abilities[4] aka waterball is on cooldown.");
+			return;
+		}
+		slog("Player direction: %d", player->direction);
+		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		player_data->abilities->abilities[4]->_is_active = 1;
+	}*/
 }
 
 void pq_player_think(pq_entity* player)
@@ -308,6 +379,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		if (gfc_rect_overlap(playerBox, enemyBox))
 		{
 			//slog("colliding with enemy");
+			// TODO (Why does it have to be == IN_COMBAT?)
 			if (player->current_state == IN_COMBAT) {
 				vector2d_clear(player->velocity);
 			}

@@ -372,7 +372,7 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 		}
 		else
 		{
-			// Player is not in range, switch back to idle sprite
+			// Player is not in range, switch back to idle sprite (TODO: FIX Cant Switch state to idle cuz grounded logic)
 			enemy->sprite = enemy->idle_sprite;
 		}
 	}
