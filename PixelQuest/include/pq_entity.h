@@ -10,7 +10,9 @@
 typedef enum
 {
 	IDLE,
-	GROUNDED
+	GROUNDED,
+	PATROLLING,
+	ATTACKING
 } EntityState;
 
 typedef enum
@@ -61,6 +63,8 @@ typedef struct PQ_Entity_S
 
 	///////// <Enemies Only> /////////
 	float patrol_distance;										// The distance in which the enemy patrol's back and forth from initial position
+	Vector2D patrol_point1;										// The enemy's first patrol point
+	Vector2D patrol_point2;										// The enemy's second patrol point
 	void (*handle_actions)(struct PQ_Entity_S* self);			// The function to call to handle enemy's actions
 
 	///////// <Items Only> /////////

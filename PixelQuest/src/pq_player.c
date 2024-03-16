@@ -306,7 +306,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		// Check for collision
 		if (gfc_rect_overlap(playerBox, enemyBox))
 		{
-			slog("colliding with enemy");
+			//slog("colliding with enemy");
 			vector2d_clear(player->velocity);
 		}
 	}
@@ -331,7 +331,14 @@ void pq_player_die(pq_entity* player)
 {
 	if (!player) return;
 
-	
+	slog("Played died!");
+	// Create an SDL quit event
+	SDL_Event quitEvent;
+	quitEvent.type = SDL_QUIT;
+	quitEvent.quit.timestamp = SDL_GetTicks();
+
+	// Push the quit event to the SDL event queue
+	SDL_PushEvent(&quitEvent);
 }
 
 void pq_player_free(pq_entity* player)

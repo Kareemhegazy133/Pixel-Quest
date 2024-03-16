@@ -64,6 +64,9 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 	float patrol_distance;
 	sj_object_get_value_as_float(enemy_json_data, "patrol_distance", &patrol_distance);
 	enemy->patrol_distance = patrol_distance;
+	vector2d_add(enemy->patrol_point1, enemy->position, vector2d(-enemy->patrol_distance, 0));
+	vector2d_add(enemy->patrol_point2, enemy->position, vector2d(enemy->patrol_distance, 0));
+	enemy->current_state = IDLE;
 
 	enemy->direction = -1;
 
@@ -130,7 +133,7 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 
 	return enemy;
 }
-
+// FIX
 void pq_enemy_handle_actions(pq_entity* enemy)
 {
 	if (!enemy) {
@@ -145,51 +148,57 @@ void pq_enemy_handle_actions(pq_entity* enemy)
 	if (distance <= ENEMY_ATTACK_RANGE)
 	{
 		//slog("Enemy Attacking");
-		pq_enemy_attack(enemy);
+		enemy->current_state = ATTACKING;
 	}
 	else
 	{
 		//slog("Enemy Patrolling");
-		pq_enemy_patrol(enemy);
+		enemy->current_state = PATROLLING;
 	}
 }
 
+// FIX
 void pq_enemy_patrol(pq_entity* enemy)
 {
-	// Define the patrol points
-	Vector2D patrol_point1 = { 0 };
-	vector2d_add(patrol_point1, enemy->position, vector2d(-enemy->patrol_distance, 0));
-	Vector2D patrol_point2 = { 0 };
-	vector2d_add(patrol_point2, enemy->position, vector2d(enemy->patrol_distance, 0));
-
-	// Calculate the distance between the enemy and each patrol point
-	float distance_to_point1 = vector2d_magnitude_between(enemy->position, patrol_point1);
-	float distance_to_point2 = vector2d_magnitude_between(enemy->position, patrol_point2);
-
-	// Choose the closer patrol point as the target
-	Vector2D target_point;
-	if (distance_to_point1 < distance_to_point2)
-	{
-		target_point = patrol_point1;
-	}
-	else
-	{
-		target_point = patrol_point2;
-	}
-
-	// Calculate the direction towards the target point
+	float distance_to_point1 = fabs(enemy->position.x - enemy->patrol_point1.x);
+	float distance_to_point2 = fabs(enemy->position.x - enemy->patrol_point2.x);
+	slog("enemy->position.x: %f", enemy->position.x);
+	slog("distance_to_point1: %f, distance_to_point2: %f", distance_to_point1, distance_to_point2);
 	Vector2D direction = { 0 };
-	vector2d_sub(direction, target_point, enemy->position);
+	if (distance_to_point1 <= distance_to_point2)
+	{
+		direction.x = -1;
+	}
+	else {
+		direction.x = 1;
+	}
+	
 	vector2d_normalize(&direction);
 	enemy->direction = direction.x;
-	// Update the enemy's velocity to move towards the target point
+	//slog("direction.x: %f", direction.x);
+	// Update the enemy's velocity to move towards the patrol point
 	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
 }
-
+// FIX
 void pq_enemy_attack(pq_entity* enemy)
 {
 	pq_enemy_data* enemy_data = (pq_enemy_data*)enemy->data;
-	if (!enemy_data) return;
+	if (!enemy_data) {
+		slog("enemy_data = NULL, Failed to trigger any enemy ability.");
+		return;
+	}
+
+	if (!enemy_data->abilities)
+	{
+		slog("enemy_data->abilities = NULL, Failed to trigger any enemy ability.");
+		return;
+	}
+
+	if (!enemy_data->abilities->abilities[0])
+	{
+		slog("enemy_data->abilities->abilities[0] aka fireball = NULL.");
+		return;
+	}
 
 	if (enemy_data->abilities->abilities[0]->duration != 0)
 	{
@@ -197,11 +206,18 @@ void pq_enemy_attack(pq_entity* enemy)
 		return;
 	}
 
+	pq_entity* player = get_pq_player();
+	if (!player) {
+		slog("Player is NULL, cannot perform enemy attack.");
+		return;
+	}
+
 	float enemy_pos_x = enemy->position.x;
-	float player_pos_x = get_pq_player()->position.x;
+	float player_pos_x = player->position.x;
 	// Player is on the left of enemy
 	if (player_pos_x < enemy_pos_x)
 	{
+
 		enemy_data->abilities->abilities[0]->position = vector2d(enemy->position.x - 100, enemy->position.y + 50);
 	}
 	else {
@@ -209,7 +225,7 @@ void pq_enemy_attack(pq_entity* enemy)
 	}
 	
 	enemy_data->abilities->abilities[0]->_is_active = 1;
-
+	enemy->current_state = IDLE;
 }
 
 void pq_enemy_think(pq_entity* enemy)
@@ -280,6 +296,24 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 
 	if (isStillGrounded == 0) {
 		enemy->current_state = IDLE;
+	}
+
+	pq_entity* player = get_pq_player();
+	if (!player) return;
+
+	Rect playerBox = {
+		player->position.x + player->velocity.x,
+		player->position.y + player->velocity.y,
+		player->width,
+		player->height
+	};
+
+	// Check for collision
+	if (gfc_rect_overlap(enemyBox, playerBox))
+	{
+		enemy->current_state = ATTACKING;
+		slog("colliding with player");
+		pq_entity_take_damage(player, enemy->damage);
 	}
 
 }
