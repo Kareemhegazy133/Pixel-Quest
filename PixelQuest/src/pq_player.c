@@ -65,8 +65,10 @@ pq_entity* new_pq_player()
 
 	player->direction = 1;
 
+	for (int i = 0; i < 5; i++) {
+		player->active_effects[i] = NOT_BUFFED;
+	}
 	player->current_buffs_count = 0;
-	player->max_buffs_allowed = 1;
 
 	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
 	if (player_data)

@@ -7,6 +7,8 @@
 
 #define GRAVITY 0.25f
 
+#define MAX_BUFFS_ALLOWED 5
+
 typedef enum
 {
 	IDLE,
@@ -15,6 +17,13 @@ typedef enum
 	ATTACKING,
 	IN_COMBAT
 } EntityState;
+
+typedef enum
+{
+	NOT_BUFFED,
+	DEFENSE_BUFFED,
+	DAMAGE_BUFFED
+} EntityEffect;
 
 typedef enum
 {
@@ -73,8 +82,8 @@ typedef struct PQ_Entity_S
 	int defense;												// The character's defense
 	int jump_force;												// The character's jump force
 	int current_buffs_count;									// The character's current buffs count
-	int max_buffs_allowed;										// The character's max allowed buffs
 	Sint8 direction;											// The character's facing direction (x axis)
+	EntityEffect active_effects[5];								// The character's active applied effects
 
 	void (*die)(struct PQ_Entity_S* self);						// The function to call when entity dies
 

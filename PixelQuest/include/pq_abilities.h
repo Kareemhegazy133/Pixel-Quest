@@ -64,6 +64,12 @@ void pq_ability_update(pq_entity* ability);
 void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity* player);
 
 /**
+* @brief: This function applies the effect of the ability.
+* @param ability: This is the pixel quest ability.
+*/
+void pq_ability_apply_effects(pq_entity* ability);
+
+/**
 * @brief: This function is called when the pixel quest ability ends.
 * @param ability: This is the pixel quest ability to end.
 */

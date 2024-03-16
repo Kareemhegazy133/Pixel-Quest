@@ -155,8 +155,8 @@ void pq_entity_take_damage(pq_entity* entity, int damage)
 		return;
 	}
 	
+	slog("Damage: %d", damage);
 	// Calculate actual damage after considering entity's defense
-
 	int actual_damage = damage - entity->defense;
 	if (actual_damage < 0)
 	{

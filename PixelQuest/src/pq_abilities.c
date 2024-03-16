@@ -147,11 +147,7 @@ void pq_ability_think(pq_entity* ability)
 		vector2d_scale(ability->velocity, direction, ability->movement_speed);
 	}
 
-	// if its a defense buff, give the owner that buff
-	if (ability->ability_effect == DEFENSE_BUFF && ability_data->owner->current_buffs_count < ability_data->owner->max_buffs_allowed) {
-		ability_data->owner->defense += 10;
-		ability_data->owner->current_buffs_count++;
-	}
+	pq_ability_apply_effects(ability);
 	// Check for ability collisions
 	pq_ability_handle_collision(ability, get_pq_world(), get_pq_player());
 
@@ -207,11 +203,7 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 			// Check for collision
 			if (gfc_rect_overlap(abilityBox, enemyBox))
 			{
-				int extra_damage = 0;
-				if (ability->ability_effect == DAMAGE_BUFF) {
-					extra_damage = 10;
-				}
-				pq_entity_take_damage(world->enemies[i], ability->ability_damage + extra_damage);
+				pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
 				pq_ability_end(ability);
 			}
 		}
@@ -228,11 +220,39 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 		// Check for collision
 		if (gfc_rect_overlap(abilityBox, playerBox))
 		{
-			pq_entity_take_damage(player, ability->ability_damage);
+			pq_entity_take_damage(player, caster->damage + ability->ability_damage);
 			pq_ability_end(ability);
 		}
 	}
 	
+}
+
+void pq_ability_apply_effects(pq_entity* ability) {
+
+	if (!ability) return;
+
+	pq_ability_data* ability_data = (pq_ability_data*)ability->data;
+	if (!ability_data) return;
+
+	pq_entity* caster = ability_data->owner;
+	int extra_damage = 0, extra_defense = 0;
+
+	// caster->active_effects[0] is ALWAYS for DAMAGE BUFFS
+	if (ability->ability_effect == DAMAGE_BUFF && caster->active_effects[0] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
+		extra_damage += 10;
+		caster->damage += extra_damage;
+		caster->active_effects[0] = DAMAGE_BUFFED;
+		caster->current_buffs_count++;
+	}
+
+	// caster->active_effects[1] is ALWAYS for DEFENSE BUFFS
+	if (ability->ability_effect == DEFENSE_BUFF && caster->active_effects[1] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
+		extra_defense += 10;
+		caster->defense += extra_defense;
+		caster->active_effects[1] = DEFENSE_BUFFED;
+		caster->current_buffs_count++;
+	}
+
 }
 
 void pq_ability_end(pq_entity* ability)
