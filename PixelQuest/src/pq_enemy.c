@@ -75,6 +75,9 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 
 	enemy->direction = -1;
 
+	enemy->current_buffs_count = 0;
+	enemy->max_buffs_allowed = 1;
+
 	pq_enemy_data* enemy_data = gfc_allocate_array(sizeof(pq_enemy_data), 1);
 	if (enemy_data)
 	{

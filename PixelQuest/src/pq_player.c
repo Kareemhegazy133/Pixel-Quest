@@ -65,6 +65,9 @@ pq_entity* new_pq_player()
 
 	player->direction = 1;
 
+	player->current_buffs_count = 0;
+	player->max_buffs_allowed = 1;
+
 	pq_player_data* player_data = gfc_allocate_array(sizeof(pq_player_data), 1);
 	if (player_data)
 	{
@@ -250,24 +253,24 @@ void pq_player_handle_input(pq_entity* player)
 		player_data->abilities->abilities[3]->position = vector2d(player->position.x + 50, player->position.y + 75);
 		player_data->abilities->abilities[3]->_is_active = 1;
 	}
-	/*
+
 	if (keys[SDL_SCANCODE_5])
 	{
 		if (!player_data->abilities->abilities[4])
 		{
-			slog("player_data->abilities->abilities[4] aka waterball = NULL.");
+			slog("player_data->abilities->abilities[4] aka shield = NULL.");
 			return;
 		}
 
 		if (player_data->abilities->abilities[4]->duration != 0)
 		{
-			//slog("player_data->abilities->abilities[4] aka waterball is on cooldown.");
+			//slog("player_data->abilities->abilities[4] aka shield is on cooldown.");
 			return;
 		}
-		slog("Player direction: %d", player->direction);
-		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 100, player->position.y + 50);
+		slog("%s: %d", player_data->abilities->abilities[4]->name, player_data->abilities->abilities[4]->ability_type);
+		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 40, player->position.y + 50);
 		player_data->abilities->abilities[4]->_is_active = 1;
-	}*/
+	}
 }
 
 void pq_player_think(pq_entity* player)

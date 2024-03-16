@@ -154,8 +154,9 @@ void pq_entity_take_damage(pq_entity* entity, int damage)
 		slog("entity = NULL, Cannot take damage without a pq_entity.");
 		return;
 	}
-
+	
 	// Calculate actual damage after considering entity's defense
+
 	int actual_damage = damage - entity->defense;
 	if (actual_damage < 0)
 	{

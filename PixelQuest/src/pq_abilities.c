@@ -147,6 +147,11 @@ void pq_ability_think(pq_entity* ability)
 		vector2d_scale(ability->velocity, direction, ability->movement_speed);
 	}
 
+	// if its a defense buff, give the owner that buff
+	if (ability->ability_effect == DEFENSE_BUFF && ability_data->owner->current_buffs_count < ability_data->owner->max_buffs_allowed) {
+		ability_data->owner->defense += 10;
+		ability_data->owner->current_buffs_count++;
+	}
 	// Check for ability collisions
 	pq_ability_handle_collision(ability, get_pq_world(), get_pq_player());
 
@@ -202,7 +207,11 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 			// Check for collision
 			if (gfc_rect_overlap(abilityBox, enemyBox))
 			{
-				pq_entity_take_damage(world->enemies[i], ability->ability_damage);
+				int extra_damage = 0;
+				if (ability->ability_effect == DAMAGE_BUFF) {
+					extra_damage = 10;
+				}
+				pq_entity_take_damage(world->enemies[i], ability->ability_damage + extra_damage);
 				pq_ability_end(ability);
 			}
 		}

@@ -72,6 +72,8 @@ typedef struct PQ_Entity_S
 	int damage;													// The character's damage
 	int defense;												// The character's defense
 	int jump_force;												// The character's jump force
+	int current_buffs_count;									// The character's current buffs count
+	int max_buffs_allowed;										// The character's max allowed buffs
 	Sint8 direction;											// The character's facing direction (x axis)
 
 	void (*die)(struct PQ_Entity_S* self);						// The function to call when entity dies
