@@ -41,6 +41,12 @@ void pq_enemy_patrol(pq_entity* enemy);
 void pq_enemy_attack(pq_entity* enemy);
 
 /**
+* @brief: This function handles chasing for the pixel quest enemy entity.
+* @param enemy: This is the pixel quest enemy entity for which we handle chasing.
+*/
+void pq_enemy_chase(pq_entity* enemy);
+
+/**
 * @brief: This function makes decisions for the enemy entity which will then get executed in pq_enemy_update().
 * @param enemy: This is the pixel quest enemy entity in which we will make decisions for.
 */

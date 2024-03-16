@@ -12,7 +12,8 @@ typedef enum
 	IDLE,
 	GROUNDED,
 	PATROLLING,
-	ATTACKING
+	ATTACKING,
+	IN_COMBAT
 } EntityState;
 
 typedef enum
@@ -46,7 +47,8 @@ typedef struct PQ_Entity_S
 	EntityState current_state;									// The current state of this entity
 
 	///////// <Player and Enemies Only> /////////
-
+	Sprite* idle_sprite;										// The entity's idle sprite (null if entity does not have one)
+	Sprite* attack_sprite;										// The entity's attack sprite (null if entity does not have one)
 	int health;													// The character's health
 	int max_health;												// The character's max health
 	int damage;													// The character's damage

@@ -308,7 +308,9 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		if (gfc_rect_overlap(playerBox, enemyBox))
 		{
 			//slog("colliding with enemy");
-			vector2d_clear(player->velocity);
+			if (player->current_state == IN_COMBAT) {
+				vector2d_clear(player->velocity);
+			}
 		}
 	}
 }

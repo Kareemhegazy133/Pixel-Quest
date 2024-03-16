@@ -28,8 +28,13 @@ pq_entity* new_pq_enemy(SJson* enemy_json_data)
 	sj_object_get_value_as_int(enemy_json_data, "frame_width", &frame_width);
 	sj_object_get_value_as_int(enemy_json_data, "frame_height", &frame_height);
 	sj_object_get_value_as_int(enemy_json_data, "frames_per_line", &frames_per_line);
-	enemy->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(enemy_json_data, "sprite"),
+	enemy->idle_sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(enemy_json_data, "sprite"),
 		frame_width, frame_height, frames_per_line, 0);
+
+	enemy->attack_sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(enemy_json_data, "attack_sprite"),
+		frame_width, frame_height, frames_per_line, 0);
+
+	enemy->sprite = enemy->idle_sprite;
 
 	int width, height;
 	sj_object_get_value_as_int(enemy_json_data, "width", &width);
@@ -180,7 +185,7 @@ void pq_enemy_patrol(pq_entity* enemy)
 	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
 }
 // FIX
-void pq_enemy_attack(pq_entity* enemy)
+/*void pq_enemy_attack(pq_entity* enemy)
 {
 	pq_enemy_data* enemy_data = (pq_enemy_data*)enemy->data;
 	if (!enemy_data) {
@@ -227,12 +232,42 @@ void pq_enemy_attack(pq_entity* enemy)
 	enemy_data->abilities->abilities[0]->_is_active = 1;
 	enemy->current_state = IDLE;
 }
+*/
+
+void pq_enemy_chase(pq_entity* enemy)
+{
+	if (!enemy) {
+		slog("Enemy is NULL, cannot perform enemy attack.");
+		return;
+	}
+
+	pq_entity* player = get_pq_player();
+	if (!player) {
+		slog("Player is NULL, cannot perform enemy attack.");
+		return;
+	}
+
+	float enemy_pos_x = enemy->position.x;
+	float player_pos_x = player->position.x;
+	Vector2D direction = { 0 };
+	// Player is on the left of enemy
+	if (player_pos_x < enemy_pos_x)
+	{
+		direction.x = -1;
+	}
+	else {
+		direction.x = 1;
+	}
+	vector2d_normalize(&direction);
+	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
+}
 
 void pq_enemy_think(pq_entity* enemy)
 {
 	if (!enemy) return;
 
-	pq_enemy_handle_actions(enemy);
+	//pq_enemy_handle_actions(enemy);
+	pq_enemy_chase(enemy);
 
 	if (enemy->current_state != GROUNDED) {
 		enemy->velocity.y += GRAVITY;
@@ -257,6 +292,11 @@ void pq_enemy_update(pq_entity* enemy)
 void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 {
 	if (!enemy || !world) return;
+
+	static Uint32 playerCollisionCooldown = 0;
+	static const Uint32 PLAYER_COLLISION_COOLDOWN_DURATION = 1000; // 1 second cooldown
+	static Uint32 lastAttackTime = 0;
+	static const Uint32 PLAYER_IDLE_COOLDOWN_DURATION = 5000; // 5 second cooldown for returning to idle state
 
 	// Calculate enemy's bounding box after velocity is applied
 	Rect enemyBox = {
@@ -298,24 +338,52 @@ void pq_enemy_handle_collision(pq_entity* enemy, pq_world* world)
 		enemy->current_state = IDLE;
 	}
 
-	pq_entity* player = get_pq_player();
-	if (!player) return;
+	// Get the current time
+	Uint32 currentTime = SDL_GetTicks();
 
-	Rect playerBox = {
-		player->position.x + player->velocity.x,
-		player->position.y + player->velocity.y,
-		player->width,
-		player->height
-	};
+	// Check if the player collision cooldown has expired
+	if (currentTime - playerCollisionCooldown >= PLAYER_COLLISION_COOLDOWN_DURATION) {
+		pq_entity* player = get_pq_player();
+		if (!player) return;
 
-	// Check for collision
-	if (gfc_rect_overlap(enemyBox, playerBox))
-	{
-		enemy->current_state = ATTACKING;
-		slog("colliding with player");
-		pq_entity_take_damage(player, enemy->damage);
+		Rect playerBox = {
+			player->position.x + player->velocity.x,
+			player->position.y + player->velocity.y,
+			player->width,
+			player->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(enemyBox, playerBox))
+		{
+			enemy->current_state = ATTACKING;
+			enemy->sprite = enemy->attack_sprite;
+			slog("colliding with player");
+			pq_entity_take_damage(player, enemy->damage);
+
+			// Set the player collision cooldown start time
+			playerCollisionCooldown = currentTime;
+
+			// Update the last attack time
+			lastAttackTime = currentTime;
+
+			// Set player state to in combat
+			player->current_state = IN_COMBAT;
+		}
+		else
+		{
+			// Player is not in range, switch back to idle sprite
+			enemy->sprite = enemy->idle_sprite;
+		}
 	}
 
+	// Check if the player should return to idle state
+	if (currentTime - lastAttackTime >= PLAYER_IDLE_COOLDOWN_DURATION) {
+		pq_entity* player = get_pq_player();
+		if (player && player->current_state == IN_COMBAT) {
+			player->current_state = IDLE;
+		}
+	}
 }
 
 void pq_enemy_drop_items(pq_entity* enemy, pq_world* world)
@@ -380,6 +448,8 @@ void pq_enemy_free(pq_entity* enemy)
 	}
 
 	pq_abilities_free(enemy_data->abilities);
+	gf2d_sprite_free(enemy->idle_sprite);
+	gf2d_sprite_free(enemy->attack_sprite);
 
 	free(enemy_data);
 	free(enemy);
