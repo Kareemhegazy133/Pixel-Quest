@@ -28,6 +28,10 @@
 		{
 			"name": "Attack Power",
 			"hotkey": 4
+		},
+		{
+			"name": "Shield Power",
+			"hotkey": 5
 		}
 	]
 }

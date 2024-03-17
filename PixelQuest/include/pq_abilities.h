@@ -64,6 +64,27 @@ void pq_ability_update(pq_entity* ability);
 void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity* player);
 
 /**
+* @brief: This function applies the knockback effect to an entity.
+* @param ability: This is the pixel quest ability.
+* @param target: This is the pixel quest entity to be knockbacked.
+*/
+void pq_ability_knockback_effect(pq_entity* ability, pq_entity* target);
+
+/**
+* @brief: This function applies the slow effect to an entity.
+* @param ability: This is the pixel quest ability.
+* @param target: This is the pixel quest entity to be slowed.
+*/
+void pq_ability_slow_effect(pq_entity* ability, pq_entity* target);
+
+/**
+* @brief: This function applies the stun effect to an entity.
+* @param ability: This is the pixel quest ability.
+* @param target: This is the pixel quest entity to be stunned.
+*/
+void pq_ability_stun_effect(pq_entity* ability, pq_entity* target);
+
+/**
 * @brief: This function applies the effect of the ability.
 * @param ability: This is the pixel quest ability.
 */

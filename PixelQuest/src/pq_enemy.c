@@ -263,6 +263,7 @@ void pq_enemy_chase(pq_entity* enemy)
 	else {
 		direction.x = 1;
 	}
+	enemy->direction = direction.x;
 	vector2d_normalize(&direction);
 	vector2d_scale(enemy->velocity, direction, enemy->movement_speed);
 }

@@ -252,7 +252,7 @@ void pq_player_handle_input(pq_entity* player)
 			return;
 		}
 		slog("%s: %d", player_data->abilities->abilities[3]->name, player_data->abilities->abilities[3]->ability_type);
-		player_data->abilities->abilities[3]->position = vector2d(player->position.x + 50, player->position.y + 75);
+		player_data->abilities->abilities[3]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[3]->_is_active = 1;
 	}
 
@@ -260,17 +260,17 @@ void pq_player_handle_input(pq_entity* player)
 	{
 		if (!player_data->abilities->abilities[4])
 		{
-			slog("player_data->abilities->abilities[4] aka shield = NULL.");
+			slog("player_data->abilities->abilities[4] aka shield_power = NULL.");
 			return;
 		}
 
 		if (player_data->abilities->abilities[4]->duration != 0)
 		{
-			//slog("player_data->abilities->abilities[4] aka shield is on cooldown.");
+			//slog("player_data->abilities->abilities[4] aka shield_power is on cooldown.");
 			return;
 		}
 		slog("%s: %d", player_data->abilities->abilities[4]->name, player_data->abilities->abilities[4]->ability_type);
-		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 40, player->position.y + 50);
+		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[4]->_is_active = 1;
 	}
 }

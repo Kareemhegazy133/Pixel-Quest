@@ -37,9 +37,10 @@ typedef enum
 {
 	NONE,
 	STUN,
-	SLOW,
+	KNOCKBACK,
 	DAMAGE_BUFF,
-	DEFENSE_BUFF
+	DEFENSE_BUFF,
+	SLOW
 } AbilityEffect;
 
 typedef enum
@@ -114,6 +115,7 @@ typedef struct PQ_Entity_S
 	AbilityType ability_type;									// The ability's type
 	float duration;												// The ability's duration
 	float max_duration;											// The ability's max_duration
+	int usage_count;											// The ability's usage count
 } pq_entity;
 
 /**

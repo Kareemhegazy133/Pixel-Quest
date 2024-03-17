@@ -117,6 +117,9 @@ pq_entity* load_nth_pq_ability(int n, pq_entity* caster)
 	ability->max_duration = 12.f;
 	ability->direction = 0;
 
+	// Currently only for stun
+	ability->usage_count = 0;
+
 	return ability;
 }
 
@@ -203,6 +206,16 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 			// Check for collision
 			if (gfc_rect_overlap(abilityBox, enemyBox))
 			{
+				if (ability->ability_effect == KNOCKBACK)
+				{
+					pq_ability_knockback_effect(ability, world->enemies[i]);
+				}
+
+				if (ability->ability_effect == SLOW)
+				{
+					pq_ability_slow_effect(ability, world->enemies[i]);
+				}
+
 				pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
 				pq_ability_end(ability);
 			}
@@ -220,11 +233,55 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 		// Check for collision
 		if (gfc_rect_overlap(abilityBox, playerBox))
 		{
+			if (ability->ability_effect == KNOCKBACK)
+			{
+				pq_ability_knockback_effect(ability, player);
+			}
+
 			pq_entity_take_damage(player, caster->damage + ability->ability_damage);
 			pq_ability_end(ability);
 		}
 	}
-	
+}
+
+void pq_ability_knockback_effect(pq_entity* ability, pq_entity* target)
+{
+	if (!ability || !target) return;
+
+	if (target->direction == -1) {
+		target->position.x += 50.f;
+	}
+	else if (target->direction == 1) {
+		target->position.x -= 50.f;
+	}
+
+}
+
+void pq_ability_slow_effect(pq_entity* ability, pq_entity* target)
+{
+	if (!ability || !target) return;
+
+	if (target->movement_speed > 1) {
+		target->movement_speed -= 1;
+	}
+}
+
+void pq_ability_stun_effect(pq_entity* ability, pq_entity* target)
+{
+	if (!ability || !target) return;
+
+	// Check if the ability usage limit has been reached
+	if (ability->usage_count >= 2) {
+		// If the limit has been reached, return without applying the stun effect
+		slog("Ability usage limit reached");
+		return;
+	}
+
+	// Apply the stun effect by setting the target's movement speed to 0
+	target->movement_speed = 0;
+
+	// Increment the ability usage count
+	ability->usage_count++;
 }
 
 void pq_ability_apply_effects(pq_entity* ability) {
@@ -235,20 +292,17 @@ void pq_ability_apply_effects(pq_entity* ability) {
 	if (!ability_data) return;
 
 	pq_entity* caster = ability_data->owner;
-	int extra_damage = 0, extra_defense = 0;
 
 	// caster->active_effects[0] is ALWAYS for DAMAGE BUFFS
 	if (ability->ability_effect == DAMAGE_BUFF && caster->active_effects[0] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		extra_damage += 10;
-		caster->damage += extra_damage;
+		caster->damage += ability->damage;
 		caster->active_effects[0] = DAMAGE_BUFFED;
 		caster->current_buffs_count++;
 	}
 
 	// caster->active_effects[1] is ALWAYS for DEFENSE BUFFS
 	if (ability->ability_effect == DEFENSE_BUFF && caster->active_effects[1] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		extra_defense += 10;
-		caster->defense += extra_defense;
+		caster->defense += ability->damage;
 		caster->active_effects[1] = DEFENSE_BUFFED;
 		caster->current_buffs_count++;
 	}
