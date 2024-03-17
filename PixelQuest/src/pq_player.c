@@ -98,6 +98,9 @@ pq_entity* new_pq_player()
 	// Initialize the input handling function for the player
 	player->handle_input = pq_player_handle_input;
 
+	player->isJumping = 0;
+	player->max_jump_force = 700.f;
+
 	player->think = pq_player_think;
 	player->update = pq_player_update;
 	player->free = pq_player_free;
@@ -145,8 +148,13 @@ void pq_player_handle_input(pq_entity* player)
 	// Jump when 'W' or up arrow key or 'Space' key is pressed
 	if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_SPACE])
 	{
-		// TODO : Jump Logic
-		direction.y = -1;
+		// Check if the player is grounded before allowing a jump
+		if (player->current_state == GROUNDED)
+		{
+			// Apply vertical velocity for the jump
+			direction.y = -1;
+			player->isJumping = 1;
+		}
 	}
 
 	// Move down when 'S' or down arrow key is pressed (testing only)
@@ -301,6 +309,20 @@ void pq_player_think(pq_entity* player)
 
 	if (player->current_state != GROUNDED) {
 		player->velocity.y += GRAVITY;
+	}
+	else if (player->isJumping == 1)
+	{
+		if (player->velocity.y < player->max_jump_force)
+		{
+			player->velocity.y -= 100.f;
+			player->max_jump_force -= 700.f;
+		}
+		else {
+			player->isJumping = 0;
+			player->max_jump_force = 700.f;
+		}
+		
+		slog("player->position.y: %f, player->velocity.y: %f", player->position.y, player->velocity.y);
 	}
 
 	// Check for collisions

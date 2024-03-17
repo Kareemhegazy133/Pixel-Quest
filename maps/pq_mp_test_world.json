@@ -61,7 +61,7 @@
 				"max_health": 200,
 				"damage": 20,
 				"defense": 5,
-				"movement_speed": 3,
+				"movement_speed": 0,
 				"patrol_distance": 50,
 				"abilities":[
 					{

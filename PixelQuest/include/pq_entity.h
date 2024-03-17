@@ -5,7 +5,7 @@
 
 #define MAX_ENTITIES 1024
 
-#define GRAVITY 0.25f
+#define GRAVITY 1.f
 
 #define MAX_BUFFS_ALLOWED 5
 
@@ -89,7 +89,8 @@ typedef struct PQ_Entity_S
 	int max_health;												// The character's max health
 	int damage;													// The character's damage
 	int defense;												// The character's defense
-	int jump_force;												// The character's jump force
+	Sint8 isJumping;											// A flag for whether the character is jumping
+	float max_jump_force;										// The character's max jump force
 	int current_buffs_count;									// The character's current buffs count
 	Sint8 direction;											// The character's facing direction (x axis)
 	EntityEffect active_effects[5];								// The character's active applied effects
