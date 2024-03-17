@@ -295,18 +295,24 @@ void pq_ability_apply_effects(pq_entity* ability) {
 
 	// caster->active_effects[0] is ALWAYS for DAMAGE BUFFS
 	if (ability->ability_effect == DAMAGE_BUFF && caster->active_effects[0] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		caster->damage += ability->damage;
+		caster->damage += 10;
 		caster->active_effects[0] = DAMAGE_BUFFED;
 		caster->current_buffs_count++;
 	}
 
 	// caster->active_effects[1] is ALWAYS for DEFENSE BUFFS
 	if (ability->ability_effect == DEFENSE_BUFF && caster->active_effects[1] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		caster->defense += ability->damage;
+		caster->defense += 10;
 		caster->active_effects[1] = DEFENSE_BUFFED;
 		caster->current_buffs_count++;
 	}
 
+	// caster->active_effects[2] is ALWAYS for MOVEMENT SPEED BUFFS
+	if (ability->ability_effect == MOVEMENT_SPEED_BUFF && caster->active_effects[2] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
+		caster->movement_speed += 2;
+		caster->active_effects[2] = MOVEMENT_SPEED_BUFFED;
+		caster->current_buffs_count++;
+	}
 }
 
 void pq_ability_end(pq_entity* ability)

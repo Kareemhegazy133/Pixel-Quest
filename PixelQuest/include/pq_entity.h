@@ -22,7 +22,8 @@ typedef enum
 {
 	NOT_BUFFED,
 	DEFENSE_BUFFED,
-	DAMAGE_BUFFED
+	DAMAGE_BUFFED,
+	MOVEMENT_SPEED_BUFFED
 } EntityEffect;
 
 typedef enum
@@ -40,7 +41,8 @@ typedef enum
 	KNOCKBACK,
 	DAMAGE_BUFF,
 	DEFENSE_BUFF,
-	SLOW
+	SLOW,
+	MOVEMENT_SPEED_BUFF
 } AbilityEffect;
 
 typedef enum

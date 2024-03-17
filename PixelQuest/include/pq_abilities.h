@@ -3,7 +3,7 @@
 #include <pq_entity.h>
 #include <pq_world.h>
 
-#define MAX_ABILITIES 5
+#define MAX_ABILITIES 10
 
 typedef struct
 {

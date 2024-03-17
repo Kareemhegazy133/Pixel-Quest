@@ -32,6 +32,10 @@
 		{
 			"name": "Shield Power",
 			"hotkey": 5
+		},
+		{
+			"name": "Speed Power",
+			"hotkey": 6
 		}
 	]
 }

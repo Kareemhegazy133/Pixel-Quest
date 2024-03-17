@@ -273,6 +273,24 @@ void pq_player_handle_input(pq_entity* player)
 		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[4]->_is_active = 1;
 	}
+
+	if (keys[SDL_SCANCODE_6])
+	{
+		if (!player_data->abilities->abilities[5])
+		{
+			slog("player_data->abilities->abilities[5] aka speed_power = NULL.");
+			return;
+		}
+
+		if (player_data->abilities->abilities[5]->duration != 0)
+		{
+			//slog("player_data->abilities->abilities[5] aka speed_power is on cooldown.");
+			return;
+		}
+		slog("%s: %d", player_data->abilities->abilities[5]->name, player_data->abilities->abilities[5]->ability_type);
+		player_data->abilities->abilities[5]->position = vector2d(player->position.x + 40, player->position.y + 85);
+		player_data->abilities->abilities[5]->_is_active = 1;
+	}
 }
 
 void pq_player_think(pq_entity* player)

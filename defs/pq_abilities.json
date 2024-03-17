@@ -44,6 +44,15 @@
 			"effect": 4,
 			"type": 2,
 			"movement_speed": 0
+		},
+		{
+			"sprite": "images/abilities/speed_power.png",
+			"name": "Speed Power",
+			"cooldown": 5,
+			"damage": 5,
+			"effect": 6,
+			"type": 2,
+			"movement_speed": 0
 		}
 	]
 }
