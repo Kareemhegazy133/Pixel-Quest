@@ -430,7 +430,7 @@ void pq_player_die(pq_entity* player)
 	if (!player) return;
 
 	slog("Player died!");
-	pq_render_announcement(RED, "Player died!", 48, 0, 0, 5000);
+	pq_render_announcement(RED, "Player died!", 48, 0, 0, 3000);
 	//Create an SDL quit event
 	SDL_Event quitEvent;
 	quitEvent.type = SDL_QUIT;

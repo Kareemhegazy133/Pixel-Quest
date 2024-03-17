@@ -59,3 +59,31 @@ void pq_render_announcement(SDL_Color text_color, const char* msg, int font_size
     // Delay for 5 seconds
     SDL_Delay(seconds);
 }
+
+void pq_render_player_health_bar(int player_health)
+{
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+
+    // Define the health bar dimensions and position
+    int barWidth = 200;
+    int barHeight = 20;
+    int barPadding = 10;
+    int barPosX = barPadding;
+    int barPosY = barPadding;
+
+    // Calculate the width of the filled portion of the health bar based on player health
+    int filledWidth = (int)((float)player_health / 100 * (barWidth - 2)); // Subtract 2 for borders
+
+    // Draw the health bar outline
+    SDL_Rect outlineRect = { barPosX, barPosY, barWidth, barHeight };
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White color
+    SDL_RenderDrawRect(renderer, &outlineRect);
+
+    // Draw the filled portion of the health bar
+    SDL_Rect fillRect = { barPosX + 1, barPosY + 1, filledWidth, barHeight - 2 };
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red color
+    SDL_RenderFillRect(renderer, &fillRect);
+
+    // Present the rendered health bar
+    SDL_RenderPresent(renderer);
+}
