@@ -413,16 +413,22 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
 {
 	pq_player_data* player_data = (pq_player_data*)player->data;
+	pq_entity* item = world->items[itemIndex];
 	if (player_data && player_data->inventory)
 	{
-		pq_inventory_add_item(player_data->inventory, world->items[itemIndex]);
+		pq_inventory_add_item(player_data->inventory, item);
 	}
 
 	// Set item status to collected and disable the sprite
-	world->items[itemIndex]->collected = 1;
-	world->items[itemIndex]->sprite = NULL;
-	slog("Collected %s", world->items[itemIndex]->display_name);
+	item->collected = 1;
+	item->sprite = NULL;
+	slog("Collected %s", item->display_name);
 	pq_inventory_display(player_data->inventory);
+
+	if (item->item_type == FOOD)
+	{
+		player->health += item->count;
+	}
 }
 
 void pq_player_die(pq_entity* player)

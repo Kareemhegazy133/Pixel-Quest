@@ -34,6 +34,15 @@
 				"position_x": 775,
 				"position_y": 625,
 				"count": 1
+			},
+			{
+				"name": "food",
+				"displayName": "Food",
+				"sprite": "images/items/apple.png",
+				"inventory_sprite": "images/items/inventory_apple.png",
+				"position_x": 575,
+				"position_y": 625,
+				"count": 20
 			}
 		],
 		"enemies":[

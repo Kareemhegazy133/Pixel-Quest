@@ -36,6 +36,12 @@ typedef enum
 
 typedef enum
 {
+	FOOD,
+	GOLD
+} ItemType;
+
+typedef enum
+{
 	NONE,
 	STUN,
 	KNOCKBACK,
@@ -106,6 +112,7 @@ typedef struct PQ_Entity_S
 	Sprite*		inventory_sprite;								// The item's inventory sprite (null if entity does not have one)
 	int			count;											// The amount of the item
 	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
+	ItemType	item_type;										// The type of item
 
 	///////// <Abilities Only> /////////
 
