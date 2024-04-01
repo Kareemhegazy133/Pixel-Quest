@@ -1,4 +1,6 @@
 #include <simple_logger.h>
+#include <gf2d_sprite.h>
+#include <gfc_shape.h>
 #include <pq_ui.h>
 
 void init_pq_ui_system()
@@ -13,12 +15,78 @@ void init_pq_ui_system()
         SDL_Quit();
         return;
     }
-
 }
 
-void pq_render_announcement(SDL_Color text_color, const char* msg, int font_size, int pos_x, int pos_y, int seconds)
+void pq_MainMenu(SDL_Renderer* renderer, GameState gameState)
 {
-    TTF_Font* font = TTF_OpenFont("fonts/MoriaCitadel.ttf", font_size); // Adjust font size as needed
+    Sprite* background = gf2d_sprite_load_image("images/worlds/medieval/Background_01.png");
+    Bool menuOpen = true;
+
+    // Load button sprites
+    Sprite* startButton = gf2d_sprite_load_image("images/ui/Start_Game_Button.png");
+    Sprite* quitButton = gf2d_sprite_load_image("images/ui/Quit_Game_Button.png");
+
+    // Button positions
+    Vector2D startButtonPos = vector2d(400, 200);
+    Vector2D quitButtonPos = vector2d(400, 400);
+
+    while (menuOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Draw the buttons
+        gf2d_sprite_draw_image(startButton, startButtonPos);
+        gf2d_sprite_draw_image(quitButton, quitButtonPos);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_QUIT)
+            {
+                menuOpen = false;
+                gameState = GAME_QUIT;
+            }
+            else if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect StartButtonBox = {400, 200, 256, 128};
+                Rect QuitButtonBox = {400, 400, 256, 128};
+
+                // Check if the mouse click is within the bounds of the start button
+                if (gfc_point_in_rect(mouse_pos, StartButtonBox))
+                {
+                    gameState = GAME_RUNNING; // Start the game
+                    menuOpen = false;
+                }
+                // Check if the mouse click is within the bounds of the quit button
+                else if (gfc_point_in_rect(mouse_pos, QuitButtonBox))
+                {
+                    menuOpen = false;
+                    gameState = GAME_QUIT;
+                }
+            }
+        }
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    gf2d_sprite_free(startButton);
+    gf2d_sprite_free(quitButton);
+}
+
+void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds)
+{
+    TTF_Font* font = TTF_OpenFont(GAME_FONT, 48); // Adjust font size as needed
     if (!font) {
         slog("Error: Failed to load font - %s", TTF_GetError());
         return;
