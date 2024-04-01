@@ -11,6 +11,10 @@
 
 static GameState game_state = MAIN_MENU;
 
+GameState* get_game_state() {
+    return &game_state;
+}
+
 int main(int argc, char * argv[])
 {
     int mx,my;
@@ -48,7 +52,7 @@ int main(int argc, char * argv[])
 
         switch (game_state) {
             case MAIN_MENU:
-                pq_MainMenu(gf2d_graphics_get_renderer(), game_state);
+                pq_MainMenu(gf2d_graphics_get_renderer(), get_game_state());
                 break;
             case LOADING:
                 SDL_ShowCursor(SDL_DISABLE);

@@ -17,7 +17,7 @@ void init_pq_ui_system()
     }
 }
 
-void pq_MainMenu(SDL_Renderer* renderer, GameState gameState)
+void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
 {
     Sprite* background = gf2d_sprite_load_image("images/worlds/medieval/Background_01.png");
     Bool menuOpen = true;
@@ -27,8 +27,8 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState gameState)
     Sprite* quitButton = gf2d_sprite_load_image("images/ui/Quit_Game_Button.png");
 
     // Button positions
-    Vector2D startButtonPos = vector2d(400, 200);
-    Vector2D quitButtonPos = vector2d(400, 400);
+    Vector2D startButtonPos = vector2d(512, 200);
+    Vector2D quitButtonPos = vector2d(512, 400);
 
     while (menuOpen)
     {
@@ -55,6 +55,7 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState gameState)
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
+                slog("Clicked");
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
 
@@ -65,17 +66,22 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState gameState)
                 // Check if the mouse click is within the bounds of the start button
                 if (gfc_point_in_rect(mouse_pos, StartButtonBox))
                 {
+                    slog("Clicked: Start");
                     gameState = GAME_RUNNING; // Start the game
                     menuOpen = false;
+                    slog("gameState: %d", gameState);
                 }
                 // Check if the mouse click is within the bounds of the quit button
                 else if (gfc_point_in_rect(mouse_pos, QuitButtonBox))
                 {
+                    slog("Clicked: Quit");
                     menuOpen = false;
                     gameState = GAME_QUIT;
+                    slog("gameState: %d", gameState);
                 }
             }
         }
+
     }
 
     // Free resources

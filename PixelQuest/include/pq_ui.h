@@ -16,15 +16,9 @@ typedef enum {
 
 #define GAME_FONT "fonts/MoriaCitadel.ttf"
 
-typedef enum
-{
-	START_GAME,
-	QUIT_GAME
-} MainMenuOption;
-
 void init_pq_ui_system();
 
-void pq_MainMenu(SDL_Renderer* renderer, GameState gameState);
+void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState);
 
 void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds);
 
