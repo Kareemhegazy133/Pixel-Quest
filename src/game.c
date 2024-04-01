@@ -62,6 +62,7 @@ int main(int argc, char * argv[])
                 pq_camera_set_size(vector2d(1280, 720));
                 world = load_pq_world("maps/pq_mp_test_world.json");
                 player = new_pq_player();
+                game_state = GAME_RUNNING;
                 break;
             case GAME_RUNNING:
                 pq_entity_system_think();

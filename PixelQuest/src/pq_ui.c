@@ -51,7 +51,7 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
             if (event.type == SDL_QUIT)
             {
                 menuOpen = false;
-                gameState = GAME_QUIT;
+                *gameState = GAME_QUIT;
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
@@ -66,18 +66,14 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
                 // Check if the mouse click is within the bounds of the start button
                 if (gfc_point_in_rect(mouse_pos, StartButtonBox))
                 {
-                    slog("Clicked: Start");
-                    gameState = GAME_RUNNING; // Start the game
+                    *gameState = LOADING;
                     menuOpen = false;
-                    slog("gameState: %d", gameState);
                 }
                 // Check if the mouse click is within the bounds of the quit button
                 else if (gfc_point_in_rect(mouse_pos, QuitButtonBox))
                 {
-                    slog("Clicked: Quit");
                     menuOpen = false;
-                    gameState = GAME_QUIT;
-                    slog("gameState: %d", gameState);
+                    *gameState = GAME_QUIT;
                 }
             }
         }
