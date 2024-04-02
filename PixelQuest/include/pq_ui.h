@@ -7,6 +7,7 @@ typedef enum {
     MAIN_MENU,
     LOADING,
     GAME_RUNNING,
+    GAME_PAUSED,
     GAME_QUIT
 } GameState;
 
@@ -19,6 +20,8 @@ typedef enum {
 void init_pq_ui_system();
 
 void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState);
+
+void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState);
 
 void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds);
 

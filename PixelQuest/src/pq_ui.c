@@ -19,7 +19,7 @@ void init_pq_ui_system()
 
 void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
 {
-    Sprite* background = gf2d_sprite_load_image("images/worlds/medieval/Background_01.png");
+    Sprite* background = gf2d_sprite_load_image("images/backgrounds/Main_Menu_Background.png");
     Bool menuOpen = true;
 
     // Load button sprites
@@ -48,20 +48,14 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0)
         {
-            if (event.type == SDL_QUIT)
+            if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                menuOpen = false;
-                *gameState = GAME_QUIT;
-            }
-            else if (event.type == SDL_MOUSEBUTTONDOWN)
-            {
-                slog("Clicked");
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
 
                 Vector2D mouse_pos = { mouseX, mouseY };
-                Rect StartButtonBox = {400, 200, 256, 128};
-                Rect QuitButtonBox = {400, 400, 256, 128};
+                Rect StartButtonBox =  { 512, 200, 256, 128 };
+                Rect QuitButtonBox = { 512, 400, 256, 128 };
 
                 // Check if the mouse click is within the bounds of the start button
                 if (gfc_point_in_rect(mouse_pos, StartButtonBox))
@@ -83,6 +77,74 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
     // Free resources
     gf2d_sprite_free(background);
     gf2d_sprite_free(startButton);
+    gf2d_sprite_free(quitButton);
+}
+
+void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState)
+{
+    slog("Game Paused!");
+    Sprite* background = gf2d_sprite_load_image("images/backgrounds/Pause_Menu_Background.png");
+    Bool menuOpen = true;
+
+    // Load button sprites
+    Sprite* resumeButton = gf2d_sprite_load_image("images/ui/Resume_Game_Button.png");
+    Sprite* quitButton = gf2d_sprite_load_image("images/ui/Quit_Game_Button.png");
+
+    // Button positions
+    Vector2D resumeButtonPos = vector2d(512, 200);
+    Vector2D quitButtonPos = vector2d(512, 400);
+
+    while (menuOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Draw the buttons
+        gf2d_sprite_draw_image(resumeButton, resumeButtonPos);
+        gf2d_sprite_draw_image(quitButton, quitButtonPos);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect ResumeButtonBox = { 512, 200, 256, 128 };
+                Rect QuitButtonBox = { 512, 400, 256, 128 };
+
+                // Check if the mouse click is within the bounds of the resume button
+                if (gfc_point_in_rect(mouse_pos, ResumeButtonBox))
+                {
+                    *gameState = GAME_RUNNING;
+                    menuOpen = false;
+                }
+                // Check if the mouse click is within the bounds of the quit button
+                else if (gfc_point_in_rect(mouse_pos, QuitButtonBox))
+                {
+                    menuOpen = false;
+                    *gameState = GAME_QUIT;
+                }
+            }
+            else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+                SDL_ShowCursor(SDL_DISABLE);
+                menuOpen = false;
+                *gameState = GAME_RUNNING;
+            }
+        }
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    gf2d_sprite_free(resumeButton);
     gf2d_sprite_free(quitButton);
 }
 

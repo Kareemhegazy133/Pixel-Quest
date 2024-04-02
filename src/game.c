@@ -89,6 +89,9 @@ int main(int argc, char * argv[])
 
                 gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
                 break;
+            case GAME_PAUSED:
+                pq_PauseMenu(gf2d_graphics_get_renderer(), get_game_state());
+                break;
             }
 
         SDL_Event event;
@@ -97,6 +100,13 @@ int main(int argc, char * argv[])
             if (event.type == SDL_QUIT)
             {
                 game_state = GAME_QUIT; // exit condition if the window is closed
+            }
+            else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+            {
+                if (game_state == GAME_RUNNING) {
+                    SDL_ShowCursor(SDL_ENABLE);
+                    game_state = GAME_PAUSED;
+                }
             }
         }
 
