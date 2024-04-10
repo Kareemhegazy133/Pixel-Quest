@@ -6,6 +6,14 @@
 
 #define MAX_ITEMS 128
 #define MAX_ENEMIES 20
+#define CELLS_AMOUNT 57
+
+typedef struct
+{
+	int width;
+	int height;
+	pq_entity* entities[MAX_ENTITIES];
+} pq_cell;
 
 typedef struct
 {
@@ -13,6 +21,7 @@ typedef struct
 	Sprite* tile_layer;						// This is the sprite containing a prerendered layer of the tiles for the world
 	Sprite* tile_set;						// This is the sprite containing tiles for the world
 	Uint8*	map;							// This is the tiles that make up the world
+	pq_cell* cells[CELLS_AMOUNT];			// This is the spatial grid or cells that work for 1280x720, each cell is 128x128
 	Uint32	tile_height;					// This is how many tiles tall the map is
 	Uint32	tile_width;						// This is how many tiles wide the map is
 	pq_entity* items[MAX_ITEMS];			// This is the list of items in the world
@@ -59,6 +68,20 @@ void set_pq_world(pq_world* world);
 * @param world: This is the pixel quest world to be freed.
 */
 void free_pq_world(pq_world* world);
+
+/**
+* @brief: This function adds an entity to the spatial partition of the pixel quest world.
+* @param world: This is the pixel quest world.
+* @param entity: This is the pixel quest entity to be added.
+*/
+void add_entity_pq_world(pq_world* world, pq_entity* entity);
+
+/**
+* @brief: This function removes an entity to the spatial partition of the pixel quest world.
+* @param world: This is the pixel quest world.
+* @param entity: This is the pixel quest entity to be removed.
+*/
+void remove_entity_pq_world(pq_world* world, pq_entity* entity);
 
 /**
 * @brief: This function draws the pixel quest world.

@@ -243,6 +243,8 @@ pq_world* new_pq_world(Uint32 width, Uint32 height)
 	world->enemies_count = 0;
 	memset(world->enemies, 0, sizeof(pq_entity*) * MAX_ENEMIES);
 
+	memset(world->cells, 0, sizeof(pq_cell*) * CELLS_AMOUNT);
+
 	set_pq_world(world);
 	return world;
 }
@@ -265,6 +267,16 @@ void free_pq_world(pq_world* world)
 	gf2d_sprite_free(world->tile_layer);
 	free(world->map);
 	free(world);
+}
+
+void add_entity_pq_world(pq_world* world, pq_entity* entity)
+{
+
+}
+
+void remove_entity_pq_world(pq_world* world, pq_entity* entity)
+{
+
 }
 
 void draw_pq_world(pq_world* world)
