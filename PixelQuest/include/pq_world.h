@@ -4,6 +4,7 @@
 #include <gf2d_sprite.h>
 #include <pq_item.h>
 
+#define MAX_SHOPS 5
 #define MAX_ITEMS 128
 #define MAX_ENEMIES 20
 #define CELLS_AMOUNT 57
@@ -24,6 +25,8 @@ typedef struct
 	pq_cell* cells[CELLS_AMOUNT];			// This is the spatial grid or cells that work for 1280x720, each cell is 128x128
 	Uint32	tile_height;					// This is how many tiles tall the map is
 	Uint32	tile_width;						// This is how many tiles wide the map is
+	pq_entity* shops[MAX_SHOPS];			// This is the list of shops in the world
+	Uint16	shops_count;					// This is how many shops are in the world
 	pq_entity* items[MAX_ITEMS];			// This is the list of items in the world
 	Uint16	items_count;					// This is how many items are in the world
 	pq_entity* enemies[MAX_ENEMIES];		// This is the list of enemies in the world

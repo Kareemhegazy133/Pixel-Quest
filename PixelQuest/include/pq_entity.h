@@ -95,6 +95,7 @@ typedef struct PQ_Entity_S
 	int current_buffs_count;									// The character's current buffs count
 	Sint8 direction;											// The character's facing direction (x axis)
 	EntityEffect active_effects[5];								// The character's active applied effects
+	Sint8 isShopping;											// A flag for whether the character is shopping
 
 	void (*die)(struct PQ_Entity_S* self);						// The function to call when entity dies
 

@@ -73,6 +73,8 @@ void load_world_pq_shops(SJson* world_json, pq_world* world)
 		pq_entity* shop = init_pq_shop(shop_data);
 		if (!shop) continue;
 
+		world->shops[world->shops_count] = shop;
+		world->shops_count++;
 		slog("Loaded a shop: %s", shop->display_name);
 	}
 }

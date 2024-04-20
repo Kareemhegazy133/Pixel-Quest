@@ -148,6 +148,44 @@ void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState)
     gf2d_sprite_free(quitButton);
 }
 
+void pq_ShopMenu()
+{
+    slog("Shop Open!");
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+    Sprite* background = gf2d_sprite_load_image("images/backgrounds/Pause_Menu_Background.png");
+    Bool menuOpen = true;
+
+    // Load button sprites
+    Sprite* resumeButton = gf2d_sprite_load_image("images/ui/Resume_Game_Button.png");
+    Sprite* quitButton = gf2d_sprite_load_image("images/ui/Quit_Game_Button.png");
+
+    // Button positions
+    Vector2D resumeButtonPos = vector2d(512, 200);
+    Vector2D quitButtonPos = vector2d(512, 400);
+
+    while (menuOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Draw the buttons
+        gf2d_sprite_draw_image(resumeButton, resumeButtonPos);
+        gf2d_sprite_draw_image(quitButton, quitButtonPos);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    gf2d_sprite_free(resumeButton);
+    gf2d_sprite_free(quitButton);
+}
+
 void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds)
 {
     TTF_Font* font = TTF_OpenFont(GAME_FONT, 48); // Adjust font size as needed

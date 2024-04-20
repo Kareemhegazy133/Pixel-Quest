@@ -101,6 +101,8 @@ pq_entity* new_pq_player()
 	player->isJumping = 0;
 	player->max_jump_force = 700.f;
 
+	player->isShopping = 0;
+
 	player->think = pq_player_think;
 	player->update = pq_player_update;
 	player->free = pq_player_free;
@@ -172,6 +174,12 @@ void pq_player_handle_input(pq_entity* player)
 	{
 		slog("player_data = NULL.");
 		return;
+	}
+
+	// 'F' key to display shop
+	if (keys[SDL_SCANCODE_F])
+	{
+		player->isShopping = 1;
 	}
 
 	// 'I' key to display inventory
@@ -385,6 +393,27 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 
 	if (isStillGrounded == 0) {
 		player->current_state = IDLE;
+	}
+
+	// Iterate through the world shops and check for collision with any of the shops
+	for (int i = 0; i < world->shops_count; i++)
+	{
+		// Calculate shop's bounding box
+		Rect shopBox = {
+			world->shops[i]->position.x,
+			world->shops[i]->position.y,
+			world->shops[i]->width,
+			world->shops[i]->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(playerBox, shopBox) && player->isShopping)
+		{
+			slog("colliding with shop");
+			// Open shop menu
+			pq_ShopMenu();
+			player->isShopping = 0;
+		}
 	}
 
 	// Iterate through the world items and check for collision with any of the items
