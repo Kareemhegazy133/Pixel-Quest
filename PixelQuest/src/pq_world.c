@@ -2,6 +2,7 @@
 
 #include <pq_camera.h>
 #include <pq_world.h>
+#include <pq_shop.h>
 #include <pq_item.h>
 #include <pq_enemy.h>
 
@@ -52,6 +53,27 @@ void pq_world_build_tile_layer(pq_world* world)
 	{
 		slog("world->tile_layer->texture = NULL, Failed to create a pq_world tile layer texture.");
 		return;
+	}
+}
+
+void load_world_pq_shops(SJson* world_json, pq_world* world)
+{
+	SJson* shopsList = sj_object_get_value(world_json, "shops");
+	if (!shopsList)
+	{
+		slog("This world_json is missing the shops object.");
+		return;
+	}
+
+	for (int i = 0; i < sj_array_get_count(shopsList); i++)
+	{
+		SJson* shop_data = sj_array_get_nth(shopsList, i);
+		if (!shop_data) continue;
+
+		pq_entity* shop = init_pq_shop(shop_data);
+		if (!shop) continue;
+
+		slog("Loaded a shop: %s", shop->display_name);
 	}
 }
 
@@ -178,6 +200,8 @@ pq_world* load_pq_world(const char* file_name)
 	world->tile_set = gf2d_sprite_load_all(tile_set, frame_width, frame_height, frames_per_line, 1);
 	pq_world_build_tile_layer(world);
 
+	load_world_pq_shops(world_json, world);
+	slog("Loaded all world shops.");
 	load_world_pq_items(world_json, world);
 	slog("Loaded all world items.");
 	load_world_pq_enemies(world_json, world);

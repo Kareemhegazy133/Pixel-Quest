@@ -25,6 +25,15 @@
 			[9, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 13, 0, 0, 0, 0, 0],
 			[9, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 13, 0, 0, 0, 0, 0]
 		],
+		"shops":[
+			{
+				"name": "shop",
+				"displayName": "Shop",
+				"sprite": "images/entities/shop.png",
+				"position_x": 875,
+				"position_y": 580,
+			}
+		],
 		"items":[
 			{
 				"name": "coin",

@@ -31,7 +31,8 @@ typedef enum
 	PLAYER_ENTITY,
 	ENEMY_ENTITY,
 	ITEM_ENTITY,
-	ABILITY_ENTITY
+	ABILITY_ENTITY,
+	SHOP_ENTITY
 } EntityType;
 
 typedef enum

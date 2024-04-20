@@ -170,6 +170,7 @@
     <ClCompile Include="src\pq_inventory.c" />
     <ClCompile Include="src\pq_item.c" />
     <ClCompile Include="src\pq_player.c" />
+    <ClCompile Include="src\pq_shop.c" />
     <ClCompile Include="src\pq_ui.c" />
     <ClCompile Include="src\pq_world.c" />
   </ItemGroup>
@@ -208,6 +209,7 @@
     <ClInclude Include="include\pq_enemy.h" />
     <ClInclude Include="include\pq_inventory.h" />
     <ClInclude Include="include\pq_item.h" />
+    <ClInclude Include="include\pq_shop.h" />
     <ClInclude Include="include\pq_ui.h" />
     <ClInclude Include="include\pq_world.h" />
   </ItemGroup>

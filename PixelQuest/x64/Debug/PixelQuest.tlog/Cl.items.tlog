@@ -33,5 +33,6 @@ C:\dev\PixelQuest\PixelQuest\src\pq_entity.c;C:\dev\PixelQuest\PixelQuest\x64\De
 C:\dev\PixelQuest\PixelQuest\src\pq_inventory.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_inventory.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_item.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_item.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_player.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_player.obj
+C:\dev\PixelQuest\PixelQuest\src\pq_shop.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_shop.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_ui.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_ui.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_world.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_world.obj

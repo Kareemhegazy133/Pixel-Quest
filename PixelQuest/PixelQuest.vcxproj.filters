@@ -126,6 +126,9 @@
     <ClCompile Include="src\pq_ui.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pq_shop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\gf2d_draw.h">
@@ -234,6 +237,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\pq_ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pq_shop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
