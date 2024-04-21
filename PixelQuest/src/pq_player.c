@@ -411,7 +411,7 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 		{
 			slog("colliding with shop");
 			// Open shop menu
-			pq_ShopMenu();
+			pq_ShopMenu(player);
 			player->isShopping = 0;
 		}
 	}

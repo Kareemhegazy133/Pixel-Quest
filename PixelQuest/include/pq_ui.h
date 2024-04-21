@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <gf2d_graphics.h>
+#include <pq_entity.h>
 
 typedef enum {
     MAIN_MENU,
@@ -23,7 +24,7 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState);
 
 void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState);
 
-void pq_ShopMenu();
+void pq_ShopMenu(pq_entity* player);
 
 void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds);
 

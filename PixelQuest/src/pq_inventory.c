@@ -88,6 +88,28 @@ void pq_inventory_display(pq_inventory* inventory)
     }
 }
 
+int pq_inventory_get_item_amount(pq_inventory* inventory, const char* display_name)
+{
+    if (!inventory || !display_name)
+    {
+        slog("inventory or display_name = NULL, Failed to get item amount in the inventory.");
+        return 0;
+    }
+
+    int amount = 0;
+
+    for (int i = 0; i < inventory->count; i++)
+    {
+        if (strcmp(inventory->items[i]->display_name, display_name) == 0)
+        {
+            amount++;
+        }
+    }
+
+    slog("Amount of %s in inventory: %d", display_name, amount);
+    return amount;
+}
+
 void pq_inventory_free(pq_inventory* inventory)
 {
     if (!inventory)

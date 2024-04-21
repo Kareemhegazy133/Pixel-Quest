@@ -40,6 +40,13 @@ int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item);
 void pq_inventory_display(pq_inventory* inventory);
 
 /**
+* @brief: Get the player's item's count in inventory.
+* @param inventory: The player's inventory.
+* @param display_name: The display name of the item to get the amount of from the inventory.
+*/
+int pq_inventory_get_item_amount(pq_inventory* inventory, const char* display_name);
+
+/**
 * @brief: Free the memory allocated for the player's inventory.
 * @param inventory: The player's inventory.
 */
