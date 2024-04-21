@@ -152,18 +152,11 @@ void pq_ShopMenu()
 {
     slog("Shop Open!");
     SDL_Renderer* renderer = gf2d_graphics_get_renderer();
-    Sprite* background = gf2d_sprite_load_image("images/backgrounds/Pause_Menu_Background.png");
-    Bool menuOpen = true;
+    Sprite* background = gf2d_sprite_load_image("images/ui/Shop.png");
+    Bool shopOpen = true;
+    SDL_ShowCursor(SDL_ENABLE);
 
-    // Load button sprites
-    Sprite* resumeButton = gf2d_sprite_load_image("images/ui/Resume_Game_Button.png");
-    Sprite* quitButton = gf2d_sprite_load_image("images/ui/Quit_Game_Button.png");
-
-    // Button positions
-    Vector2D resumeButtonPos = vector2d(512, 200);
-    Vector2D quitButtonPos = vector2d(512, 400);
-
-    while (menuOpen)
+    while (shopOpen)
     {
         // Clear the screen
         gf2d_graphics_clear_screen();
@@ -171,19 +164,47 @@ void pq_ShopMenu()
         // Draw the background
         gf2d_sprite_draw_image(background, vector2d(0, 0));
 
-        // Draw the buttons
-        gf2d_sprite_draw_image(resumeButton, resumeButtonPos);
-        gf2d_sprite_draw_image(quitButton, quitButtonPos);
-
         // Present the rendered frame
         gf2d_graphics_next_frame();
 
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect maceBuyButtonBox = { 118, 391, 188, 103 };
+                Rect wandBuyButtonBox = { 536, 390, 188, 103 };
+                Rect staffBuyButtonBox = { 932, 390, 188, 103 };
+                Rect quitButtonBox = { 1179, 73, 39, 45 };
+
+                // Check if the mouse click is within the bounds of the mace buy button
+                if (gfc_point_in_rect(mouse_pos, maceBuyButtonBox))
+                {
+                    shopOpen = false;
+                }
+                else if (gfc_point_in_rect(mouse_pos, wandBuyButtonBox))
+                {
+                    shopOpen = false;
+                }
+                else if (gfc_point_in_rect(mouse_pos, staffBuyButtonBox))
+                {
+                    shopOpen = false;
+                }
+                // Check if the mouse click is within the bounds of the quit button
+                else if (gfc_point_in_rect(mouse_pos, quitButtonBox))
+                {
+                    shopOpen = false;
+                }
+            }
+        }
     }
 
     // Free resources
     gf2d_sprite_free(background);
-    gf2d_sprite_free(resumeButton);
-    gf2d_sprite_free(quitButton);
 }
 
 void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds)
