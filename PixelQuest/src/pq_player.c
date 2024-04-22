@@ -476,7 +476,7 @@ void pq_player_collect_item(pq_entity* player, pq_world* world, int itemIndex)
 	slog("Collected %s", item->display_name);
 	pq_inventory_display(player_data->inventory);
 
-	if (item->item_type == FOOD)
+	if (item->type == FOOD_ENTITY)
 	{
 		player->health += item->count;
 	}
@@ -487,7 +487,7 @@ void pq_player_die(pq_entity* player)
 	if (!player) return;
 
 	slog("Player died!");
-	pq_render_announcement(RED, "Player died!", 0, 0, 3000);
+	pq_render_announcement(RED, "Player died!", 3);
 	//Create an SDL quit event
 	SDL_Event quitEvent;
 	quitEvent.type = SDL_QUIT;

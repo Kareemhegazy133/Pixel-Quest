@@ -33,14 +33,9 @@ typedef enum
 	ITEM_ENTITY,
 	ABILITY_ENTITY,
 	SHOP_ENTITY,
-	WEAPON_ENTITY
+	WEAPON_ENTITY,
+	FOOD_ENTITY
 } EntityType;
-
-typedef enum
-{
-	FOOD,
-	GOLD
-} ItemType;
 
 typedef enum
 {
@@ -121,7 +116,6 @@ typedef struct PQ_Entity_S
 	int			count;											// The amount of the item
 	int			cost;											// The shop cost of the item
 	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
-	ItemType	item_type;										// The type of item
 
 	///////// <Abilities Only> /////////
 

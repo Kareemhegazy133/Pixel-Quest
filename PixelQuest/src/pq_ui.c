@@ -326,6 +326,7 @@ void pq_ShopMenu(pq_entity* player)
                     }
                     else {
                         slog("Not Enough Coins to Purchase Mace");
+                        pq_render_text(RED, 24, 300, 630, "Not Enough Coins to Purchase Mace", 2);
                     }
                 }
                 else if (gfc_point_in_rect(mouse_pos, wandBuyButtonBox))
@@ -339,8 +340,15 @@ void pq_ShopMenu(pq_entity* player)
 
                     pq_entity* item = new_pq_item(wand_item_def);
                     item->collected = 1;
-                    pq_inventory_add_item(player_data->inventory, item);
-                    shopOpen = false;
+                    if (player_coins - item->cost >= 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
+                        pq_inventory_add_item(player_data->inventory, item);
+                    }
+                    else {
+                        slog("Not Enough Coins to Purchase Wand");
+                        pq_render_text(RED, 24, 300, 630, "Not Enough Coins to Purchase Wand", 2);
+                    }
                 }
                 else if (gfc_point_in_rect(mouse_pos, staffBuyButtonBox))
                 {
@@ -353,8 +361,15 @@ void pq_ShopMenu(pq_entity* player)
 
                     pq_entity* item = new_pq_item(staff_item_def);
                     item->collected = 1;
-                    pq_inventory_add_item(player_data->inventory, item);
-                    shopOpen = false;
+                    if (player_coins - item->cost >= 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
+                        pq_inventory_add_item(player_data->inventory, item);
+                    }
+                    else {
+                        slog("Not Enough Coins to Purchase Staff");
+                        pq_render_text(RED, 24, 300, 630, "Not Enough Coins to Purchase Staff", 2);
+                    }
                 }
                 // Check if the mouse click is within the bounds of the quit button
                 else if (gfc_point_in_rect(mouse_pos, quitButtonBox))
@@ -370,7 +385,7 @@ void pq_ShopMenu(pq_entity* player)
     TTF_CloseFont(font);
 }
 
-void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, int pos_y, int seconds)
+void pq_render_announcement(SDL_Color text_color, const char* msg, int seconds)
 {
     TTF_Font* font = TTF_OpenFont(GAME_FONT, 48); // Adjust font size as needed
     if (!font) {
@@ -411,7 +426,51 @@ void pq_render_announcement(SDL_Color text_color, const char* msg, int pos_x, in
     TTF_CloseFont(font);
 
     // Delay for 5 seconds
-    SDL_Delay(seconds);
+    SDL_Delay(seconds * 1000);
+}
+
+void pq_render_text(SDL_Color text_color, int font_size, int pos_x, int pos_y, const char* msg, int seconds)
+{
+    TTF_Font* font = TTF_OpenFont(GAME_FONT, font_size); // Adjust font size as needed
+    if (!font) {
+        slog("Error: Failed to load font - %s", TTF_GetError());
+        return;
+    }
+
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, msg, text_color);
+    if (!textSurface) {
+        slog("Error: Failed to render text surface - %s", TTF_GetError());
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (!textTexture) {
+        slog("Error: Failed to create texture from surface - %s", SDL_GetError());
+        SDL_FreeSurface(textSurface);
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Rect textRect;
+    textRect.x = pos_x;
+    textRect.y = pos_y;
+    textRect.w = textSurface->w;
+    textRect.h = textSurface->h;
+
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    SDL_RenderPresent(renderer);
+
+    // Free resources
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(font);
+
+    // Delay for 5 seconds
+    SDL_Delay(seconds * 1000);
 }
 
 void pq_render_player_health_bar(int player_health)

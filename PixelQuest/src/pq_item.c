@@ -57,7 +57,7 @@ pq_entity* new_pq_item(SJson* item_data)
 	int item_type;
 	sj_object_get_value_as_int(item_data, "type", &item_type);
 
-	if (item_type == 1)
+	if (item_type == 5)
 	{
 		item->type = WEAPON_ENTITY;
 		item->width = 128;
@@ -86,6 +86,11 @@ pq_entity* new_pq_item(SJson* item_data)
 
 	// Parse the rest of the properties from the json
 	gfc_word_cpy(item->display_name, sj_object_get_value_as_string(item_data, "displayName"));
+
+	if (gfc_word_cmp(item->display_name, "Food") == 0)
+	{
+		item->type = FOOD_ENTITY;
+	}
 
 	sj_object_get_value_as_int(item_data, "cost", &item->cost);
 

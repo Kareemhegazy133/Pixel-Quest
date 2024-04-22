@@ -38,7 +38,7 @@
 			{
 				"name": "mace",
 				"displayName": "Mace",
-				"type": 1,
+				"type": 5,
 				"sprite": "images/items/Mace_1.png",
 				"sprite_2": "images/items/Mace_2.png",
 				"sprite_3": "images/items/Mace_3.png",
@@ -53,7 +53,7 @@
 			{
 				"name": "coin",
 				"displayName": "Coin",
-				"type": 0,
+				"type": 2,
 				"sprite": "images/items/coin.png",
 				"inventory_sprite": "images/items/inventory_coin.png",
 				"position_x": 775,
@@ -64,7 +64,7 @@
 			{
 				"name": "food",
 				"displayName": "Food",
-				"type": 0,
+				"type": 6,
 				"sprite": "images/items/apple.png",
 				"inventory_sprite": "images/items/inventory_apple.png",
 				"position_x": 650,
