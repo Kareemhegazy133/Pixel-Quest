@@ -190,7 +190,8 @@ void pq_player_handle_input(pq_entity* player)
 			slog("player_data->inventory = NULL, Failed to display player inventory.");
 			return;
 		}
-		pq_inventory_display(player_data->inventory);
+		//pq_inventory_display(player_data->inventory);
+		pq_InventoryMenu(player);
 	}
 
 	if (!player_data->abilities)

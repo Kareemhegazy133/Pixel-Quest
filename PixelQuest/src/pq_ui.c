@@ -385,6 +385,253 @@ void pq_ShopMenu(pq_entity* player)
     TTF_CloseFont(font);
 }
 
+void pq_InventoryMenu(pq_entity* player)
+{
+    slog("Inventory Open!");
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+    Sprite* background = gf2d_sprite_load_image("images/ui/Inventory.png");
+    Bool inventoryOpen = true;
+    SDL_ShowCursor(SDL_ENABLE);
+
+    int player_coins = 0;
+    int mace_count = 0;
+    int wand_count = 0;
+    int staff_count = 0;
+    int bat_count = 0;
+    int sickle_count = 0;
+
+    TTF_Font* font = TTF_OpenFont(GAME_FONT, 32); // Adjust font size as needed
+    if (!font) {
+        slog("Error: Failed to load font - %s", TTF_GetError());
+        return;
+    }
+
+    SDL_Color textColor = { 255, 255, 255, 255 }; // White color
+
+    while (inventoryOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Render player coins text
+        pq_player_data* player_data = (pq_player_data*)player->data;
+        if (player_data && player_data->inventory)
+        {
+            player_coins = pq_inventory_get_item_amount(player_data->inventory, "Coin");
+            mace_count = player_data->inventory->mace_count;
+            wand_count = player_data->inventory->wand_count;
+            staff_count = player_data->inventory->staff_count;
+            bat_count = player_data->inventory->bat_count;
+            sickle_count = player_data->inventory->sickle_count;
+        }
+
+        char coinsText[50];
+        snprintf(coinsText, 50, "%d", player_coins);
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, coinsText, textColor);
+        if (!textSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (!textTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(textSurface);
+            break;
+        }
+
+        SDL_Rect textRect = { 40, 70, textSurface->w, textSurface->h };
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        // Free text resources
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
+
+        // Render mace coins text
+        char macecoinsText[50];
+        snprintf(macecoinsText, 50, "%d", mace_count);
+        SDL_Surface* maceTextSurface = TTF_RenderText_Solid(font, macecoinsText, textColor);
+        if (!maceTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* maceTextTexture = SDL_CreateTextureFromSurface(renderer, maceTextSurface);
+        if (!maceTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(maceTextSurface);
+            break;
+        }
+
+        SDL_Rect macetextRect = { 200, 290, maceTextSurface->w, maceTextSurface->h };
+        SDL_RenderCopy(renderer, maceTextTexture, NULL, &macetextRect);
+
+        // Free text resources
+        SDL_FreeSurface(maceTextSurface);
+        SDL_DestroyTexture(maceTextTexture);
+
+        // Render wand coins text
+        char wandcoinsText[50];
+        snprintf(wandcoinsText, 50, "%d", wand_count);
+        SDL_Surface* wandTextSurface = TTF_RenderText_Solid(font, wandcoinsText, textColor);
+        if (!wandTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* wandTextTexture = SDL_CreateTextureFromSurface(renderer, wandTextSurface);
+        if (!wandTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(wandTextSurface);
+            break;
+        }
+
+        SDL_Rect wandtextRect = { 620, 290, wandTextSurface->w, wandTextSurface->h };
+        SDL_RenderCopy(renderer, wandTextTexture, NULL, &wandtextRect);
+
+        // Free text resources
+        SDL_FreeSurface(wandTextSurface);
+        SDL_DestroyTexture(wandTextTexture);
+
+        // Render staff coins text
+        char staffcoinsText[50];
+        snprintf(staffcoinsText, 50, "%d", staff_count);
+        SDL_Surface* staffTextSurface = TTF_RenderText_Solid(font, staffcoinsText, textColor);
+        if (!staffTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* staffTextTexture = SDL_CreateTextureFromSurface(renderer, staffTextSurface);
+        if (!staffTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(staffTextSurface);
+            break;
+        }
+
+        SDL_Rect stafftextRect = { 1010, 290, staffTextSurface->w, staffTextSurface->h };
+        SDL_RenderCopy(renderer, staffTextTexture, NULL, &stafftextRect);
+
+        // Free text resources
+        SDL_FreeSurface(staffTextSurface);
+        SDL_DestroyTexture(staffTextTexture);
+
+        // Render bat coins text
+        char batcoinsText[50];
+        snprintf(batcoinsText, 50, "%d", bat_count);
+        SDL_Surface* batTextSurface = TTF_RenderText_Solid(font, batcoinsText, textColor);
+        if (!batTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* batTextTexture = SDL_CreateTextureFromSurface(renderer, batTextSurface);
+        if (!batTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(batTextSurface);
+            break;
+        }
+
+        SDL_Rect battextRect = { 200, 550, batTextSurface->w, batTextSurface->h };
+        SDL_RenderCopy(renderer, batTextTexture, NULL, &battextRect);
+
+        // Free text resources
+        SDL_FreeSurface(batTextSurface);
+        SDL_DestroyTexture(batTextTexture);
+
+        // Render sickle coins text
+        char sicklecoinsText[50];
+        snprintf(sicklecoinsText, 50, "%d", sickle_count);
+        SDL_Surface* sickleTextSurface = TTF_RenderText_Solid(font, sicklecoinsText, textColor);
+        if (!sickleTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* sickleTextTexture = SDL_CreateTextureFromSurface(renderer, sickleTextSurface);
+        if (!sickleTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(sickleTextSurface);
+            break;
+        }
+
+        SDL_Rect sickletextRect = { 1010, 550, sickleTextSurface->w, sickleTextSurface->h };
+        SDL_RenderCopy(renderer, sickleTextTexture, NULL, &sickletextRect);
+
+        // Free text resources
+        SDL_FreeSurface(sickleTextSurface);
+        SDL_DestroyTexture(sickleTextTexture);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect maceUseButtonBox = { 142, 360, 156, 86 };
+                Rect wandUseButtonBox = { 562, 360, 156, 86 };
+                Rect staffUseButtonBox = { 944, 360, 156, 86 };
+                Rect batUseButtonBox = { 147, 618, 156, 86 };
+                Rect sickleUseButtonBox = { 955, 625, 156, 86 };
+                Rect quitButtonBox = { 1179, 73, 39, 45 };
+                SJson* itemsList = get_pq_items_list();
+
+                // Check if the mouse click is within the bounds of the mace buy button
+                if (gfc_point_in_rect(mouse_pos, maceUseButtonBox))
+                {
+                    slog("Equipped Mace");
+                }
+                else if (gfc_point_in_rect(mouse_pos, wandUseButtonBox))
+                {
+                    slog("Equipped Wand");
+                }
+                else if (gfc_point_in_rect(mouse_pos, staffUseButtonBox))
+                {
+                    slog("Equipped Staff");
+                }
+                else if (gfc_point_in_rect(mouse_pos, batUseButtonBox))
+                {
+                    slog("Equipped Bat");
+                }
+                else if (gfc_point_in_rect(mouse_pos, sickleUseButtonBox))
+                {
+                    slog("Equipped Sickle");
+                }
+                // Check if the mouse click is within the bounds of the quit button
+                else if (gfc_point_in_rect(mouse_pos, quitButtonBox))
+                {
+                    inventoryOpen = false;
+                }
+            }
+        }
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    TTF_CloseFont(font);
+}
+
 void pq_render_announcement(SDL_Color text_color, const char* msg, int seconds)
 {
     TTF_Font* font = TTF_OpenFont(GAME_FONT, 48); // Adjust font size as needed

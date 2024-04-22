@@ -26,6 +26,8 @@ void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState);
 
 void pq_ShopMenu(pq_entity* player);
 
+void pq_InventoryMenu(pq_entity* player);
+
 void pq_render_announcement(SDL_Color text_color, const char* msg, int seconds);
 
 void pq_render_text(SDL_Color text_color, int font_size, int pos_x, int pos_y, const char* msg, int seconds);

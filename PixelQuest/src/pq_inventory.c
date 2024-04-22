@@ -38,6 +38,27 @@ int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item)
     }
     else {
         inventory->items[inventory->count++] = item;
+
+        if (gfc_word_cmp(item->display_name, "Mace") == 0)
+        {
+            inventory->mace_count++;
+        }
+        else if (gfc_word_cmp(item->display_name, "Wand") == 0)
+        {
+            inventory->wand_count++;
+        }
+        else if (gfc_word_cmp(item->display_name, "Staff") == 0)
+        {
+            inventory->staff_count++;
+        }
+        else if (gfc_word_cmp(item->display_name, "Bat") == 0)
+        {
+            inventory->bat_count++;
+        }
+        else if (gfc_word_cmp(item->display_name, "Sickle") == 0)
+        {
+            inventory->sickle_count++;
+        }
     }
     
     slog("Added %d %s to player's inventory", item->count, item->display_name);
@@ -59,6 +80,27 @@ int pq_inventory_remove_item(pq_inventory* inventory, TextWord item_display_name
     {
         if (gfc_word_cmp(inventory->items[i]->display_name, item_display_name) == 0)
         {
+            if (gfc_word_cmp(inventory->items[i]->display_name, "Mace") == 0)
+            {
+                inventory->mace_count--;
+            }
+            else if (gfc_word_cmp(inventory->items[i]->display_name, "Wand") == 0)
+            {
+                inventory->wand_count--;
+            }
+            else if (gfc_word_cmp(inventory->items[i]->display_name, "Staff") == 0)
+            {
+                inventory->staff_count--;
+            }
+            else if (gfc_word_cmp(inventory->items[i]->display_name, "Bat") == 0)
+            {
+                inventory->bat_count--;
+            }
+            else if (gfc_word_cmp(inventory->items[i]->display_name, "Sickle") == 0)
+            {
+                inventory->sickle_count--;
+            }
+
             // Shift items to fill the gap
             for (int j = i; j < inventory->count - 1; j++)
             {

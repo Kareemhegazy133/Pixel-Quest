@@ -9,6 +9,11 @@ typedef struct
 {
     pq_entity* items[MAX_INVENTORY_SIZE];
     int count;
+    int mace_count;
+    int wand_count;
+    int staff_count;
+    int bat_count;
+    int sickle_count;
 } pq_inventory;
 
 /**
