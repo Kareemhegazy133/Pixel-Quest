@@ -412,8 +412,8 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 			slog("colliding with shop");
 			// Open shop menu
 			pq_ShopMenu(player);
-			player->isShopping = 0;
 		}
+		player->isShopping = 0;
 	}
 
 	// Iterate through the world items and check for collision with any of the items

@@ -2,6 +2,7 @@
 #include <gf2d_sprite.h>
 #include <gfc_shape.h>
 #include <pq_ui.h>
+#include <pq_item.h>
 #include <pq_player.h>
 
 void init_pq_ui_system()
@@ -158,12 +159,11 @@ void pq_ShopMenu(pq_entity* player)
     SDL_ShowCursor(SDL_ENABLE);
 
     int player_coins = 0;
-    pq_player_data* player_data = (pq_player_data*)player->data;
-    if (player_data && player_data->inventory)
-    {
-        player_coins = pq_inventory_get_item_amount(player_data->inventory, "Coin");
-        slog("Player coins: %d", player_coins);
-    }
+    //TODO Find a better solution than hardcoding prices
+    int mace_cost = 2;
+    int wand_cost = 3;
+    int staff_cost = 4;
+    int food_cost = 1;
 
     TTF_Font* font = TTF_OpenFont(GAME_FONT, 32); // Adjust font size as needed
     if (!font) {
@@ -182,6 +182,12 @@ void pq_ShopMenu(pq_entity* player)
         gf2d_sprite_draw_image(background, vector2d(0, 0));
 
         // Render player coins text
+        pq_player_data* player_data = (pq_player_data*)player->data;
+        if (player_data && player_data->inventory)
+        {
+            player_coins = pq_inventory_get_item_amount(player_data->inventory, "Coin");
+        }
+
         char coinsText[50];
         snprintf(coinsText, 50, "%d", player_coins);
         SDL_Surface* textSurface = TTF_RenderText_Solid(font, coinsText, textColor);
@@ -199,7 +205,7 @@ void pq_ShopMenu(pq_entity* player)
             break;
         }
 
-        SDL_Rect textRect = { 50, 70, textSurface->w, textSurface->h };
+        SDL_Rect textRect = { 40, 70, textSurface->w, textSurface->h };
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
         // Free text resources
@@ -208,7 +214,7 @@ void pq_ShopMenu(pq_entity* player)
 
         // Render mace coins text
         char macecoinsText[50];
-        snprintf(macecoinsText, 50, "%d", player_coins);
+        snprintf(macecoinsText, 50, "%d", mace_cost);
         SDL_Surface* maceTextSurface = TTF_RenderText_Solid(font, macecoinsText, textColor);
         if (!maceTextSurface)
         {
@@ -233,7 +239,7 @@ void pq_ShopMenu(pq_entity* player)
 
         // Render wand coins text
         char wandcoinsText[50];
-        snprintf(wandcoinsText, 50, "%d", player_coins);
+        snprintf(wandcoinsText, 50, "%d", wand_cost);
         SDL_Surface* wandTextSurface = TTF_RenderText_Solid(font, wandcoinsText, textColor);
         if (!wandTextSurface)
         {
@@ -258,7 +264,7 @@ void pq_ShopMenu(pq_entity* player)
 
         // Render staff coins text
         char staffcoinsText[50];
-        snprintf(staffcoinsText, 50, "%d", player_coins);
+        snprintf(staffcoinsText, 50, "%d", staff_cost);
         SDL_Surface* staffTextSurface = TTF_RenderText_Solid(font, staffcoinsText, textColor);
         if (!staffTextSurface)
         {
@@ -297,18 +303,57 @@ void pq_ShopMenu(pq_entity* player)
                 Rect wandBuyButtonBox = { 536, 390, 188, 103 };
                 Rect staffBuyButtonBox = { 932, 390, 188, 103 };
                 Rect quitButtonBox = { 1179, 73, 39, 45 };
+                SJson* itemsList = get_pq_items_list();
 
                 // Check if the mouse click is within the bounds of the mace buy button
                 if (gfc_point_in_rect(mouse_pos, maceBuyButtonBox))
                 {
-                    shopOpen = false;
+                    //n is hardcoded aka 0 is mace, 1 is wand, 2 is staff, 3 is coin, 4 is food
+                    SJson* mace_item_def = sj_array_get_nth(itemsList, 0);
+                    if (!mace_item_def)
+                    {
+                        slog("Mace item is missing from the items list object in pq_items def file.");
+                        return;
+                    }
+
+                    pq_entity* item = new_pq_item(mace_item_def);
+                    item->collected = 1;
+                    // if we have enough coins to buy
+                    if (player_coins - item->cost >= 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
+                        pq_inventory_add_item(player_data->inventory, item);
+                    }
+                    else {
+                        slog("Not Enough Coins to Purchase Mace");
+                    }
                 }
                 else if (gfc_point_in_rect(mouse_pos, wandBuyButtonBox))
                 {
+                    SJson* wand_item_def = sj_array_get_nth(itemsList, 1);
+                    if (!wand_item_def)
+                    {
+                        slog("Wand item is missing from the items list object in pq_items def file.");
+                        return;
+                    }
+
+                    pq_entity* item = new_pq_item(wand_item_def);
+                    item->collected = 1;
+                    pq_inventory_add_item(player_data->inventory, item);
                     shopOpen = false;
                 }
                 else if (gfc_point_in_rect(mouse_pos, staffBuyButtonBox))
                 {
+                    SJson* staff_item_def = sj_array_get_nth(itemsList, 2);
+                    if (!staff_item_def)
+                    {
+                        slog("Staff item is missing from the items list object in pq_items def file.");
+                        return;
+                    }
+
+                    pq_entity* item = new_pq_item(staff_item_def);
+                    item->collected = 1;
+                    pq_inventory_add_item(player_data->inventory, item);
                     shopOpen = false;
                 }
                 // Check if the mouse click is within the bounds of the quit button

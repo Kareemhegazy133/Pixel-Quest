@@ -59,6 +59,7 @@ int main(int argc, char * argv[])
 
                 init_pq_entity_system();
                 load_pq_abilities_json("defs/pq_abilities.json");
+                load_pq_items_json("defs/pq_items.json");
                 pq_camera_set_size(vector2d(1280, 720));
                 world = load_pq_world("maps/pq_mp_test_world.json");
                 player = new_pq_player();

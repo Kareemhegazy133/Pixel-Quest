@@ -29,23 +29,35 @@ int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item)
     }
 
     // Add the item to the inventory
-    inventory->items[inventory->count++] = item;
-    slog("Added %s to player's inventory", item->display_name);
+    if (item->type != WEAPON_ENTITY)
+    {
+        for (int i = 0; i < item->count; i++)
+        {
+            inventory->items[inventory->count++] = item;
+        }
+    }
+    else {
+        inventory->items[inventory->count++] = item;
+    }
+    
+    slog("Added %d %s to player's inventory", item->count, item->display_name);
     return 1;
 }
 
-int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item)
+int pq_inventory_remove_item(pq_inventory* inventory, TextWord item_display_name, int amount)
 {
-    if (!inventory || !item)
+    if (!inventory || !item_display_name)
     {
-        slog("inventory or item = NULL, failed to remove item to the inventory.");
+        slog("inventory or item_display_name = NULL, failed to remove item to the inventory.");
         return 0;
     }
 
-    // Find the item in the inventory
+    int removed = 0;
+
+    // Find the item in the inventory and remove it x amount of times
     for (int i = 0; i < inventory->count; i++)
     {
-        if (inventory->items[i] == item)
+        if (gfc_word_cmp(inventory->items[i]->display_name, item_display_name) == 0)
         {
             // Shift items to fill the gap
             for (int j = i; j < inventory->count - 1; j++)
@@ -56,13 +68,27 @@ int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item)
             // Clear the last slot and update the count
             inventory->items[inventory->count - 1] = NULL;
             inventory->count--;
+            removed++;
 
-            return 1; // Item removed successfully
+            // Check if we have removed the desired amount
+            if (removed == amount)
+            {
+                return 1; // Removed the desired amount
+            }
+
+            // After removing an item, we need to check the current index 'i' again
+            // because inventory->items[i] has been replaced by the next item.
+            i--;
         }
     }
 
-    // Item not found in the inventory
-    slog("Item not found in the inventory.");
+    if (removed > 0)
+    {
+        slog("Removed %d %s from Inventory", removed, item_display_name);
+        return 1;
+    }
+
+    slog("Item not found in Inventory");
     return 0;
 }
 
@@ -106,7 +132,7 @@ int pq_inventory_get_item_amount(pq_inventory* inventory, const char* display_na
         }
     }
 
-    slog("Amount of %s in inventory: %d", display_name, amount);
+    //slog("Amount of %s in inventory: %d", display_name, amount);
     return amount;
 }
 

@@ -3,7 +3,7 @@
 #include <pq_entity.h>
 #include <pq_item.h>
 
-#define MAX_INVENTORY_SIZE 10
+#define MAX_INVENTORY_SIZE 100
 
 typedef struct
 {
@@ -28,10 +28,11 @@ int pq_inventory_add_item(pq_inventory* inventory, pq_entity* item);
 /**
 * @brief: Remove an item from the player's inventory.
 * @param inventory: The player's inventory.
-* @param item: The item to remove from the inventory.
+* @param item_display_name: The item's display name to remove from the inventory.
+* @param amount: the amount of the item to remove.
 * @return: 1 if successful, 0 if the item is not in the inventory.
 */
-int pq_inventory_remove_item(pq_inventory* inventory, pq_entity* item);
+int pq_inventory_remove_item(pq_inventory* inventory, TextWord item_display_name, int amount);
 
 /**
 * @brief: Display the player's inventory.

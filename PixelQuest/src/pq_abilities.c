@@ -42,6 +42,7 @@ SJson* load_pq_abilities_json(const char* file_name)
 	}
 
 	set_pq_abilities_list(abilitiesList);
+	slog("Loaded pq_abilities_json.");
 	return abilitiesList;
 }
 

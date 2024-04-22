@@ -36,22 +36,41 @@
 		],
 		"items":[
 			{
+				"name": "mace",
+				"displayName": "Mace",
+				"type": 1,
+				"sprite": "images/items/Mace_1.png",
+				"sprite_2": "images/items/Mace_2.png",
+				"sprite_3": "images/items/Mace_3.png",
+				"inventory_sprite": "images/items/Mace_1.png",
+				"inventory_sprite_2": "images/items/Mace_2.png",
+				"inventory_sprite_3": "images/items/Mace_3.png",
+				"position_x": 375,
+				"position_y": 660,
+				"count": 1,
+				"cost": 2
+			},
+			{
 				"name": "coin",
 				"displayName": "Coin",
+				"type": 0,
 				"sprite": "images/items/coin.png",
 				"inventory_sprite": "images/items/inventory_coin.png",
 				"position_x": 775,
 				"position_y": 625,
-				"count": 1
+				"count": 10,
+				"cost": -1
 			},
 			{
 				"name": "food",
 				"displayName": "Food",
+				"type": 0,
 				"sprite": "images/items/apple.png",
 				"inventory_sprite": "images/items/inventory_apple.png",
-				"position_x": 575,
+				"position_x": 650,
 				"position_y": 625,
-				"count": 20
+				"count": 20,
+				"cost": 1
 			}
 		],
 		"enemies":[

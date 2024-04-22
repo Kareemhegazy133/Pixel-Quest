@@ -32,7 +32,8 @@ typedef enum
 	ENEMY_ENTITY,
 	ITEM_ENTITY,
 	ABILITY_ENTITY,
-	SHOP_ENTITY
+	SHOP_ENTITY,
+	WEAPON_ENTITY
 } EntityType;
 
 typedef enum
@@ -109,11 +110,16 @@ typedef struct PQ_Entity_S
 	Vector2D patrol_point2;										// The enemy's second patrol point
 	void (*handle_actions)(struct PQ_Entity_S* self);			// The function to call to handle enemy's actions
 
-	///////// <Items Only> /////////
+	///////// <Items and Weapons Only> /////////
 
 	TextWord	display_name;									// The display name of the item
+	Sprite*		sprite_2;										// The item's level 2 sprite (null if entity does not have one)
+	Sprite*		sprite_3;										// The item's level 3 sprite (null if entity does not have one)
 	Sprite*		inventory_sprite;								// The item's inventory sprite (null if entity does not have one)
+	Sprite*		inventory_sprite_2;								// The item's inventory level 2 sprite (null if entity does not have one)
+	Sprite*		inventory_sprite_3;								// The item's inventory level 3 sprite (null if entity does not have one)
 	int			count;											// The amount of the item
+	int			cost;											// The shop cost of the item
 	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
 	ItemType	item_type;										// The type of item
 

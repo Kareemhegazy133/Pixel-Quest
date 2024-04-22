@@ -10,6 +10,12 @@
 pq_entity* new_pq_item(SJson* item_data);
 
 /**
+* @brief This function gets the pq_itemsList Sjson's pointer.
+* @return A pointer to the pq_items_list Sjson.
+*/
+SJson* get_pq_items_list();
+
+/**
 * @brief: This function executes updates for the item entity.
 * @param item: This is the pixel quest item entity in which we execute updates for.
 */
