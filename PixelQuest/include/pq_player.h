@@ -10,6 +10,12 @@ typedef struct
 {
 	pq_inventory* inventory;
 	pq_abilities_list* abilities;
+	int strength;
+	int defense;
+	int magic;
+	int spirit;
+	int vigor;
+	int level;
 } pq_player_data;
 
 /**

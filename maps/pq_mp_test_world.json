@@ -51,6 +51,17 @@
 				"cost": 2
 			},
 			{
+				"name": "diamond",
+				"displayName": "Diamond",
+				"type": 2,
+				"sprite": "images/items/diamond.png",
+				"inventory_sprite": "images/items/inventory_diamond.png",
+				"position_x": 475,
+				"position_y": 625,
+				"count": 10,
+				"cost": -1
+			},
+			{
 				"name": "coin",
 				"displayName": "Coin",
 				"type": 2,

@@ -78,6 +78,12 @@ pq_entity* new_pq_player()
 		player_data->inventory->count = 0;
 		player_data->abilities = init_pq_abilities();
 		player_data->abilities->count = 0;
+		player_data->strength = 0;
+		player_data->defense = 0;
+		player_data->magic = 0;
+		player_data->spirit = 0;
+		player_data->vigor = 0;
+		player_data->level = 0;
 
 		SJson* player_abilities = sj_object_get_value(player_file_json, "abilities");
 		if (!player_abilities)
@@ -174,6 +180,17 @@ void pq_player_handle_input(pq_entity* player)
 	{
 		slog("player_data = NULL.");
 		return;
+	}
+
+	// 'Tab' key to display stats
+	if (keys[SDL_SCANCODE_TAB])
+	{
+		if (!player_data->inventory)
+		{
+			slog("player_data->inventory = NULL, Failed to display player stats.");
+			return;
+		}
+		pq_StatsMenu(player);
 	}
 
 	// 'F' key to display shop

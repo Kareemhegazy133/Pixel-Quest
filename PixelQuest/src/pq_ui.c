@@ -632,6 +632,323 @@ void pq_InventoryMenu(pq_entity* player)
     TTF_CloseFont(font);
 }
 
+void pq_StatsMenu(pq_entity* player)
+{
+    slog("Stats Open!");
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+    Sprite* background = gf2d_sprite_load_image("images/ui/Stats.png");
+    Bool statsOpen = true;
+    SDL_ShowCursor(SDL_ENABLE);
+
+    int player_diamonds = 0;
+    int player_level = 0;
+    int vigor_level = 0;
+    int strength_level = 0;
+    int defense_level = 0;
+    int magic_level = 0;
+    int spirit_level = 0;
+
+    TTF_Font* font = TTF_OpenFont(GAME_FONT, 32); // Adjust font size as needed
+    if (!font) {
+        slog("Error: Failed to load font - %s", TTF_GetError());
+        return;
+    }
+
+    SDL_Color textColor = { 255, 255, 255, 255 }; // White color
+
+    while (statsOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Render player coins text
+        pq_player_data* player_data = (pq_player_data*)player->data;
+        if (player_data && player_data->inventory)
+        {
+            player_diamonds = pq_inventory_get_item_amount(player_data->inventory, "Diamond");
+            player_level = player_data->level;
+            strength_level = player_data->strength;
+            defense_level = player_data->defense;
+            magic_level = player_data->magic;
+            spirit_level = player_data->spirit;
+        }
+
+        char diamondsText[50];
+        snprintf(diamondsText, 50, "%d", player_diamonds);
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, diamondsText, textColor);
+        if (!textSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (!textTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(textSurface);
+            break;
+        }
+
+        SDL_Rect textRect = { 160, 80, textSurface->w, textSurface->h };
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        // Free text resources
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
+
+        // Render current level text
+        char currentlevelText[50];
+        snprintf(currentlevelText, 50, "%d", player_level);
+        SDL_Surface* currentlevelTextSurface = TTF_RenderText_Solid(font, currentlevelText, textColor);
+        if (!currentlevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* currentlevelTextTexture = SDL_CreateTextureFromSurface(renderer, currentlevelTextSurface);
+        if (!currentlevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(currentlevelTextSurface);
+            break;
+        }
+
+        SDL_Rect currentleveltextRect = { 250, 300, currentlevelTextSurface->w, currentlevelTextSurface->h };
+        SDL_RenderCopy(renderer, currentlevelTextTexture, NULL, &currentleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(currentlevelTextSurface);
+        SDL_DestroyTexture(currentlevelTextTexture);
+
+        // Render vigor level text
+        char vigorlevelText[50];
+        snprintf(vigorlevelText, 50, "%d", vigor_level);
+        SDL_Surface* vigorlevelTextSurface = TTF_RenderText_Solid(font, vigorlevelText, textColor);
+        if (!vigorlevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* vigorlevelTextTexture = SDL_CreateTextureFromSurface(renderer, vigorlevelTextSurface);
+        if (!vigorlevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(vigorlevelTextSurface);
+            break;
+        }
+
+        SDL_Rect vigorleveltextRect = { 750, 230, vigorlevelTextSurface->w, vigorlevelTextSurface->h };
+        SDL_RenderCopy(renderer, vigorlevelTextTexture, NULL, &vigorleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(vigorlevelTextSurface);
+        SDL_DestroyTexture(vigorlevelTextTexture);
+
+        // Render strength level text
+        char strengthlevelText[50];
+        snprintf(strengthlevelText, 50, "%d", strength_level);
+        SDL_Surface* strengthlevelTextSurface = TTF_RenderText_Solid(font, strengthlevelText, textColor);
+        if (!strengthlevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* strengthlevelTextTexture = SDL_CreateTextureFromSurface(renderer, strengthlevelTextSurface);
+        if (!strengthlevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(strengthlevelTextSurface);
+            break;
+        }
+
+        SDL_Rect strengthleveltextRect = { 1150, 230, strengthlevelTextSurface->w, strengthlevelTextSurface->h };
+        SDL_RenderCopy(renderer, strengthlevelTextTexture, NULL, &strengthleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(strengthlevelTextSurface);
+        SDL_DestroyTexture(strengthlevelTextTexture);
+
+        // Render defense level text
+        char defenselevelText[50];
+        snprintf(defenselevelText, 50, "%d", defense_level);
+        SDL_Surface* defenselevelTextSurface = TTF_RenderText_Solid(font, defenselevelText, textColor);
+        if (!defenselevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* defenselevelTextTexture = SDL_CreateTextureFromSurface(renderer, defenselevelTextSurface);
+        if (!defenselevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(defenselevelTextSurface);
+            break;
+        }
+
+        SDL_Rect defenseleveltextRect = { 400, 460, defenselevelTextSurface->w, defenselevelTextSurface->h };
+        SDL_RenderCopy(renderer, defenselevelTextTexture, NULL, &defenseleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(defenselevelTextSurface);
+        SDL_DestroyTexture(defenselevelTextTexture);
+
+        // Render magic level text
+        char magiclevelText[50];
+        snprintf(magiclevelText, 50, "%d", magic_level);
+        SDL_Surface* magiclevelTextSurface = TTF_RenderText_Solid(font, magiclevelText, textColor);
+        if (!magiclevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* magiclevelTextTexture = SDL_CreateTextureFromSurface(renderer, magiclevelTextSurface);
+        if (!magiclevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(magiclevelTextSurface);
+            break;
+        }
+
+        SDL_Rect magicleveltextRect = { 750, 460, magiclevelTextSurface->w, magiclevelTextSurface->h };
+        SDL_RenderCopy(renderer, magiclevelTextTexture, NULL, &magicleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(magiclevelTextSurface);
+        SDL_DestroyTexture(magiclevelTextTexture);
+
+        // Render spirit level text
+        char spiritlevelText[50];
+        snprintf(spiritlevelText, 50, "%d", spirit_level);
+        SDL_Surface* spiritlevelTextSurface = TTF_RenderText_Solid(font, spiritlevelText, textColor);
+        if (!spiritlevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* spiritlevelTextTexture = SDL_CreateTextureFromSurface(renderer, spiritlevelTextSurface);
+        if (!spiritlevelTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(spiritlevelTextSurface);
+            break;
+        }
+
+        SDL_Rect spiritleveltextRect = { 1150, 460, spiritlevelTextSurface->w, spiritlevelTextSurface->h };
+        SDL_RenderCopy(renderer, spiritlevelTextTexture, NULL, &spiritleveltextRect);
+
+        // Free text resources
+        SDL_FreeSurface(spiritlevelTextSurface);
+        SDL_DestroyTexture(spiritlevelTextTexture);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect vigorUpgradeButtonBox = { 546, 291, 188, 103 };
+                Rect strengthUpgradeButtonBox = { 910, 295, 188, 103 };
+                Rect defenseUpgradeButtonBox = { 146, 524, 188, 103 };
+                Rect magicUpgradeButtonBox = { 546, 521, 188, 103 };
+                Rect spiritUpgradeButtonBox = { 920, 523, 188, 103 };
+                Rect quitButtonBox = { 1179, 73, 39, 45 };
+
+                if (gfc_point_in_rect(mouse_pos, vigorUpgradeButtonBox))
+                {
+                    if (player_diamonds > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
+                        player_data->level++;
+                        slog("Upgraded Vigor");
+                    }
+                    else {
+                        slog("Not Enough Diamonds to Level Up!");
+                        pq_render_text(RED, 24, 320, 650, "Not Enough Diamonds to Level Up!", 2);
+                    }
+                }
+                else if (gfc_point_in_rect(mouse_pos, strengthUpgradeButtonBox))
+                {
+                    if (player_diamonds > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
+                        player_data->level++;
+                        slog("Upgraded Strength");
+                    }
+                    else {
+                        slog("Not Enough Diamonds to Level Up!");
+                        pq_render_text(RED, 24, 320, 650, "Not Enough Diamonds to Level Up!", 2);
+                    }
+                }
+                else if (gfc_point_in_rect(mouse_pos, defenseUpgradeButtonBox))
+                {
+                    if (player_diamonds > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
+                        player_data->level++;
+                        slog("Upgraded Defense");
+                    }
+                    else {
+                        slog("Not Enough Diamonds to Level Up!");
+                        pq_render_text(RED, 24, 320, 650, "Not Enough Diamonds to Level Up!", 2);
+                    }
+                }
+                else if (gfc_point_in_rect(mouse_pos, magicUpgradeButtonBox))
+                {
+                    if (player_diamonds > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
+                        player_data->level++;
+                        slog("Upgraded Magic");
+                    }
+                    else {
+                        slog("Not Enough Diamonds to Level Up!");
+                        pq_render_text(RED, 24, 320, 650, "Not Enough Diamonds to Level Up!", 2);
+                    }
+                }
+                else if (gfc_point_in_rect(mouse_pos, spiritUpgradeButtonBox))
+                {
+                    if (player_diamonds > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
+                        player_data->level++;
+                        slog("Upgraded Spirit");
+                    }
+                    else {
+                        slog("Not Enough Diamonds to Level Up!");
+                        pq_render_text(RED, 24, 320, 650, "Not Enough Diamonds to Level Up!", 2);
+                    }
+                }
+
+                // Check if the mouse click is within the bounds of the quit button
+                if (gfc_point_in_rect(mouse_pos, quitButtonBox))
+                {
+                    statsOpen = false;
+                }
+            }
+        }
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    TTF_CloseFont(font);
+}
+
 void pq_render_announcement(SDL_Color text_color, const char* msg, int seconds)
 {
     TTF_Font* font = TTF_OpenFont(GAME_FONT, 48); // Adjust font size as needed
