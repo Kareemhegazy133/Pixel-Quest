@@ -77,7 +77,7 @@ int main(int argc, char * argv[])
                 pq_entity_system_draw();
 
                 //UI elements last
-                pq_render_player_health_bar(player->health);
+                pq_render_player_health_bar(player);
                 gf2d_sprite_draw(
                     mouse,
                     vector2d(mx, my),

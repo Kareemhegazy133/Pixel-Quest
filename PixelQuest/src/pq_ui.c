@@ -875,6 +875,8 @@ void pq_StatsMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
                         player_data->level++;
+                        player_data->vigor++;
+                        player->max_health += 20;
                         slog("Upgraded Vigor");
                     }
                     else {
@@ -888,6 +890,7 @@ void pq_StatsMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
                         player_data->level++;
+                        player_data->strength++;
                         slog("Upgraded Strength");
                     }
                     else {
@@ -901,6 +904,7 @@ void pq_StatsMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
                         player_data->level++;
+                        player_data->defense++;
                         slog("Upgraded Defense");
                     }
                     else {
@@ -914,6 +918,7 @@ void pq_StatsMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
                         player_data->level++;
+                        player_data->magic++;
                         slog("Upgraded Magic");
                     }
                     else {
@@ -927,6 +932,7 @@ void pq_StatsMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Diamond", 1);
                         player_data->level++;
+                        player_data->spirit++;
                         slog("Upgraded Spirit");
                     }
                     else {
@@ -1037,19 +1043,19 @@ void pq_render_text(SDL_Color text_color, int font_size, int pos_x, int pos_y, c
     SDL_Delay(seconds * 1000);
 }
 
-void pq_render_player_health_bar(int player_health)
+void pq_render_player_health_bar(pq_entity* player)
 {
     SDL_Renderer* renderer = gf2d_graphics_get_renderer();
 
     // Define the health bar dimensions and position
-    int barWidth = 200;
+    int barWidth = player->max_health;
     int barHeight = 20;
     int barPadding = 10;
     int barPosX = barPadding;
     int barPosY = barPadding;
 
     // Calculate the width of the filled portion of the health bar based on player health
-    int filledWidth = (int)((float)player_health / 100 * (barWidth - 2)); // Subtract 2 for borders
+    int filledWidth = (int)((float)player->health / 100 * (barWidth - 2)); // Subtract 2 for borders
 
     // Draw the health bar outline
     SDL_Rect outlineRect = { barPosX, barPosY, barWidth, barHeight };
