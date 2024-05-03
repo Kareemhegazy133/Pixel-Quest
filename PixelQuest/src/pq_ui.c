@@ -600,7 +600,20 @@ void pq_InventoryMenu(pq_entity* player)
                 // Check if the mouse click is within the bounds of the mace buy button
                 if (gfc_point_in_rect(mouse_pos, maceUseButtonBox))
                 {
-                    slog("Equipped Mace");
+                    if (pq_inventory_get_item_amount(player_data->inventory, "Mace") > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Mace", 1);
+                        pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 0));
+                        weapon->_is_active = 0;
+                        player_data->equippedWeapon = weapon;
+                        player->equippedWeapon = 1;
+                        slog("Equipped Mace");
+                    }
+                    else {
+                        slog("No Mace to Equip!");
+                        pq_render_text(RED, 24, 470, 650, "No Mace to Equip!", 2);
+                    }
+                    
                 }
                 else if (gfc_point_in_rect(mouse_pos, wandUseButtonBox))
                 {
@@ -664,12 +677,12 @@ void pq_StatsMenu(pq_entity* player)
         // Draw the background
         gf2d_sprite_draw_image(background, vector2d(0, 0));
 
-        // Render player coins text
         pq_player_data* player_data = (pq_player_data*)player->data;
         if (player_data && player_data->inventory)
         {
             player_diamonds = pq_inventory_get_item_amount(player_data->inventory, "Diamond");
             player_level = player_data->level;
+            vigor_level = player_data->vigor;
             strength_level = player_data->strength;
             defense_level = player_data->defense;
             magic_level = player_data->magic;

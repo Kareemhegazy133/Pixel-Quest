@@ -1,5 +1,6 @@
 {
 	"sprite": "images/entities/Player/Player_Idle.png",
+	"attack_sprite": "images/entities/Player/Player_Attack.png",
 	"frame_width": 128,
 	"frame_height": 128,
 	"frames_per_line": 9,

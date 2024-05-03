@@ -97,6 +97,7 @@ typedef struct PQ_Entity_S
 
 	///////// <Player Only> /////////
 
+	Sint8 equippedWeapon;										// A flag for whether the player currently has a weapon equipped
 	void (*handle_input)(struct PQ_Entity_S* self);				// The function to call to handle any input
 
 	///////// <Enemies Only> /////////

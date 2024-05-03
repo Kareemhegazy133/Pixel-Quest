@@ -16,6 +16,7 @@ typedef struct
 	int spirit;
 	int vigor;
 	int level;
+	pq_entity* equippedWeapon;
 } pq_player_data;
 
 /**

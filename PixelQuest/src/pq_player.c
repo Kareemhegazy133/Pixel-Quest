@@ -32,6 +32,8 @@ pq_entity* new_pq_player()
 	sj_object_get_value_as_int(player_file_json, "frames_per_line", &frames_per_line);
 	player->sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(player_file_json, "sprite"),
 		frame_width, frame_height, frames_per_line, 0);
+	player->attack_sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(player_file_json, "attack_sprite"),
+		frame_width, frame_height, frames_per_line, 0);
 
 	int width, height;
 	sj_object_get_value_as_int(player_file_json, "width", &width);
@@ -354,6 +356,10 @@ void pq_player_think(pq_entity* player)
 	// Check for collisions
 	pq_player_handle_collision(player, get_pq_world());
 
+	if (player->equippedWeapon == 1)
+	{
+		player->sprite = player->attack_sprite;
+	}
 }
 
 void pq_player_update(pq_entity* player)
@@ -518,6 +524,8 @@ void pq_player_die(pq_entity* player)
 void pq_player_free(pq_entity* player)
 {
 	if (!player || !player->data) return;
+
+	gf2d_sprite_free(player->attack_sprite);
 
 	pq_player_data* player_data = (pq_player_data*)player->data;
 

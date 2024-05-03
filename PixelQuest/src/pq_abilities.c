@@ -207,17 +207,35 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 			// Check for collision
 			if (gfc_rect_overlap(abilityBox, enemyBox))
 			{
-				if (ability->ability_effect == KNOCKBACK)
+				pq_player_data* caster_data = (pq_player_data*)caster->data;
+				if (!caster_data)
 				{
-					pq_ability_knockback_effect(ability, world->enemies[i]);
+					slog("caster_data = NULL.");
+					return;
 				}
 
-				if (ability->ability_effect == SLOW)
+				// Fireball
+				if (ability->ability_effect == NONE)
 				{
-					pq_ability_slow_effect(ability, world->enemies[i]);
+					pq_entity_take_damage(world->enemies[i], caster->damage + caster_data->magic + ability->ability_damage);
 				}
-
-				pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
+				else if (ability->ability_effect == STUN)
+				{
+					pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
+				}
+				else if (ability->ability_effect == KNOCKBACK)
+				{
+					pq_ability_knockback_effect(ability, world->enemies[i], caster_data->strength);
+					pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
+				}
+				else if (ability->ability_effect == SLOW)
+				{
+					pq_ability_slow_effect(ability, world->enemies[i], caster_data->spirit);
+				}
+				else {
+					pq_entity_take_damage(world->enemies[i], caster->damage + ability->ability_damage);
+				}
+				
 				pq_ability_end(ability);
 			}
 		}
@@ -236,7 +254,7 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 		{
 			if (ability->ability_effect == KNOCKBACK)
 			{
-				pq_ability_knockback_effect(ability, player);
+				pq_ability_knockback_effect(ability, player, 1);
 			}
 
 			pq_entity_take_damage(player, caster->damage + ability->ability_damage);
@@ -245,25 +263,25 @@ void pq_ability_handle_collision(pq_entity* ability, pq_world* world, pq_entity*
 	}
 }
 
-void pq_ability_knockback_effect(pq_entity* ability, pq_entity* target)
+void pq_ability_knockback_effect(pq_entity* ability, pq_entity* target, int factor)
 {
 	if (!ability || !target) return;
 
 	if (target->direction == -1) {
-		target->position.x += 50.f;
+		target->position.x += 25.f * factor;
 	}
 	else if (target->direction == 1) {
-		target->position.x -= 50.f;
+		target->position.x -= 25.f * factor;
 	}
 
 }
 
-void pq_ability_slow_effect(pq_entity* ability, pq_entity* target)
+void pq_ability_slow_effect(pq_entity* ability, pq_entity* target, int factor)
 {
 	if (!ability || !target) return;
 
 	if (target->movement_speed > 1) {
-		target->movement_speed -= 1;
+		target->movement_speed -= 1 * factor;
 	}
 }
 
@@ -293,17 +311,23 @@ void pq_ability_apply_effects(pq_entity* ability) {
 	if (!ability_data) return;
 
 	pq_entity* caster = ability_data->owner;
+	pq_player_data* caster_data = (pq_player_data*)caster->data;
+	if (!caster_data)
+	{
+		slog("caster_data = NULL.");
+		return;
+	}
 
 	// caster->active_effects[0] is ALWAYS for DAMAGE BUFFS
 	if (ability->ability_effect == DAMAGE_BUFF && caster->active_effects[0] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		caster->damage += 10;
+		caster->damage += 10 + caster_data->magic * 10;
 		caster->active_effects[0] = DAMAGE_BUFFED;
 		caster->current_buffs_count++;
 	}
 
 	// caster->active_effects[1] is ALWAYS for DEFENSE BUFFS
 	if (ability->ability_effect == DEFENSE_BUFF && caster->active_effects[1] == NOT_BUFFED && caster->current_buffs_count < MAX_BUFFS_ALLOWED) {
-		caster->defense += 10;
+		caster->defense += 10 + caster_data->defense * 10;
 		caster->active_effects[1] = DEFENSE_BUFFED;
 		caster->current_buffs_count++;
 	}
