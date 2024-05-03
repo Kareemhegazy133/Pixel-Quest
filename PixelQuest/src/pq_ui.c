@@ -323,6 +323,8 @@ void pq_ShopMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
                         pq_inventory_add_item(player_data->inventory, item);
+                        slog("Purchased Mace!");
+                        pq_render_text(RED, 24, 470, 650, "Purchased Mace!", 2);
                     }
                     else {
                         slog("Not Enough Coins to Purchase Mace");
@@ -344,6 +346,8 @@ void pq_ShopMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
                         pq_inventory_add_item(player_data->inventory, item);
+                        slog("Purchased Wand!");
+                        pq_render_text(RED, 24, 470, 650, "Purchased Wand!", 2);
                     }
                     else {
                         slog("Not Enough Coins to Purchase Wand");
@@ -365,6 +369,8 @@ void pq_ShopMenu(pq_entity* player)
                     {
                         pq_inventory_remove_item(player_data->inventory, "Coin", item->cost);
                         pq_inventory_add_item(player_data->inventory, item);
+                        slog("Purchased Staff!");
+                        pq_render_text(RED, 24, 470, 650, "Purchased Staff!", 2);
                     }
                     else {
                         slog("Not Enough Coins to Purchase Staff");
@@ -606,8 +612,12 @@ void pq_InventoryMenu(pq_entity* player)
                         pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 0));
                         weapon->_is_active = 0;
                         player_data->equippedWeapon = weapon;
+                        gfc_word_cpy(player_data->equippedWeaponText, weapon->display_name);
+                        player_data->equippedWeaponLevel = weapon->level;
                         player->equippedWeapon = 1;
+                        player_data->strength += weapon->damage;
                         slog("Equipped Mace");
+                        pq_render_text(RED, 24, 470, 650, "Equipped Mace", 2);
                     }
                     else {
                         slog("No Mace to Equip!");
@@ -617,19 +627,85 @@ void pq_InventoryMenu(pq_entity* player)
                 }
                 else if (gfc_point_in_rect(mouse_pos, wandUseButtonBox))
                 {
-                    slog("Equipped Wand");
+                    if (pq_inventory_get_item_amount(player_data->inventory, "Wand") > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Wand", 1);
+                        pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 1));
+                        weapon->_is_active = 0;
+                        player_data->equippedWeapon = weapon;
+                        gfc_word_cpy(player_data->equippedWeaponText, weapon->display_name);
+                        player_data->equippedWeaponLevel = weapon->level;
+                        player->equippedWeapon = 1;
+                        player_data->magic += weapon->damage;
+                        slog("Equipped Wand");
+                        pq_render_text(RED, 24, 470, 650, "Equipped Wand", 2);
+                    }
+                    else {
+                        slog("No Wand to Equip!");
+                        pq_render_text(RED, 24, 470, 650, "No Wand to Equip!", 2);
+                    }
                 }
                 else if (gfc_point_in_rect(mouse_pos, staffUseButtonBox))
                 {
-                    slog("Equipped Staff");
+                    if (pq_inventory_get_item_amount(player_data->inventory, "Staff") > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Staff", 1);
+                        pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 2));
+                        weapon->_is_active = 0;
+                        player_data->equippedWeapon = weapon;
+                        gfc_word_cpy(player_data->equippedWeaponText, weapon->display_name);
+                        player_data->equippedWeaponLevel = weapon->level;
+                        player->equippedWeapon = 1;
+                        player_data->spirit += weapon->damage;
+                        slog("Equipped Staff");
+                        pq_render_text(RED, 24, 470, 650, "Equipped Staff", 2);
+                    }
+                    else {
+                        slog("No Staff to Equip!");
+                        pq_render_text(RED, 24, 470, 650, "No Staff to Equip!", 2);
+                    }
                 }
                 else if (gfc_point_in_rect(mouse_pos, batUseButtonBox))
                 {
-                    slog("Equipped Bat");
+                    if (pq_inventory_get_item_amount(player_data->inventory, "Bat") > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Bat", 1);
+                        pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 3));
+                        weapon->_is_active = 0;
+                        player_data->equippedWeapon = weapon;
+                        gfc_word_cpy(player_data->equippedWeaponText, weapon->display_name);
+                        player_data->equippedWeaponLevel = weapon->level;
+                        player->equippedWeapon = 1;
+                        player_data->strength += weapon->damage;
+                        player_data->defense += weapon->damage;
+                        slog("Equipped Bat");
+                        pq_render_text(RED, 24, 470, 650, "Equipped Bat", 2);
+                    }
+                    else {
+                        slog("No Bat to Equip!");
+                        pq_render_text(RED, 24, 470, 650, "No Bat to Equip!", 2);
+                    }
                 }
                 else if (gfc_point_in_rect(mouse_pos, sickleUseButtonBox))
                 {
-                    slog("Equipped Sickle");
+                    if (pq_inventory_get_item_amount(player_data->inventory, "Sickle") > 0)
+                    {
+                        pq_inventory_remove_item(player_data->inventory, "Sickle", 1);
+                        pq_entity* weapon = new_pq_item(sj_array_get_nth(itemsList, 4));
+                        weapon->_is_active = 0;
+                        player_data->equippedWeapon = weapon;
+                        gfc_word_cpy(player_data->equippedWeaponText, weapon->display_name);
+                        player_data->equippedWeaponLevel = weapon->level;
+                        player->equippedWeapon = 1;
+                        player_data->magic += weapon->damage;
+                        player_data->defense += weapon->damage;
+                        slog("Equipped Sickle");
+                        pq_render_text(RED, 24, 470, 650, "Equipped Sickle", 2);
+                    }
+                    else {
+                        slog("No Sickle to Equip!");
+                        pq_render_text(RED, 24, 470, 650, "No Sickle to Equip!", 2);
+                    }
                 }
                 // Check if the mouse click is within the bounds of the quit button
                 else if (gfc_point_in_rect(mouse_pos, quitButtonBox))
@@ -737,6 +813,31 @@ void pq_StatsMenu(pq_entity* player)
         // Free text resources
         SDL_FreeSurface(currentlevelTextSurface);
         SDL_DestroyTexture(currentlevelTextTexture);
+
+        // Render current weapon text
+        char currentweaponText[50];
+        snprintf(currentweaponText, 50, "%s: %d", player_data->equippedWeaponText, player_data->equippedWeaponLevel);
+        SDL_Surface* currentweaponTextSurface = TTF_RenderText_Solid(font, currentweaponText, textColor);
+        if (!currentlevelTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* currentweaponTextTexture = SDL_CreateTextureFromSurface(renderer, currentweaponTextSurface);
+        if (!currentweaponTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(currentweaponTextSurface);
+            break;
+        }
+
+        SDL_Rect currentweapontextRect = { 160, 350, currentweaponTextSurface->w, currentweaponTextSurface->h };
+        SDL_RenderCopy(renderer, currentweaponTextTexture, NULL, &currentweapontextRect);
+
+        // Free text resources
+        SDL_FreeSurface(currentweaponTextSurface);
+        SDL_DestroyTexture(currentweaponTextTexture);
 
         // Render vigor level text
         char vigorlevelText[50];

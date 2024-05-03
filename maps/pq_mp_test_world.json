@@ -48,7 +48,9 @@
 				"position_x": 375,
 				"position_y": 660,
 				"count": 1,
-				"cost": 2
+				"cost": 2,
+				"damage": 5,
+				"level": 1
 			},
 			{
 				"name": "diamond",

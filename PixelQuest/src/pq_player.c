@@ -86,6 +86,7 @@ pq_entity* new_pq_player()
 		player_data->spirit = 0;
 		player_data->vigor = 0;
 		player_data->level = 0;
+		gfc_word_cpy(player_data->equippedWeaponText, "None");
 
 		SJson* player_abilities = sj_object_get_value(player_file_json, "abilities");
 		if (!player_abilities)

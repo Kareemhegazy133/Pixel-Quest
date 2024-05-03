@@ -69,6 +69,8 @@ pq_entity* new_pq_item(SJson* item_data)
 		item->inventory_sprite = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "inventory_sprite"), 128, 32, 1, 0);
 		item->inventory_sprite_2 = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "inventory_sprite_2"), 128, 32, 1, 0);
 		item->inventory_sprite_3 = gf2d_sprite_load_all(sj_object_get_value_as_string(item_data, "inventory_sprite_3"), 128, 32, 1, 0);
+		sj_object_get_value_as_int(item_data, "damage", &item->damage);
+		sj_object_get_value_as_int(item_data, "level", &item->level);
 	}
 	else
 	{

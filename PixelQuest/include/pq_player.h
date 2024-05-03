@@ -17,6 +17,8 @@ typedef struct
 	int vigor;
 	int level;
 	pq_entity* equippedWeapon;
+	TextWord equippedWeaponText;
+	int equippedWeaponLevel;
 } pq_player_data;
 
 /**

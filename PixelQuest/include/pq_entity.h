@@ -116,6 +116,7 @@ typedef struct PQ_Entity_S
 	Sprite*		inventory_sprite_3;								// The item's inventory level 3 sprite (null if entity does not have one)
 	int			count;											// The amount of the item
 	int			cost;											// The shop cost of the item
+	int			level;											// The level of the item
 	Uint8		collected;										// A flag for keeping track if item is collected (1 for true, 0 for false)
 
 	///////// <Abilities Only> /////////
