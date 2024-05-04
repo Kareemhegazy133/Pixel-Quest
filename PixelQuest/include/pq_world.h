@@ -5,6 +5,7 @@
 #include <pq_item.h>
 
 #define MAX_SHOPS 5
+#define MAX_BLACKSMITHS 5
 #define MAX_ITEMS 128
 #define MAX_ENEMIES 20
 #define CELLS_AMOUNT 57
@@ -27,6 +28,8 @@ typedef struct
 	Uint32	tile_width;						// This is how many tiles wide the map is
 	pq_entity* shops[MAX_SHOPS];			// This is the list of shops in the world
 	Uint16	shops_count;					// This is how many shops are in the world
+	pq_entity* blacksmiths[MAX_BLACKSMITHS];		// This is the list of blacksmiths in the world
+	Uint16	blacksmiths_count;				// This is how many blacksmiths are in the world
 	pq_entity* items[MAX_ITEMS];			// This is the list of items in the world
 	Uint16	items_count;					// This is how many items are in the world
 	pq_entity* enemies[MAX_ENEMIES];		// This is the list of enemies in the world

@@ -111,6 +111,7 @@ pq_entity* new_pq_player()
 	player->max_jump_force = 700.f;
 
 	player->isShopping = 0;
+	player->isBlacksmithing = 0;
 
 	player->think = pq_player_think;
 	player->update = pq_player_update;
@@ -200,6 +201,7 @@ void pq_player_handle_input(pq_entity* player)
 	if (keys[SDL_SCANCODE_F])
 	{
 		player->isShopping = 1;
+		player->isBlacksmithing = 1;
 	}
 
 	// 'I' key to display inventory
@@ -439,6 +441,27 @@ void pq_player_handle_collision(pq_entity* player, pq_world* world)
 			pq_ShopMenu(player);
 		}
 		player->isShopping = 0;
+	}
+
+	// Iterate through the world blacksmiths and check for collision with any of the blacksmiths
+	for (int i = 0; i < world->blacksmiths_count; i++)
+	{
+		// Calculate blacksmith's bounding box
+		Rect blacksmithBox = {
+			world->blacksmiths[i]->position.x,
+			world->blacksmiths[i]->position.y,
+			world->blacksmiths[i]->width,
+			world->blacksmiths[i]->height
+		};
+
+		// Check for collision
+		if (gfc_rect_overlap(playerBox, blacksmithBox) && player->isBlacksmithing)
+		{
+			slog("colliding with blacksmith");
+			// Open blacksmith menu
+			pq_BlacksmithMenu(player);
+		}
+		player->isBlacksmithing = 0;
 	}
 
 	// Iterate through the world items and check for collision with any of the items

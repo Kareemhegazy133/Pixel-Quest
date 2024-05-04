@@ -391,6 +391,251 @@ void pq_ShopMenu(pq_entity* player)
     TTF_CloseFont(font);
 }
 
+void pq_BlacksmithMenu(pq_entity* player)
+{
+    slog("Blacksmith Open!");
+    SDL_Renderer* renderer = gf2d_graphics_get_renderer();
+    Sprite* background = gf2d_sprite_load_image("images/ui/Blacksmithing.png");
+    Bool blacksmithOpen = true;
+    SDL_ShowCursor(SDL_ENABLE);
+
+    int player_diamonds = 0;
+    //TODO Find a better solution than hardcoding prices
+    int mace_upgrade_cost = 2;
+    int wand_upgrade_cost = 3;
+    int staff_upgrade_cost = 4;
+
+    TTF_Font* font = TTF_OpenFont(GAME_FONT, 32); // Adjust font size as needed
+    if (!font) {
+        slog("Error: Failed to load font - %s", TTF_GetError());
+        return;
+    }
+
+    SDL_Color textColor = { 255, 255, 255, 255 }; // White color
+
+    while (blacksmithOpen)
+    {
+        // Clear the screen
+        gf2d_graphics_clear_screen();
+
+        // Draw the background
+        gf2d_sprite_draw_image(background, vector2d(0, 0));
+
+        // Render player diamonds text
+        pq_player_data* player_data = (pq_player_data*)player->data;
+        if (player_data && player_data->inventory)
+        {
+            player_diamonds = pq_inventory_get_item_amount(player_data->inventory, "Diamond");
+        }
+
+        char diamondsText[50];
+        snprintf(diamondsText, 50, "%d", player_diamonds);
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, diamondsText, textColor);
+        if (!textSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (!textTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(textSurface);
+            break;
+        }
+
+        SDL_Rect textRect = { 40, 70, textSurface->w, textSurface->h };
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        // Free text resources
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
+
+        // Render mace coins text
+        char macecoinsText[50];
+        snprintf(macecoinsText, 50, "%d", mace_upgrade_cost);
+        SDL_Surface* maceTextSurface = TTF_RenderText_Solid(font, macecoinsText, textColor);
+        if (!maceTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* maceTextTexture = SDL_CreateTextureFromSurface(renderer, maceTextSurface);
+        if (!maceTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(maceTextSurface);
+            break;
+        }
+
+        SDL_Rect macetextRect = { 200, 340, maceTextSurface->w, maceTextSurface->h };
+        SDL_RenderCopy(renderer, maceTextTexture, NULL, &macetextRect);
+
+        // Free text resources
+        SDL_FreeSurface(maceTextSurface);
+        SDL_DestroyTexture(maceTextTexture);
+
+        // Render wand coins text
+        char wandcoinsText[50];
+        snprintf(wandcoinsText, 50, "%d", wand_upgrade_cost);
+        SDL_Surface* wandTextSurface = TTF_RenderText_Solid(font, wandcoinsText, textColor);
+        if (!wandTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* wandTextTexture = SDL_CreateTextureFromSurface(renderer, wandTextSurface);
+        if (!wandTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(wandTextSurface);
+            break;
+        }
+
+        SDL_Rect wandtextRect = { 620, 340, wandTextSurface->w, wandTextSurface->h };
+        SDL_RenderCopy(renderer, wandTextTexture, NULL, &wandtextRect);
+
+        // Free text resources
+        SDL_FreeSurface(wandTextSurface);
+        SDL_DestroyTexture(wandTextTexture);
+
+        // Render staff coins text
+        char staffcoinsText[50];
+        snprintf(staffcoinsText, 50, "%d", staff_upgrade_cost);
+        SDL_Surface* staffTextSurface = TTF_RenderText_Solid(font, staffcoinsText, textColor);
+        if (!staffTextSurface)
+        {
+            slog("Failed to create text surface: %s", TTF_GetError());
+            break;
+        }
+
+        SDL_Texture* staffTextTexture = SDL_CreateTextureFromSurface(renderer, staffTextSurface);
+        if (!staffTextTexture)
+        {
+            slog("Failed to create text texture: %s", SDL_GetError());
+            SDL_FreeSurface(staffTextSurface);
+            break;
+        }
+
+        SDL_Rect stafftextRect = { 1010, 340, staffTextSurface->w, staffTextSurface->h };
+        SDL_RenderCopy(renderer, staffTextTexture, NULL, &stafftextRect);
+
+        // Free text resources
+        SDL_FreeSurface(staffTextSurface);
+        SDL_DestroyTexture(staffTextTexture);
+
+        // Present the rendered frame
+        gf2d_graphics_next_frame();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event) != 0)
+        {
+            if (event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                Vector2D mouse_pos = { mouseX, mouseY };
+                Rect maceUpgradeButtonBox = { 118, 391, 188, 103 };
+                Rect wandUpgradeButtonBox = { 536, 390, 188, 103 };
+                Rect staffUpgradeButtonBox = { 932, 390, 188, 103 };
+                Rect quitButtonBox = { 1179, 73, 39, 45 };
+
+                // Check if the mouse click is within the bounds of the mace Upgrade button
+                if (gfc_point_in_rect(mouse_pos, maceUpgradeButtonBox))
+                {
+                    if (gfc_word_cmp(player_data->equippedWeaponText, "Mace") == 0)
+                    {
+                        // if we have enough diamonds to buy
+                        if (player_diamonds - mace_upgrade_cost >= 0)
+                        {
+                            pq_inventory_remove_item(player_data->inventory, "Diamond", mace_upgrade_cost);
+                            // Loose binding with these vars with other menus
+                            player_data->equippedWeapon->level++;
+                            player_data->equippedWeaponLevel++;
+                            player_data->equippedWeapon->damage += 5;
+                            player_data->strength += 5;
+                            slog("Upgraded Mace!");
+                            pq_render_text(RED, 24, 470, 650, "Upgraded Mace!", 2);
+                        }
+                        else {
+                            slog("Not Enough Diamonds to Upgrade Mace");
+                            pq_render_text(RED, 24, 300, 630, "Not Enough Diamonds to Upgrade Mace", 2);
+                        }
+                    }
+                    else {
+                        slog("Mace must be equipped to be upgraded!");
+                        pq_render_text(RED, 24, 300, 630, "Mace must be equipped to be upgraded!", 2);
+                    }
+                    
+                }
+                else if (gfc_point_in_rect(mouse_pos, wandUpgradeButtonBox))
+                {
+                    if (gfc_word_cmp(player_data->equippedWeaponText, "Wand") == 0)
+                    {
+                        if (player_diamonds - wand_upgrade_cost >= 0)
+                        {
+                            pq_inventory_remove_item(player_data->inventory, "Diamond", wand_upgrade_cost);
+                            // Loose binding with these vars with other menus
+                            player_data->equippedWeapon->level++;
+                            player_data->equippedWeaponLevel++;
+                            player_data->equippedWeapon->damage += 5;
+                            player_data->magic += 5;
+                            slog("Upgraded Wand!");
+                            pq_render_text(RED, 24, 470, 650, "Upgraded Wand!", 2);
+                        }
+                        else {
+                            slog("Not Enough Diamonds to Upgrade Wand");
+                            pq_render_text(RED, 24, 300, 630, "Not Enough Diamonds to Upgrade Wand", 2);
+                        }
+                    }
+                    else {
+                        slog("Wand must be equipped to be upgraded!");
+                        pq_render_text(RED, 24, 300, 630, "Wand must be equipped to be upgraded!", 2);
+                    }
+                }
+                else if (gfc_point_in_rect(mouse_pos, staffUpgradeButtonBox))
+                {
+                    if (gfc_word_cmp(player_data->equippedWeaponText, "Staff") == 0)
+                    {
+                        if (player_diamonds - staff_upgrade_cost >= 0)
+                        {
+                            pq_inventory_remove_item(player_data->inventory, "Diamond", staff_upgrade_cost);
+                            // Loose binding with these vars with other menus
+                            player_data->equippedWeapon->level++;
+                            player_data->equippedWeaponLevel++;
+                            player_data->equippedWeapon->damage += 5;
+                            player_data->spirit += 5;
+                            slog("Upgraded Staff!");
+                            pq_render_text(RED, 24, 470, 650, "Upgraded Staff!", 2);
+                        }
+                        else {
+                            slog("Not Enough Diamonds to Upgrade Staff");
+                            pq_render_text(RED, 24, 300, 630, "Not Enough Diamonds to Upgrade Staff", 2);
+                        }
+                    }
+                    else {
+                        slog("Staff must be equipped to be upgraded!");
+                        pq_render_text(RED, 24, 300, 630, "Staff must be equipped to be upgraded!", 2);
+                    }
+                }
+                // Check if the mouse click is within the bounds of the quit button
+                else if (gfc_point_in_rect(mouse_pos, quitButtonBox))
+                {
+                    blacksmithOpen = false;
+                }
+            }
+        }
+    }
+
+    // Free resources
+    gf2d_sprite_free(background);
+    TTF_CloseFont(font);
+}
+
 void pq_InventoryMenu(pq_entity* player)
 {
     slog("Inventory Open!");

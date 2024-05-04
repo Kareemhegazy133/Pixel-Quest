@@ -26,6 +26,8 @@ void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState);
 
 void pq_ShopMenu(pq_entity* player);
 
+void pq_BlacksmithMenu(pq_entity* player);
+
 void pq_InventoryMenu(pq_entity* player);
 
 void pq_StatsMenu(pq_entity* player);

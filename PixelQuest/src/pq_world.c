@@ -3,6 +3,7 @@
 #include <pq_camera.h>
 #include <pq_world.h>
 #include <pq_shop.h>
+#include <pq_blacksmith.h>
 #include <pq_item.h>
 #include <pq_enemy.h>
 
@@ -76,6 +77,29 @@ void load_world_pq_shops(SJson* world_json, pq_world* world)
 		world->shops[world->shops_count] = shop;
 		world->shops_count++;
 		slog("Loaded a shop: %s", shop->display_name);
+	}
+}
+
+void load_world_pq_blacksmiths(SJson* world_json, pq_world* world)
+{
+	SJson* blacksmithsList = sj_object_get_value(world_json, "blacksmiths");
+	if (!blacksmithsList)
+	{
+		slog("This world_json is missing the blacksmiths object.");
+		return;
+	}
+
+	for (int i = 0; i < sj_array_get_count(blacksmithsList); i++)
+	{
+		SJson* blacksmith_data = sj_array_get_nth(blacksmithsList, i);
+		if (!blacksmith_data) continue;
+
+		pq_entity* blacksmith = init_pq_blacksmith(blacksmith_data);
+		if (!blacksmith) continue;
+
+		world->blacksmiths[world->blacksmiths_count] = blacksmith;
+		world->blacksmiths_count++;
+		slog("Loaded a blacksmith: %s", blacksmith->display_name);
 	}
 }
 
@@ -204,6 +228,8 @@ pq_world* load_pq_world(const char* file_name)
 
 	load_world_pq_shops(world_json, world);
 	slog("Loaded all world shops.");
+	load_world_pq_blacksmiths(world_json, world);
+	slog("Loaded all world blacksmiths.");
 	load_world_pq_items(world_json, world);
 	slog("Loaded all world items.");
 	load_world_pq_enemies(world_json, world);

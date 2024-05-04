@@ -164,6 +164,7 @@
     <ClCompile Include="..\src\gf2d_graphics.c" />
     <ClCompile Include="..\src\gf2d_sprite.c" />
     <ClCompile Include="src\pq_abilities.c" />
+    <ClCompile Include="src\pq_blacksmith.c" />
     <ClCompile Include="src\pq_camera.c" />
     <ClCompile Include="src\pq_enemy.c" />
     <ClCompile Include="src\pq_entity.c" />
@@ -205,6 +206,7 @@
     <ClInclude Include="..\include\gf2d_graphics.h" />
     <ClInclude Include="..\include\gf2d_sprite.h" />
     <ClInclude Include="include\pq_abilities.h" />
+    <ClInclude Include="include\pq_blacksmith.h" />
     <ClInclude Include="include\pq_camera.h" />
     <ClInclude Include="include\pq_enemy.h" />
     <ClInclude Include="include\pq_inventory.h" />

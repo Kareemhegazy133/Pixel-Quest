@@ -27,6 +27,7 @@ C:\dev\PixelQuest\src\gf2d_draw.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_dr
 C:\dev\PixelQuest\src\gf2d_graphics.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_graphics.obj
 C:\dev\PixelQuest\src\gf2d_sprite.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\gf2d_sprite.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_abilities.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_abilities.obj
+C:\dev\PixelQuest\PixelQuest\src\pq_blacksmith.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_blacksmith.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_camera.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_camera.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_enemy.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_enemy.obj
 C:\dev\PixelQuest\PixelQuest\src\pq_entity.c;C:\dev\PixelQuest\PixelQuest\x64\Debug\pq_entity.obj
