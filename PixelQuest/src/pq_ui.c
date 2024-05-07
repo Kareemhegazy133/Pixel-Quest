@@ -1,5 +1,6 @@
 #include <simple_logger.h>
 #include <gf2d_sprite.h>
+#include <gfc_audio.h>
 #include <gfc_shape.h>
 #include <pq_ui.h>
 #include <pq_item.h>
@@ -22,6 +23,7 @@ void init_pq_ui_system()
 void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
 {
     Sprite* background = gf2d_sprite_load_image("images/backgrounds/Main_Menu_Background.png");
+
     Bool menuOpen = true;
 
     // Load button sprites
@@ -46,6 +48,7 @@ void pq_MainMenu(SDL_Renderer* renderer, GameState* gameState)
 
         // Present the rendered frame
         gf2d_graphics_next_frame();
+
 
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0)

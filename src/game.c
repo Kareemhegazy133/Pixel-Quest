@@ -3,6 +3,7 @@
 
 #include <gf2d_graphics.h>
 #include <gf2d_sprite.h>
+#include <gfc_audio.h>
 #include <pq_ui.h>
 #include <pq_camera.h>
 #include <pq_entity.h>
@@ -35,10 +36,17 @@ int main(int argc, char * argv[])
         0);
     gf2d_graphics_set_frame_delay(16);
     gf2d_sprite_init(1024);
+    gfc_audio_init(32, 16, 1, 1, 1, 0);
     init_pq_ui_system();
 
     pq_world* world = NULL;
     pq_entity* player = NULL;
+
+    // Load main_menu music
+    Sound* mainMenuMusic = gfc_sound_load("sounds/main_menu_music.mp3", 0.125f, -1);
+
+    // Load game_running music
+    Sound* gameRunningMusic = gfc_sound_load("sounds/gameplay_music.mp3", 0.5f, -1);
 
     /*main game loop*/
     while(game_state != GAME_QUIT)
@@ -52,6 +60,8 @@ int main(int argc, char * argv[])
 
         switch (game_state) {
             case MAIN_MENU:
+                // Play background music in the main menu
+                gfc_sound_play(mainMenuMusic, -1, 0.125f, 1, -1);
                 pq_MainMenu(gf2d_graphics_get_renderer(), get_game_state());
                 break;
             case LOADING:
@@ -64,8 +74,11 @@ int main(int argc, char * argv[])
                 world = load_pq_world("maps/pq_mp_test_world.json");
                 player = new_pq_player();
                 game_state = GAME_RUNNING;
+                // Play game running music
+                gfc_sound_play(gameRunningMusic, -1, 0.0625f, 1, -1);
                 break;
             case GAME_RUNNING:
+
                 pq_entity_system_think();
                 pq_entity_system_update();
 
@@ -117,6 +130,12 @@ int main(int argc, char * argv[])
     if(player) free_pq_entity(player);
 
     free_pq_world(world);
+
+    if (mainMenuMusic)
+    {
+        gfc_sound_free(mainMenuMusic);
+    }
+
 
     slog("---==== END ====---");
     return 0;
