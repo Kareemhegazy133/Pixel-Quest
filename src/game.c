@@ -78,7 +78,6 @@ int main(int argc, char * argv[])
                 gfc_sound_play(gameRunningMusic, -1, 0.0625f, 1, -1);
                 break;
             case GAME_RUNNING:
-
                 pq_entity_system_think();
                 pq_entity_system_update();
 
@@ -104,6 +103,8 @@ int main(int argc, char * argv[])
                 gf2d_graphics_next_frame();// render current draw frame and skip to the next frame
                 break;
             case GAME_PAUSED:
+                // Play background music in the main menu
+                gfc_sound_play(mainMenuMusic, -1, 0.125f, 1, -1);
                 pq_PauseMenu(gf2d_graphics_get_renderer(), get_game_state());
                 break;
             }

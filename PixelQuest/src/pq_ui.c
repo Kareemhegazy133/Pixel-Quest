@@ -89,6 +89,8 @@ void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState)
 {
     slog("Game Paused!");
     Sprite* background = gf2d_sprite_load_image("images/backgrounds/Pause_Menu_Background.png");
+    // Load game_running music
+    Sound* gameRunningMusic = gfc_sound_load("sounds/gameplay_music.mp3", 0.5f, -1);
     Bool menuOpen = true;
 
     // Load button sprites
@@ -130,6 +132,8 @@ void pq_PauseMenu(SDL_Renderer* renderer, GameState* gameState)
                 if (gfc_point_in_rect(mouse_pos, ResumeButtonBox))
                 {
                     *gameState = GAME_RUNNING;
+                    // Play game running music
+                    gfc_sound_play(gameRunningMusic, -1, 0.0625f, 1, -1);
                     menuOpen = false;
                 }
                 // Check if the mouse click is within the bounds of the quit button
