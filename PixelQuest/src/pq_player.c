@@ -239,6 +239,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[0]->name, player_data->abilities->abilities[0]->ability_type);
 		player_data->abilities->abilities[0]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[0]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[0]->sound, 0, 0.03125f, 2, -1);
 	}
 
 	if (keys[SDL_SCANCODE_2])
@@ -257,6 +258,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[1]->name, player_data->abilities->abilities[1]->ability_type);
 		player_data->abilities->abilities[1]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[1]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[1]->sound, 0, 0.03125f, 2, -1);
 	}
 
 	if (keys[SDL_SCANCODE_3])
@@ -275,6 +277,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[2]->name, player_data->abilities->abilities[2]->ability_type);
 		player_data->abilities->abilities[2]->position = vector2d(player->position.x + 100, player->position.y + 50);
 		player_data->abilities->abilities[2]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[2]->sound, 0, 0.03125f, 2, -1);
 	}
 
 	if (keys[SDL_SCANCODE_4])
@@ -293,6 +296,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[3]->name, player_data->abilities->abilities[3]->ability_type);
 		player_data->abilities->abilities[3]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[3]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[3]->sound, 0, 0.03125f, 2, -1);
 	}
 
 	if (keys[SDL_SCANCODE_5])
@@ -311,6 +315,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[4]->name, player_data->abilities->abilities[4]->ability_type);
 		player_data->abilities->abilities[4]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[4]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[4]->sound, 0, 0.03125f, 2, -1);
 	}
 
 	if (keys[SDL_SCANCODE_6])
@@ -329,6 +334,7 @@ void pq_player_handle_input(pq_entity* player)
 		slog("%s: %d", player_data->abilities->abilities[5]->name, player_data->abilities->abilities[5]->ability_type);
 		player_data->abilities->abilities[5]->position = vector2d(player->position.x + 40, player->position.y + 85);
 		player_data->abilities->abilities[5]->_is_active = 1;
+		gfc_sound_play(player_data->abilities->abilities[5]->sound, 0, 0.03125f, 2, -1);
 	}
 }
 

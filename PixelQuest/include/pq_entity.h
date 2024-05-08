@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gfc_types.h>
+#include <gfc_audio.h>
 #include <gf2d_sprite.h>
 
 #define MAX_ENTITIES 1024
@@ -131,6 +132,7 @@ typedef struct PQ_Entity_S
 	float duration;												// The ability's duration
 	float max_duration;											// The ability's max_duration
 	int usage_count;											// The ability's usage count
+	Sound* sound;												// The ability's sound file
 } pq_entity;
 
 /**

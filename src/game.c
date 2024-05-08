@@ -75,7 +75,7 @@ int main(int argc, char * argv[])
                 player = new_pq_player();
                 game_state = GAME_RUNNING;
                 // Play game running music
-                gfc_sound_play(gameRunningMusic, -1, 0.0625f, 1, -1);
+                gfc_sound_play(gameRunningMusic, -1, 0.03125f, 1, -1);
                 break;
             case GAME_RUNNING:
                 pq_entity_system_think();

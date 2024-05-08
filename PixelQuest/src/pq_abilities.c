@@ -80,6 +80,8 @@ pq_entity* load_nth_pq_ability(int n, pq_entity* caster)
 	ability->width = 52;
 	ability->height = 40;
 
+	ability->sound = gfc_sound_load(sj_object_get_value_as_string(ability_def, "sound"), 0.125f, -1);
+
 	ability->think = pq_ability_think;
 	ability->update = pq_ability_update;
 	ability->free = pq_ability_free;

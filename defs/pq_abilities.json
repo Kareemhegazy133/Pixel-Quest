@@ -7,7 +7,8 @@
 			"damage": 10,
 			"effect": 0,
 			"type": 0,
-			"movement_speed": 5
+			"movement_speed": 5,
+			"sound": "sounds/fireball.mp3"
 		},
 		{
 			"sprite": "images/abilities/waterball.png",
@@ -16,7 +17,8 @@
 			"damage": 10,
 			"effect": 5,
 			"type": 0,
-			"movement_speed": 5
+			"movement_speed": 5,
+			"sound": "sounds/waterball.mp3"
 		},
 		{
 			"sprite": "images/abilities/tornado.png",
@@ -25,7 +27,8 @@
 			"damage": 10,
 			"effect": 2,
 			"type": 0,
-			"movement_speed": 5
+			"movement_speed": 5,
+			"sound": "sounds/tornado.mp3"
 		},
 		{
 			"sprite": "images/abilities/attack_power.png",
@@ -34,7 +37,8 @@
 			"damage": 10,
 			"effect": 3,
 			"type": 2,
-			"movement_speed": 0
+			"movement_speed": 0,
+			"sound": "sounds/attack_power.mp3"
 		},
 		{
 			"sprite": "images/abilities/shield_power.png",
@@ -43,7 +47,8 @@
 			"damage": 10,
 			"effect": 4,
 			"type": 2,
-			"movement_speed": 0
+			"movement_speed": 0,
+			"sound": "sounds/shield_power.mp3"
 		},
 		{
 			"sprite": "images/abilities/speed_power.png",
@@ -52,7 +57,8 @@
 			"damage": 5,
 			"effect": 6,
 			"type": 2,
-			"movement_speed": 0
+			"movement_speed": 0,
+			"sound": "sounds/speed_power.mp3"
 		}
 	]
 }
